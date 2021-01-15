@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Sms{% endblock %}
+
+{% block head %} {% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-4" style="border-right: 1px solid grey;">		
+			{% include 'arduino.html' %}
+		</div>
+		<div class="col-md-8">
+			<div>
+				<h3><span class="fas fa-clock"></span> Realtime
+					<small class="badge badge-pill badge-success text-white"><span class="fas fa-rss"></span></small>
+				</h3>
+			</div>
+			<hr>
+			<div>
+				<ul>
+					<li>
+						<div>
+							<h5>Transmitter 21								
+							<span>
+								<button class="btn btn-sm">View</button>
+								<button class="btn btn-sm">Delete</button>
+								<span> </span>
+								<span style="border-radius: 3px; background: orange; width: 100%; height: 10px;"> </span>
+							</span>
+							</h5>
+							<p style="border: 1px solid grey; border-radius: 3px; padding: 5px;">
+								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
+								<br>
+								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
+								<br>
+								<small class="font-weight-bold">Alert Condition: </small><small class="text-muted">Orange Warning</small>
+							</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %} {% endblock %}
