@@ -7,12 +7,38 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/nav.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/owl.carousel.css') }}">
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/owl.carousel.css') }}"> -->
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css') }}">
 	<style>
 		li {
 			list-style-type: none;
 		}
+		.btn-circle.btn-sm { 
+            width: 30px; 
+            height: 30px; 
+            padding: 6px 0px; 
+            border-radius: 15px; 
+            font-size: 8px; 
+            text-align: center; 
+        } 
+        .btn-circle.btn-md { 
+            width: 50px; 
+            height: 50px; 
+            padding: 7px 10px; 
+            border-radius: 25px; 
+            font-size: 10px; 
+            text-align: center; 
+        } 
+        .btn-circle.btn-xl { 
+            width: 70px; 
+            height: 70px; 
+            padding: 10px 16px; 
+            border-radius: 35px; 
+            font-size: 12px; 
+            text-align: center; 
+        } 
 	</style>
 	{% block head %}{% endblock %}
 </head>
@@ -25,6 +51,10 @@
 	{% include 'aside.html' %}
 	<!-- END ASIDE -->
 
+	<!-- ALERT MODAL -->
+	{% include '/alert/success.html' %}
+	<!-- end alert modal -->
+
 	<main>
 		<div class="container">
 			<br>
@@ -36,6 +66,12 @@
 	
 	<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
 		<div class="container text-center">
+			<p>
+				<div style="font-size: 3rem;">
+					<i class="fas fa-microchip"></i>
+					<i class="fas fa-broadcast-tower"></i>
+				</div>
+			</p>
 			<small>Copyright &copy; Your Website</small>
 		</div>
 	</footer>
@@ -43,9 +79,11 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/pooper.min.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/owl.carousel.js') }}"></script>
+	<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/owl.carousel.js') }}"></script> -->
 	<script type="text/javascript" src="{{ url_for('static', filename='js/shieldui-all.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/main2.js') }}"></script>
+	<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script> -->
+	<!-- <script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script> -->
 
 	{% block script %}{% endblock %}
 </body>

@@ -2,7 +2,14 @@
 
 {% block title %}Sms{% endblock %}
 
-{% block head %} {% endblock %}
+{% block head %}
+<style>
+    .control-center {
+        text-align: center;
+    }
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+{% endblock %}
 
 {% block body %}
 	<div class="row">
@@ -11,34 +18,159 @@
 		</div>
 		<div class="col-md-8">
 			<div>
-				<h3><span class="fas fa-comment-dots"></span> SMS</h3>
+                <span style="font-size: 2rem;" class="fas fa-comment-alt"> SMS | </span>
+                <span>Warning Legends: </span>
+				<i class="fas fa-circle text-primary"> Normal</i>
+				<i class="fas fa-circle" style="color: yellow"> Above normal</i>
+				<i class="fas fa-circle text-warning"> Warning</i>
+				<i class="fas fa-circle text-danger"> Danger</i>
 			</div>
 			<hr>
-			<div>
-				<ul>
-					<li>
-						<div>
-							<h5>Transmitter 21								
-							<span>
-								<button class="btn btn-sm">View</button>
-								<button class="btn btn-sm">Delete</button>
-								<span> </span>
-								<span style="border-radius: 3px; background: orange; width: 100%; height: 10px;"> </span>
-							</span>
-							</h5>
-							<p style="border: 1px solid grey; border-radius: 3px; padding: 5px;">
-								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
-								<br>
-								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
-								<br>
-								<small class="font-weight-bold">Alert Condition: </small><small class="text-muted">Orange Warning</small>
-							</p>
-						</div>
-					</li>
-				</ul>
+            <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
+                <section class="content">
+                    <table class="table table-sm table-stripped table-hover" id="sms_table">
+                        <thead></thead>
+                        <tbody>
+                            <tr>
+                                <td class="align-top"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
 			</div>
 		</div>
 	</div>
 {% endblock %}
 
-{% block script %} {% endblock %}
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script language="javascript">
+	$(document).ready(function(){
+        $("#sms_table").DataTable({
+            'pageLength': 4,
+            'processing': true,
+            'ajax': {
+                'url': '/sms/show',
+                'dataSrc': ''
+            },
+            'columns': [
+                {
+                    'title': '<i class="fas fa-exclamation-triangle text-danger"></i> Alert Level',
+                    'data': {
+                        'alert_level': 'alert_level',
+                        'water_distance': 'water_distance',
+                    },
+                    'render': function(data) {
+                        var view = "<div class=' control-center'>";
+                        if (data.alert_level == 1)
+                            view += "<h3 class='fas fa-exclamation-triangle text-primary'> </h3>";
+                        if (data.alert_level == 2)
+                            view += "<h3 class='fas fa-exclamation-triangle' style='color: yellow;'> </h3>";
+                        if (data.alert_level == 3)
+                            view += "<h3 class='fas fa-exclamation-triangle text-warning'> </h3>";
+                        if (data.alert_level == 4)
+                            view += "<h3 class='fas fa-exclamation-triangle text-danger'> </h3>";
+                        view += "<br><small class='text-small'>"+data.water_distance+"m from sensor</small>";    
+                        view += "</div>";
+                        return view;
+                    }
+                },
+                {
+                    'title': '<i class="fas fa-broadcast-tower"></i> Transmitter',
+                    'data': 'transmitter',
+                    'render': function(data) {
+                        return "<small class='text-primary font-weight-bold'>"+data.name+"</small>";
+                    }
+                },
+                {
+                    'title': '<i class="fas fa-list-alt"></i> Details',
+                    'data': 'transmitter',
+                    'render': function(data) {
+                        var view = "<div class='text-left text-muted'>";
+                            view += "<b class='font-weight-bold fas fa-location-arrow'> Location: </b>";
+                            view += "<span>"+data.location+"</span><br>";
+                            view += "<b class='font-weight-bold fas fa-flag'> Post #: </b>";
+                            view += "<span>"+data.post_number+"</span><br>";
+                            view += "<b class='font-weight-bold fas fa-directions'> Post description: </b>";
+                            view += "<span>"+data.post_description+"</span><br>"
+                            // view += "<b class='font-weight-bold fas fa-clock'> Datetime: </b>";
+                            // view += "<span>"+data.date_created+"</span><br>"
+                        view += "</div>";
+                        return view;
+                    }
+                },
+                {
+                    'title': 'DateTime',
+                    'data': 'created_at',
+                    'render': function(data) {
+                        // return "<div class='text-muted text-center'><small>"+new Date(data)+"</small></div>";
+                        // var date = $.format.data(new Date(data), 'yyyy/MM/dd HH:mm:ss');
+                        var date = new Date(data).toLocaleString('en-US');
+                        var now = new Date(Date.now());
+                        // var timediff = diff_minutes(date, now);
+                        return "<div class='text-muted text-center'><small>"+date+"</small></div>";
+                    }
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'render': function(data) {
+                        var btn = "<div class='control-center'>"
+                        btn += "<i class='fas fa-search text-primary'></i> ";
+                        btn += "<i class='fas fa-trash text-danger'></i> ";
+                        btn += "</div>";
+                        return btn;
+                    }
+                }
+            ],
+			dom: 'Bfrtip',
+			buttons: [
+                {
+                    'text': '<i class="fas fa-pencil-alt"></i> Compose',
+                    'action': function(e, dt, node, config) {
+                        $.ajax({
+                            url:'/sms/add',
+                            method:'post',
+                            data:{},
+                            success:function(data) {
+                                alert("New message added!");
+                                refresh();
+                            }
+                        });
+                    }
+                },
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+                'pdfHtml5',
+                {
+                    'text': '<i class="fas fa-ellipsis-h"></i>',
+                    'action': function(e, dt, node, config){
+                        if( this.columns([4]).visible() == true) {
+                            this.columns([4]).visible(false);
+                        }else {
+                            this.columns([4]).visible(true);
+                        }
+                        // console.log( this.columns([4]).visible);
+                        // this.columns[4].visible(!this.columns[4].visible());
+                    }
+                }
+			]
+        });
+
+        function refresh() {
+			$("#sms_table").DataTable().ajax.reload(null, false);
+		}
+        var table = $('#sms_table').DataTable(); 
+        // Hide two columns
+        table.columns( [4] ).visible( false );
+    })
+</script>
+{% endblock %}

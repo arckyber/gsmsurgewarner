@@ -31,6 +31,17 @@ $(function() {
     }
 	}); 
 
-    
+    function rendertime() {
+		$.ajax({
+			url: '/showtime',
+			method: 'get',
+			success:function(data) {
+				$("#time").text(data);
+				// console.log("time: "+data);
+			}
+		})
+	}
+
+	// setInterval(rendertime, 1000);
 
 });

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash
-# from admin.model.admin import Admin
+from model.models import Admin, db
 
 admin = Blueprint("admin", __name__, static_folder="static", template_folder="templates")
 
@@ -27,3 +27,17 @@ def register():
 @admin.route('/login')
 def login():
 	return render_template('admin_login.html');
+
+@admin.route('/test')
+def test():
+	# from admin.model.admin import Admin, db
+	a=Admin('Carlo')
+	db.session.add(a)
+	db.session.commit()
+
+	q=Admin.query.all()
+
+	for qq in q:
+		print(qq.name)
+
+	return f"<h1>This is test</h1>"

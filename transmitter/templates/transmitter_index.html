@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Transmitters{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="modal fade" id="add_transmitter_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<form role="form" id="add_form">
+				<div class="card-header bg-primary text-light">
+					<h5><i class="fas fa-pencil-alt"></i> Add Transmitter Module</h5>
+				</div>
+				<div class="card-body">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Transmiiter name</label>
+						<input type="text" class="form-control" name="name" placeholder="Give transmitter a name">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Simcard number</label>
+						<input type="text" class="form-control" name="sim_number" placeholder="Enter simcard number">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Post number</label>
+						<input type="number" class="form-control" name="post_number" placeholder="Enter post number">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Post description</label>
+						<textarea type="text" class="form-control" name="post_description" placeholder="Describe where the transmitter being placed"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Location/Address</label>
+						<input type="text" class="form-control" name="location" placeholder="Enter location or address">
+					</div>
+				</div>
+				<div class="card-footer text-right">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+        </div>
+    </div>
+</div>
+	<div class="row">
+		<div class="col-md-4" style="border-right: 1px solid grey;">		
+			{% include 'arduino.html' %}
+		</div>
+		<div class="col-md-8">
+			<div>
+				<h3><span class="fas fa-broadcast-tower"></span> Transmitters |
+				</h3>
+			</div>
+			<hr>
+			<div style="height: 500px; overflow-y: scroll;" class="container">
+				<table class="table table-sm" id="transmitters_table"></table>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){			
+		$("#transmitters_table").DataTable({
+			"pageLength":10,
+			"processing":true,
+			"ajax": {
+				url:'/transmitter/show',
+				dataSrc:''
+			},
+			"columns":[
+				{
+					"title": "Transmitter Name",
+					"data": "name"
+				},
+				{
+					"title": "Simcard #",
+					"data": "sim_number"
+				},
+				{
+					"title": "Post #",
+					"data": "post_number"
+				},
+				{
+					"title": "Post Desc.",
+					"data": "post_description"
+				},
+				{
+					"title": "Location",
+					"data": "location"
+				},
+				{
+					"title": "Actions",
+					"data": "id",
+					"render": function(data) {
+						var btn = "<div class='text-center'>";
+						btn += "<a class='text-primary fas fa-paper-plane'></a>";
+						btn += "<a class='text-warning fas fa-recycle'></a>  ";
+						btn += "<a class='text-danger fas fa-trash'></a>";
+						btn += '</div>';
+						return btn;
+					}
+				}
+			],
+			dom: 'Bfrtip',
+			buttons: [
+				{
+					// 'text': '<span class="fas fa-plus"></span>',
+					'text': '<i class="fas fa-pencil-alt"></i> Add',
+					'action': function(e, dt, node, config) {
+						$("#add_transmitter_modal").modal("show");
+					}
+				},
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+				'pdfHtml5',
+			]
+		});
+
+		function refresh() {
+			$("#transmitters_table").DataTable().ajax.reload(null, false);
+		}
+
+		$("#add_form").on('submit', function(e) {
+			e.preventDefault();
+			// alert('hi');
+			$.ajax({
+				url:'/transmitter/add',
+				method:'post',
+				processData:false,
+				contentType:false,
+				data: new FormData(this),
+				success: function(data) {
+					alert(data);
+					$("#add_transmitter_modal").modal('hide');
+					$("#add_form")[0].reset();
+					refresh();
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}
+

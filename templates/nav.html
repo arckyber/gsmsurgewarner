@@ -1,15 +1,74 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/" style="margin-left: 10px;"><span class="fas fa-broadcast-tower"></span> GSM</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-    </button>
+    </button> -->
 
     <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/"><span class="fas fa-bell"></span> 
-                    <small class="badge badge-pill badge-danger">1</small>
-                </a>
+                <div class="dropdown">
+                    <a class="nav-link" href="#"><span class="fas fa-bell dropdown-toggle" data-toggle="dropdown"></span> 
+                        <small class="badge badge-pill badge-danger">1</small>
+                        <div class="dropdown-menu bg-light" style="width: 400px; overflow-y: scroll; height: 500px;">
+                            <strong style="margin-left: 5px;" class="fas fa-comment-alt text-dark"> Messages</strong>
+                            <hr>                   
+                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
+                                <small><strong class="text-primary">Transmitter name</strong></small>
+                                <br>
+                                <!-- <ul>
+                                    <li><strong>Date: </strong><small>12/12/12</small></li>
+                                </ul> -->
+								<small class="font-weight-bold text-small">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
+								<br>
+								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
+								<br>
+                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-danger">Red Warning</span>
+							</p>                            
+                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
+                                <small><strong class="text-primary">Transmitter name</strong></small>
+                                <br>
+                                <!-- <ul>
+                                    <li><strong>Date: </strong><small>12/12/12</small></li>
+                                </ul> -->
+								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
+								<br>
+								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
+								<br>
+                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-warning">Orange Warning</span>
+							</p>                            
+                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
+                                <small><strong class="text-primary">Transmitter name</strong></small>
+                                <br>
+                                <!-- <ul>
+                                    <li><strong>Date: </strong><small>12/12/12</small></li>
+                                </ul> -->
+								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
+								<br>
+								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
+								<br>
+                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-danger">Red Warning</span>
+							</p>                         
+                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
+                                <small><strong class="text-primary">Transmitter name</strong></small>
+                                <br>
+                                <!-- <ul>
+                                    <li><strong>Date: </strong><small>12/12/12</small></li>
+                                </ul> -->
+								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
+								<br>
+								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
+								<br>
+                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-danger">Red Warning</span>
+							</p>
+                            <p class="text-center bg-light">
+                                <form class="text-center" action="/sms" method="GET">
+                                    <button class="fas fa-chevron-circle-down btn btn-round"></button>
+                                </form>
+                            </p>
+                        </div>
+                    </a>
+                </div>
             </li>
         </ul>
     </div>
@@ -18,7 +77,7 @@
     </div> -->
     <div class="toggle">
         <a href="#" class="js-menu-toggle menu-toggle">
-          <span class="fas fa-bars"></span>
+            <span class="fas fa-bars"></span>
         </a>
-      </div>
+    </div>
 </nav>
