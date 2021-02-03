@@ -15,7 +15,7 @@
 				<h3><span class="fas fa-cog"></span> Configurations</h3>
 			</div>
 			<hr>
-			<div class="container" style="overflow-y: scroll;">
+			<div class="container" style="overflow-y: scroll; height: 500px;">
 				<div>
 					<h2>Transmitter responce delay (for realtime monitoring)</h2>
 					<form>
@@ -54,7 +54,20 @@
 				</div>
 				<hr>
 				<div>
-
+					<h2>Default Transmitter (Graph)</h2>
+					<form>
+						<div class="form-group">
+							<select class="form-control selectpicker">
+								<option>Transmitter name 1 <i class="fas fa-user" aria-hidden='true'></i></option>
+								<option>Transmitter name 2</option>
+								<option>Transmitter name 3</option>
+							</select>
+						</div>
+						<div class="form-group text-right">
+							<button id="test" type="submit" class="btn btn-success">Restore</button>
+							<button type="submit" class="btn btn-warning">Save changes</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

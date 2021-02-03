@@ -1,25 +1,45 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request
+from arduino.device import Arduino as Ard
+import time
 
-import serial, serial.tools.list_ports
+print("diri ni sa arduino nga blueprint..............")
+ard = Ard()
 
 arduino = Blueprint("arduino", __name__, static_folder="static", template_folder="templates")
 
+@arduino.route('/read', methods=['POST'])
+def read():
+	data = ard.read()
+	return jsonify({'data':str(data)})
+
+@arduino.route('/light')
+def light():
+	return render_template('light.html')
+
+@arduino.route('/write', methods=['POST'])
+def write():
+	message = request.form['message']
+	ard.write(message)
+	return message
+
 @arduino.route('/render', methods=['POST', 'GET'])
 def render():
-	try:
-		device = find_arduino('75735353138351912001')
-		if device.port:
-			return jsonify({'connected':True})
-		else: 
-			return jsonify({'connected':False})
-	except:
-		return jsonify({'connected':False})
+	if ard.port():
+		return jsonify({
+			'connected':True,
+		})
+	else:
+		ard.connect()
+		if ard.port():
+			return jsonify({
+				'connected':True,
+			})
+		else:
+			return jsonify({
+				'connected':True,
+			})
 
-def find_arduino(serial_number):
-	for pinfo in serial.tools.list_ports.comports():
-		if pinfo.serial_number == serial_number:
-			return serial.Serial(pinfo.device)
-	raise IOError('Failed to find arduino')
-
-# ser = serial.Serial(str(device.port), baudrate=19200, timeout=1)
-# val = ser.readline().decode('utf-8')
+if __name__ == '__main__':
+	while True:
+		print('in main........')
+		time.sleep(1)

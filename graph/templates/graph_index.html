@@ -17,24 +17,27 @@
 				<h3><span class="fas fa-line-chart"></span> Graph</h3>
 			</div>
 			<hr>
-			<div class="container" style="overflow-y: scroll;">
+			<div class="container" style="overflow-y: scroll; height: 500px;">
 				<div class="card-header">
-					<form class="form-inline justify-content-end">
+					<form class="form-inline justify-content-end" method="post" action="{{url_for('graph.process')}}">
 						<div class="input-group mb-2 mr-sm-2 mb-sm-0">
-							<!-- <input type="text" class="form-control" id="yourEmail" placeholder="Your Email"> -->
-							<span> </span>
+							<!-- <select id="" class="mr-sm">
+								<option value=""><i class="fas fa-chart-line">Line</i></option>
+								<option value=""><i class="fas fa-chart-bar">Bar</i></option>
+							</select> -->
 
-							<input type="date" name="from_date" class="form-control mr-sm" id="datePicker1">
+							<input name="date_begin"  placeholder="Date start" class="textbox-n mr-sm form-control" type="text" onfocus="(this.type='date')" id="date">
 							
-							<input type="date" name="to_date" class="form-control mr-sm" value="now">
+							<input name="date_end"  placeholder="Date end" class="textbox-n mr-sm form-control" type="text" onfocus="(this.type='date')" id="date">
 
-							<select class="form-control mr-sm">
-								<option>Transmitter 21</option>
-								<option>Transmitter 22</option>
-								<option>Transmitter 25</option>
+							<select class="form-control mr-sm" name="transmitter">
+								<option>All</option>
+								{% for trans in transmitters %}
+									<option>{{trans.name}}</option>
+								{% endfor %}
 							</select>
 						</div>
-						<button type="button" class="btn btn-primary my-2 my-sm-0"><span class="fas fa-drafting-compass"></span> Process</button>
+						<button type="submit" class="btn btn-primary my-2 my-sm-0"><span class="fas fa-drafting-compass"></span> Process</button>
 					</form>
 				</div>
 				<canvas id="myChart" width="700" height="450" style="margin: auto;"></canvas>
@@ -88,6 +91,9 @@
 									reverse: true,
 									beginAtZero:true,
 									start: 0,
+									callback: function(value, index, values) {
+										return value + "m";
+									},
 								}
 							}],
 							xAxes: [{
@@ -117,8 +123,8 @@
             mode: 'single',
             callbacks: {
               label: function(tooltipItems, data) {
-                       return tooltipItems.yLabel + ' degrees';
-                     }
+					return tooltipItems.yLabel + ' degrees';
+				}
             }
           },
         }

@@ -52,7 +52,26 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
 <script language="javascript">
-	$(document).ready(function(){
+	$(document).ready(function(){		
+
+        function makeToast(type, message) {
+            if (type == 'success') {			
+                toastr.success(message);
+            }
+            else if (type == 'failed') {			
+                toastr.warning(message);
+            }
+            else if (type == 'missing data') {
+                toastr.warning(message);
+            }
+            else if (type == 'error') {
+                toastr.error(message);
+            }
+            else {
+                toastr.info(message);
+            }
+        }
+        
         $("#sms_table").DataTable({
             'pageLength': 4,
             'processing': true,
@@ -139,8 +158,8 @@
                             url:'/sms/add',
                             method:'post',
                             data:{},
-                            success:function(data) {
-                                alert("New message added!");
+                            success:function(type) {
+                                makeToast(type, "Report: " + type.toUpperCase());
                                 refresh();
                             }
                         });

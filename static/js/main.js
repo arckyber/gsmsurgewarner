@@ -22,16 +22,16 @@ $(document).ready(function() {
 
 	// setInterval(arduinoRender, 1000);
 
-	function rendertime() {
-		$.ajax({
-			url: '/showtime',
-			method: 'get',
-			success:function(data) {
-				$("#time").text(data);
-				console.log("time: "+data);
-			}
-		})
-	}
+	// function rendertime() {
+	// 	$.ajax({
+	// 		url: '/showtime',
+	// 		method: 'get',
+	// 		success:function(data) {
+	// 			$("#time").text(data);
+	// 			console.log("time: "+data);
+	// 		}
+	// 	})
+	// }
 
-	setInterval(rendertime, 1000);
+	// setInterval(rendertime, 1000);
 })

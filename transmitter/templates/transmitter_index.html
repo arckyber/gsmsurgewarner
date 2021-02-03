@@ -71,9 +71,29 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){			
+
+		function makeToast(type, message) {
+			if (type == 'success') {			
+				toastr.success(message);
+			}
+			else if (type == 'failed') {			
+				toastr.warning(message);
+			}
+			else if (type == 'missing data') {
+				toastr.warning(message);
+			}
+			else if (type == 'error') {
+				toastr.error(message);
+			}
+			else {
+				toastr.info(message);
+			}
+		}
+		
 		$("#transmitters_table").DataTable({
 			"pageLength":10,
 			"processing":true,
+			'responsive':true,
 			"ajax": {
 				url:'/transmitter/show',
 				dataSrc:''
@@ -125,7 +145,7 @@
 				'excelHtml5',
 				'csvHtml5',
 				'pdfHtml5',
-			]
+			],
 		});
 
 		function refresh() {
@@ -142,7 +162,7 @@
 				contentType:false,
 				data: new FormData(this),
 				success: function(data) {
-					alert(data);
+					makeToast(data, 'Report: '+data);
 					$("#add_transmitter_modal").modal('hide');
 					$("#add_form")[0].reset();
 					refresh();

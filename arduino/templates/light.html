@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Transmitters{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Read data</h1>
+    <p id="data"></p>
+    <form id="myform">
+        <div class="form-group">
+            <input type="text" name="message" />
+        </div>
+        <button class="btn btn-sm btn-danger" id="write" type="submit">Write</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+        function read() {
+            $.ajax({
+                url:'/arduino/read',
+                method:'POST',
+                data:{},
+                success:function(data) {
+                    console.log('reading....');
+                    $("#data").text(data['data']);
+                }
+            })
+        }
+
+        setInterval(read, 1000);
+
+        $("#myform").on("submit", function(e){
+            e.preventDefault();
+            $.ajax({
+                url:'/arduino/write',
+                method:'post',
+                processData:false,
+                contentType:false,
+                data:new FormData(this),
+                success:function(data){
+                    console.log("Writing...");
+                }
+            })
+        })
+    })
+</script>
+{% endblock %}
+

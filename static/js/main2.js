@@ -31,17 +31,46 @@ $(function() {
     }
 	}); 
 
-    function rendertime() {
-		$.ajax({
-			url: '/showtime',
-			method: 'get',
-			success:function(data) {
-				$("#time").text(data);
-				// console.log("time: "+data);
-			}
-		})
+    // function rendertime() {
+	// 	$.ajax({
+	// 		url: '/showtime',
+	// 		method: 'get',
+	// 		success:function(data) {
+	// 			$("#time").text(data);
+	// 			// console.log("time: "+data);
+	// 		}
+	// 	})
+	// }
+	
+
+    $('.toastrDefaultSuccess').click(function() {
+		toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+	});
+	$('.toastrDefaultInfo').click(function() {
+		toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+	});
+	$('.toastrDefaultError').click(function() {
+		toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+	});
+	$('.toastrDefaultWarning').click(function() {
+		toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+	});
+
+	function makeToast(type, message) {
+		if (type == 'success') {			
+			toastr.success(message);
+		}
+		else if (type == 'failed') {			
+			toastr.warning(message);
+		}
+		else if (type == 'missing data') {
+			toastr.warning(message);
+		}
+		else if (type == 'error') {
+			toastr.error(message);
+		}
+		else {
+			toastr.info(message);
+		}
 	}
-
-	// setInterval(rendertime, 1000);
-
 });

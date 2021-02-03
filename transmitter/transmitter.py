@@ -2,6 +2,7 @@ import json, traceback
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, Response
 from model.models import db, TransmitterSchema, Transmitter
 from util.query_serializer import serialize
+from config.const import SUCCESS, FAILED, ERROR, MISSING_DATA
 
 transmitter = Blueprint('transmitter', __name__, static_folder='static', template_folder='templates')
 
@@ -30,11 +31,11 @@ def test():
 		try:
 			db.session.add(transmitter)
 			db.session.commit()
-			return "Add successful!"
+			return SUCCESS
 		except:
-			return "Add failure!"
+			return ERROR
 	else:
-		return "All fields are required"
+		return MISSING_DATA
 	# t1 = Transmitter('Transmitter 1', '09097454445', 2, 'Near the gate', 'Tagum Sur, Trinidad, Bohol')
 	# t2 = Transmitter('Transmitter 2', '09097454465', 2, 'Below Bridge', 'San Jose, Talibon, Bohol')
 	# t3 = Transmitter('Transmitter 2', '09097454465', 2, 'Near the Nara tree', 'Ubay, Bohol')

@@ -3,6 +3,7 @@ from model.models import db, Sms, SmsSchema
 from datetime import datetime
 from sqlalchemy import desc, asc
 import random
+from config.const import SUCCESS, FAILED, ERROR
 
 sms = Blueprint('sms', __name__, static_folder='static', template_folder='templates')
 
@@ -19,10 +20,13 @@ def add():
 		transmitter_id = random.randint(1,2),
 		created_at = datetime.now(),
 	)
-	db.session.add(sms_obj)
-	db.session.commit()
-	# return f"<h3>added</h3>"
-	return "New sms added!"
+	try:
+		db.session.add(sms_obj)
+		db.session.commit()
+		return SUCCESS
+	except:
+		return ERROR
+	return FAILED
 
 @sms.route('/dummy')
 def dummy():
