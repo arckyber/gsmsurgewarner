@@ -17,7 +17,7 @@ app.register_blueprint(admin, url_prefix="/admin")
 from transmitter.transmitter import transmitter
 app.register_blueprint(transmitter, url_prefix="/transmitter")
 
-from arduino.arduino import arduino
+from arduino.route import arduino
 app.register_blueprint(arduino, url_prefix="/arduino")
 
 from sms.sms import sms
@@ -34,6 +34,9 @@ app.register_blueprint(users, url_prefix="/users")
 
 from configurations.route import configurations
 app.register_blueprint(configurations, url_prefix="/configurations")
+
+from extrasms.route import extrasms
+app.register_blueprint(extrasms, url_prefix="/extrasms")
 
 # from admin.model.admin import db as admin_db
 # from transmitter.model.transmitter import db as transmitter_db

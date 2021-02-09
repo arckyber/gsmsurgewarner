@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Transmitters{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="table">
+    <div class="row">
+        <div class="col-md-4" style="border-right: 1px solid grey;">		
+			{% include 'arduino.html' %}
+        </div>
+        <div class="col-md-8">
+			<div>
+				<h3><span class="fas fa-pen-alt"></span> Write Message |
+				</h3>
+			</div>
+			<hr>
+            <div class="jumbotron">
+                <form id="form">
+                    <div class="container">
+                        <div class="form-group">
+                            <label for="number">Sim Number</label>
+                            <input type="text" name="number" class="form-control" placeholder="Add receipient">
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Your message</label>
+                            <textarea type="text" name="message" class="form-control" placeholder="Type your message here..."></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Send Message">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function(){
+        
+		function makeToast(type, message) {
+			if (type == 'success') {			
+				toastr.success(message);
+			}
+			else if (type == 'failed') {			
+				toastr.warning(message);
+			}
+			else if (type == 'missing data') {
+				toastr.warning(message);
+			}
+			else if (type == 'error') {
+				toastr.error(message);
+			}
+			else {
+				toastr.info(message);
+			}
+		}
+        
+        $("#form").on("submit", function(e){
+            e.preventDefault();
+            $.ajax({
+                url:'/arduino/send',
+                method:'POST',
+                processData:false,
+                contentType:false,
+                data:new FormData(this),
+                success:function(data) {
+                    makeToast(data, 'Report: '+data);
+                }
+            })
+        });
+    })
+</script>
+{% endblock %}
+

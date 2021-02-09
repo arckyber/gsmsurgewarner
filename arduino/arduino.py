@@ -1,45 +1,53 @@
-from flask import Blueprint, render_template, jsonify, request
-from arduino.device import Arduino as Ard
+import serial, serial.tools.list_ports
 import time
 
-print("diri ni sa arduino nga blueprint..............")
-ard = Ard()
+class Arduino():
+    arduino = None
 
-arduino = Blueprint("arduino", __name__, static_folder="static", template_folder="templates")
+    def __init__(self):
+        self.connect()
 
-@arduino.route('/read', methods=['POST'])
-def read():
-	data = ard.read()
-	return jsonify({'data':str(data)})
+    def connect(self):
+        try:
+            self.arduino = self.find_arduino('75735353138351912001')
+            time.sleep(3)
+            print("device instantiation success")
+            print(self.arduino)
+        except Exception as e:
+            print("device instantiation exception")
+            print(str(e))
+    
+    def find_arduino(self, serial_number):
+        for pinfo in serial.tools.list_ports.comports():
+            if pinfo.serial_number == serial_number:
+                return serial.Serial(pinfo.device)
+        raise IOError('Failed to find arduino')
 
-@arduino.route('/light')
-def light():
-	return render_template('light.html')
+    def read(self):
+        try:
+            self.arduino.flush()
+            time.sleep(1)
+            return str(self.arduino.readline(self.arduino.inWaiting()).strip())
+            # return self.arduino.read(self.arduino.readline())
+        except Exception as e:
+            return str(e)
 
-@arduino.route('/write', methods=['POST'])
-def write():
-	message = request.form['message']
-	ard.write(message)
-	return message
+    def write(self, input):
+        try:
+            self.arduino.flush()
+            time.sleep(1)
+            self.arduino.write(bytes(input, 'utf-8'))
+            print(input+" writen")
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
 
-@arduino.route('/render', methods=['POST', 'GET'])
-def render():
-	if ard.port():
-		return jsonify({
-			'connected':True,
-		})
-	else:
-		ard.connect()
-		if ard.port():
-			return jsonify({
-				'connected':True,
-			})
-		else:
-			return jsonify({
-				'connected':True,
-			})
+    def port(self):
+        if self.arduino:
+            return self.arduino.port
+        else:
+            return None
 
-if __name__ == '__main__':
-	while True:
-		print('in main........')
-		time.sleep(1)
+    def connected(self):
+        return self.arduino is not None

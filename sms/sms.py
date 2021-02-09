@@ -17,7 +17,7 @@ def add():
 	sms_obj = Sms(
 		alert_level = random.randint(1, 4),
 		water_distance = random.randint(0, 10),
-		transmitter_id = random.randint(1,2),
+		transmitter_id = random.randint(1,1),
 		created_at = datetime.now(),
 	)
 	try:

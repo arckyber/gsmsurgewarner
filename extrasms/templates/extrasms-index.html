@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Transmitters{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="modal fade" role="dialog" id="compose_sms_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- <div class="jumbotron">
+                <form id="form">
+                    <div class="container">
+                        <div class="form-group">
+                            <label for="number">Sim Number</label>
+                            <input type="text" name="number" class="form-control" placeholder="Add receipient">
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Your message</label>
+                            <textarea type="text" name="message" class="form-control" placeholder="Type your message here..."></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Send Message">
+                    </div>
+                </form>
+            </div> -->
+            <div class="card card-primary card-outline">
+                <form id="form">
+                    <div class="card-header">
+                        <h3 class="card-title">Compose New Message</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="number">Add recipient</label>
+                            <input class="form-control" name="number" placeholder="To:">
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Your message</label>
+                            <textarea type="text" name="message" class="form-control" placeholder="Type your message here..."></textarea>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <div class="float-right">
+                            <button type="button" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Draft</button>
+                            <button type="submit" class="btn btn-primary"><i class="far fa-paper-plane"></i> Send</button>
+                        </div>
+                        <button type="reset" class="btn btn-default"><i class="fas fa-times"></i> Discard</button>
+                        </div>
+                        <!-- /.card-footer -->
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <div class="row">
+        <div class="col-md-4" style="border-right: 1px solid grey;">		
+			{% include 'arduino.html' %}
+        </div>
+        <div class="col-md-8">
+			<div>
+				<h3><span class="fas fa-comment"></span> Extra messages
+				</h3>
+			</div>
+            <hr>
+            <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
+                <table id="smstable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+        $("#smstable").DataTable({
+            'pageLength': 10,
+            'processing': true,
+            'ajax': {
+                'url': '/arduino/smsdum',
+                method:'post',
+                'dataSrc': ''
+            },
+            'columns':[
+                {
+                    title:'ID',
+                    data:'id',
+                },
+                {
+                    title:'Number',
+                    data:'number',
+                },
+                {
+                    title:'Message',
+                    data:'message',
+                },
+                {
+                    title:'<i class="fas fa-clock">',
+                    data:'date_sent',
+                    render:function(data) {
+                        // console.log(data);
+                        var dd = $.format.date(data, "dd-MM-yyyy HH:mm:ss ");
+                        // console.log(dd);
+                        // var d = jQuery.format.prettyDate(data);
+                        return "<span>"+dd+"</span>";
+                    }
+                },
+            ],
+            dom: 'Bfrtip',
+            buttons:[
+                {
+                    text:'Compose',
+                    action:function(e, dt, node, config) {
+                        $("#compose_sms_modal").modal('show');
+                    }
+                },
+                {
+                    text:'Delete all',
+                    action:function(e, dt, node, config) {
+                        $.ajax({
+                            url:'/arduino/delete-all-sms',
+                            method:'post',
+                            data:{},
+                            syccess:function(data) {
+                                console.log("delete all sms data in arduino/smslist");
+                                toastr.warning("All message cleared!");
+                                refresh();
+                            }
+                        })
+                    }
+                }
+            ],
+            "order": [[ 3, "desc" ]],
+        });
+
+        function refresh() {
+			$("#smstable").DataTable().ajax.reload(null, false);
+        }
+        
+        setInterval(refresh, 5000);
+
+        // function deleteAllMessage() {
+        //     $.ajax({
+        //         url:'/arduino/delete-all-sms',
+        //         method:'post',
+        //         data:{},
+        //         syccess:function(data) {
+        //             console.log("delete all sms data in arduino/smslist");
+        //             refresh();
+        //         }
+        //     })
+        // }
+
+        function makeToast(type, message) {
+			if (type == 'success') {			
+				toastr.success(message);
+			}
+			else if (type == 'failed') {			
+				toastr.warning(message);
+			}
+			else if (type == 'missing data') {
+				toastr.warning(message);
+			}
+			else if (type == 'error') {
+				toastr.error(message);
+			}
+			else {
+				toastr.info(message);
+			}
+		}
+        
+        $("#form").on("submit", function(e){
+            e.preventDefault();
+            $.ajax({
+                url:'/arduino/send',
+                method:'POST',
+                processData:false,
+                contentType:false,
+                data:new FormData(this),
+                success:function(data) {
+                    $("#compose_sms_modal").modal('hide');
+                    $("#form")[0].reset();
+                    toastr.success("Message sent");
+                }
+            })
+        });
+
+        // var c = jQuery.format.prettyDate("2008-01-27T22:24:17Z");
+        // console.log(c);
+    })
+</script>
+{% endblock %}
