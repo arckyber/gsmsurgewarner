@@ -26,20 +26,11 @@ class Desequivalert(db.Model):
 		self.transmitter_id = transmitter_id
 		self.created_at = datetime.datetime.now()
 
-	def getAlertLevel(self, distance):
-		if distance <= self._red:
-			return RED
-		elif distance <= self._orange and distance > self._red:
-			return ORANGE
-		elif distance <= self._yellow and distance > self._orange:
-			return YELLOW
-		elif distance <= self._normal and distance > self._yellow:
-			return NORMAL
-
 class DesequivalertSchema(ModelSchema):
 	transmitter_id = fields.Integer()
 	class Meta:
 		model = Desequivalert
+
 class Transmitter(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(100))
@@ -74,6 +65,7 @@ class Sms(db.Model):
 	water_distance = db.Column(db.Float)
 	transmitter_id = db.Column(db.Integer, db.ForeignKey('transmitter.id'))
 	transmitter = db.relationship('Transmitter')
+	date_sent = db.Column(db.DateTime)
 	created_at = db.Column(db.DateTime)
 	is_opened = db.Column(db.Boolean)
 	status = db.Column(db.Boolean)

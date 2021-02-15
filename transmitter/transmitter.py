@@ -65,8 +65,11 @@ def add():
 
 @transmitter.route('/des')
 def des():
-	results = Desequivalert.query.all()
-	output = DesequivalertSchema(many=True).dump(results)
+	results = Transmitter.query.all()
+	output = TransmitterSchema(many=True).dump(results)
+	# return jsonify(output)
+	for o in output:
+		print(o['desequivealert'][0]['_red'])
 	return jsonify(output)
 
 	# t1 = Transmitter('Transmitter 1', '09097454445', 2, 'Near the gate', 'Tagum Sur, Trinidad, Bohol')

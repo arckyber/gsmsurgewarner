@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import desc, asc
 import random
 from config.const import SUCCESS, FAILED, ERROR
+from model.alert import get_alert_level
 
 sms = Blueprint('sms', __name__, static_folder='static', template_folder='templates')
 

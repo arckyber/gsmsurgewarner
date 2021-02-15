@@ -6,6 +6,7 @@ from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema, db, Ext
 import datetime
 import dateparser
 from sqlalchemy import asc, desc
+from model.alert import get_alert_level
 
 print("diri ni sa arduino nga blueprint..............")
 ard = Ard()
@@ -57,24 +58,29 @@ def receivedum():
 		data = ard.read()
 		if data:
 			data = data.replace('b\'', '')
+			data = data.replace('b\"', '')
 			data = data[:-1]
 			print(data)
 			if "TRANSMITTER" in data:
+				# Split the string and store in array
 				dataArr = data.split('&')
-				transmitter_id = Transmitter.query.filter(Transmitter.sim_number == dataArr[SIMNUMBER_INDEX]).first().id
-				# extra_obj = Extra(
-				# 	number = dataArr[SIMNUMBER_INDEX],
-				# 	message = dataArr[MSG_INDEX],
-				# 	date_sent = dateparser.parse(dataArr[DATETIME_INDEX][:-3]),
-				# 	created_at = datetime.datetime.now(),
-				# 	is_opened = False,
-				# 	status = True
-				# )
-				# db.session.add(extra_obj)
-				# db.session.commit()
-				# return jsonify({
-				# 	'success':True
-				# })
+				transmitter = Transmitter.query.filter(Transmitter.sim_number == dataArr[SIMNUMBER_INDEX]).first()
+				if transmitter:
+					alert_level = get_alert_level(transmitter, dataArr[MSG_INDEX])
+					sms = Sms(
+						alert_level = alert_level,
+						water_distance = dataArr[MSG_INDEX],
+						transmitter_id = transmitter.id,
+						created_at = datetime.datetime.now(),
+						date_sent = dataArr[DATETIME_INDEX],
+						status = True,
+						is_opened = False,
+					)
+					db.session.add(sms)
+					db.session.commit()
+					return jsonify({
+						'sucess': True
+					})
 			else:
 				dataArr = data.split('&')
 				extra_obj = Extra(
