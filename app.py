@@ -1,14 +1,16 @@
-from flask import Flask, render_template, url_for, Response
+from flask import Flask, render_template, url_for, Response, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_fontawesome import FontAwesome
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
+from model.models import db, Role
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'll340s0fj340'
+app.permanent_session_lifetime = timedelta(minutes=60)
 
 
 from admin.admin import admin	
@@ -66,7 +68,13 @@ fa = FontAwesome(app)
 @app.route('/')
 @app.route('/login')
 def index():
-	return render_template("login.html")
+	if 'email' in session:
+		return redirect(url_for('transmitter.index'))
+	return render_template("auth/login.html")
+
+@app.route('/register')
+def register():
+	return render_template('auth/register.html')
 
 @app.route('/showtime')
 def showtime():
@@ -75,8 +83,16 @@ def showtime():
 	return Response(generate(), mimetype='text')
 	# return generate()
 
+@app.route('/logout')
+def logout():
+	session.pop('email', None)
+	return render_template('auth/login.html')
+
 if __name__ == '__main__':
 	# with app.app_context():
 	# 	db.create_all()
 	db.create_all()
+	# role = Role(role="Operator")
+	# db.session.add(role)
+	# db.session.commit()
 	app.run(debug=True)

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="register-box" style="width: 40%; margin: auto;">
+	<div class="register-logo text-center">
+	  <h1>Register</h1>
+	</div>
+  
+	<div class="card">
+	  <div class="card-body register-card-body">
+		<p class="login-box-msg">Register a new membership</p>
+  
+		<form action="/admin/register" method="post">
+		  <div class="input-group mb-3">
+			<input type="text" class="form-control" name="name" placeholder="Full name">
+			<div class="input-group-append">
+			  <div class="input-group-text">
+				<span class="fas fa-user"></span>
+			  </div>
+			</div>
+		  </div>
+		  <div class="input-group mb-3">
+			<input type="email" class="form-control" name="email" placeholder="Email">
+			<div class="input-group-append">
+			  <div class="input-group-text">
+				<span class="fas fa-envelope"></span>
+			  </div>
+			</div>
+		  </div>
+		  <div class="input-group mb-3">
+			<input type="password" class="form-control" name="password1" placeholder="Password">
+			<div class="input-group-append">
+			  <div class="input-group-text">
+				<span class="fas fa-lock"></span>
+			  </div>
+			</div>
+		  </div>
+		  <div class="input-group mb-3">
+			<input type="password" class="form-control" name="password2" placeholder="Retype password">
+			<div class="input-group-append">
+			  <div class="input-group-text">
+				<span class="fas fa-lock"></span>
+			  </div>
+			</div>
+		  </div>
+		  	<div class="input-group mb-3">
+				<select type="text" class="form-control" name="role" placeholder="Role">
+					<option>Admin</option>
+					<option>Operator</option>
+				</select>
+				<div class="input-group-append">
+				<div class="input-group-text">
+					<span class="fas fa-creative-commons-by"></span>
+				</div>
+				</div>
+		  </div>
+		  <div class="row">
+			<div class="col-8">
+			  <div class="icheck-primary">
+				<input type="checkbox" id="agreeTerms" name="terms" value="agree">
+				<label for="agreeTerms">
+				 I agree to the <a href="#">terms</a>
+				</label>
+			  </div>
+			</div>
+			<!-- /.col -->
+			<div class="col-4">
+			  <button type="submit" class="btn btn-primary btn-block">Register</button>
+			</div>
+			<!-- /.col -->
+		  </div>
+		</form>
+  
+		<div class="social-auth-links text-center">
+		  <p>- OR -</p>
+		  <a href="#" class="btn btn-block btn-primary">
+			<i class="fab fa-facebook mr-2"></i>
+			Sign up using Facebook
+		  </a>
+		  <a href="#" class="btn btn-block btn-danger">
+			<i class="fab fa-google-plus mr-2"></i>
+			Sign up using Google+
+		  </a>
+		</div>
+  
+		<a href="/login" class="text-center">I already have a membership</a>
+	  </div>
+	  <!-- /.form-box -->
+	</div><!-- /.card -->
+  </div>
+  <!-- /.register-box -->
+{% endblock %}
+<br>
+<br>
+{% block script %}
+<!-- <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/graph.js') }}"></script> -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

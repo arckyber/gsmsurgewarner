@@ -98,22 +98,18 @@ class ExtraSmsSchema(ModelSchema):
 	class Meta:
 		model = ExtraSms
 
-class Admin(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(200))
-	email = db.Column(db.String(200))
-	password = db.Column(db.String(200))
-
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String())
+	email = db.Column(db.String())
+	password = db.Column(db.String())
 	role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 	# role = db.relationship('Role')
 
 class Role(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	role = db.Column(db.String())
-	user = db.relationship('User')
+	# user = db.relationship('User')
 
 class UserSchema(ModelSchema):
 	class Meta:
