@@ -39,3 +39,17 @@ def process():
 		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
 	transmitters = Transmitter.query.all()
 	return render_template('graph.html', legend=transmitter, water_distance=water_distance, times=times, transmitters=transmitters)
+
+@graph.route('/graph_index')
+def graph_index():
+	# t_name = request.form['transmitter_name']
+	t_name = "Transmitter Jagna"
+	sms = db.session.query(Sms).join(Transmitter).filter(Transmitter.name == t_name).order_by(desc(Sms.created_at)).all()
+	output = SmsSchema(many=True).dump(sms)
+	water_distance = []
+	times = []
+	for o in output:
+		water_distance.append(o.get('water_distance'))
+		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
+	transmitters = Transmitter.query.all()
+	return render_template('graph_index.html', legend=t_name, water_distance=water_distance, times=times, transmitters=transmitters)
