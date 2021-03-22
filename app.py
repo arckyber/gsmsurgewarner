@@ -66,8 +66,11 @@ db = SQLAlchemy(app)
 fa = FontAwesome(app)
 
 @app.route('/')
-@app.route('/login')
 def index():
+	return render_template('home/index.html')
+
+@app.route('/login')
+def login():
 	if 'email' in session:
 		return redirect(url_for('transmitter.index'))
 	return render_template("auth/login.html")
