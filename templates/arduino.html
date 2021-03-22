@@ -17,13 +17,12 @@
     <p class="container text-center text-muted">
         <strong class="text-muted">SN: 75735353138351912001</strong>
     </p>
-    <br>
+    <!-- <br> -->
     <p>
         <h5 class="text-success">Arduino UNO</h5>
     </p>
-    <form class="form-inline justify-content-center" id="request">
+    <!-- <form class="form-inline justify-content-center" id="request">
         <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-            <!-- <input type="text" class="form-control" id="yourEmail" placeholder="Your Email"> -->
             <select class="form-control">
                 <option>Receirver</option>
                 <option>Transmitter</option>
@@ -31,10 +30,11 @@
             </select>
         </div>
         <button type="submit" class="btn btn-primary my-2 my-sm-0 fas fa-paper-plane"> Request Reponce</button>
-    </form>
+    </form> -->
     <br>
     <div>
-        <h5 id="time"></h5>
+        <h5 id="time" style="font-size: 2rem;"></h5>
+        <p id="date" class=" text-primary"></p>
     </div>
 </div>
 
@@ -43,7 +43,8 @@
         function ticktime() {
             var d = new Date(Date.now());
             var target = document.getElementById("time");
-            target.innerHTML = d;
+            target.innerHTML = d.toLocaleTimeString();
+            $("#date").text(d.toDateString());
         }
         setInterval(ticktime, 1000);
 

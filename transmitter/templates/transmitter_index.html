@@ -68,17 +68,17 @@
     </div>
 </div>
 	<div class="row">
-		<div class="col-md-4" style="border-right: 1px solid grey;">		
+		<div class="col-md-3" style="border-right: 1px solid grey;">		
 			{% include 'arduino.html' %}
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-9">
 			<div>
 				<h3><span class="fas fa-broadcast-tower"></span> Transmitters |
 				</h3>
 			</div>
 			<hr>
 			<div style="height: 500px; overflow-y: scroll;" class="container">
-				<table class="table table-sm" id="transmitters_table"></table>
+				<table class="table" id="transmitters_table"></table>
 			</div>
 		</div>
 	</div>
@@ -115,7 +115,7 @@
 		}
 		
 		$("#transmitters_table").DataTable({
-			"pageLength":10,
+			"pageLength":8,
 			"processing":true,
 			'responsive':true,
 			"ajax": {

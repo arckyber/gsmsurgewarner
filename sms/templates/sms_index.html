@@ -13,10 +13,10 @@
 
 {% block body %}
 	<div class="row">
-		<div class="col-md-4" style="border-right: 1px solid grey;">		
+		<div class="col-md-3" style="border-right: 1px solid grey;">		
 			{% include 'arduino.html' %}
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-9">
 			<div>
                 <span style="font-size: 2rem;" class="fas fa-comment-alt"> SMS | </span>
                 <span class="text-muted">Warning Legends: </span>
@@ -73,7 +73,7 @@
         }
         
         $("#sms_table").DataTable({
-            'pageLength': 4,
+            'pageLength': 3,
             'processing': true,
             'ajax': {
                 'url': '/sms/show',

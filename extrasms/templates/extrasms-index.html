@@ -60,10 +60,10 @@
 
 <div>
     <div class="row">
-        <div class="col-md-4" style="border-right: 1px solid grey;">		
+        <div class="col-md-3" style="border-right: 1px solid grey;">		
 			{% include 'arduino.html' %}
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
 			<div>
 				<h3><span class="fas fa-comment"></span> Extra messages
 				</h3>
@@ -91,7 +91,7 @@
 	$(document).ready(function(){
 
         $("#smstable").DataTable({
-            'pageLength': 10,
+            'pageLength': 8,
             'processing': true,
             'ajax': {
                 'url': '/arduino/smsdum',

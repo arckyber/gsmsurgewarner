@@ -17,10 +17,10 @@
 
 {% block body %}
 	<div class="row">
-		<div class="col-md-4" style="border-right: 1px solid grey;">		
+		<div class="col-md-3" style="border-right: 1px solid grey;">		
 			{% include 'arduino.html' %}
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-9">
 			<div>
 				<h3><span class="fas fa-line-chart"></span> Graph</h3>
 			</div>
@@ -30,11 +30,11 @@
           
         <section class="col-lg-12 connectedSortable">
           <!-- solid sales graph -->
-      <div class="card bg-gradient-info">
+      <div class="card bg-gradient-success">
         <div class="card-header border-0">
-          <h3 class="card-title">
+          <h3 class="card-title text-default">
             <i class="fas fa-th mr-1"></i>
-            Sales Graph
+            Transmitters
           </h3>
 
           <div class="card-tools">
@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="card-body">
-          <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          <canvas class="chart text-dark" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
         </div>
         <!-- /.card-body -->
         <div class="card-footer bg-transparent">
@@ -318,11 +318,11 @@
           borderWidth         : 2,
           lineTension         : 0,
           spanGaps : true,
-          borderColor         : '#efefef',
+          borderColor         : 'black',
           pointRadius         : 3,
           pointHoverRadius    : 7,
-          pointColor          : '#efefef',
-          pointBackgroundColor: '#efefef',
+          pointColor          : 'black',
+          pointBackgroundColor: 'black',
           data                : data,
           // data                : [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432, 2344]
         }
