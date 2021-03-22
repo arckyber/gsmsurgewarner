@@ -63,22 +63,23 @@
 			<br>
 			{% block body %} {% endblock %}
 		</div>
+
+		<br>
+	
+		<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+			<div class="container text-center">
+				<p>
+					<div style="font-size: 3rem;">
+						<i class="fas fa-microchip"></i>
+						<i class="fas fa-broadcast-tower"></i>
+					</div>
+				</p>
+				<small>Copyright &copy; Your Website</small>			
+				<small id="port"></small>
+			</div>
+		</footer>
 	</main>
 
-
-	
-	<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
-		<div class="container text-center">
-			<p>
-				<div style="font-size: 3rem;">
-					<i class="fas fa-microchip"></i>
-					<i class="fas fa-broadcast-tower"></i>
-				</div>
-			</p>
-			<small>Copyright &copy; Your Website</small>			
-			<small id="port"></small>
-		</div>
-	</footer>
 
 	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/pooper.min.js') }}"></script>

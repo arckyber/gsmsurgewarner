@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Transmitters/Add{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form role="form" id="add_form">
+        <div class="card-header bg-muted text-default">
+            <h5><i class="fas fa-pencil-alt"></i> Add Transmitter Module</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <legend class="text-danger">Transmitter information</legend>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Transmiiter name</label>
+                        <input type="text" class="form-control" name="name" placeholder="Give transmitter a name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Simcard number</label>
+                        <input type="text" class="form-control" name="sim_number" placeholder="Enter simcard number">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Post number</label>
+                        <input type="number" class="form-control" name="post_number" placeholder="Enter post number">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Post description</label>
+                        <textarea type="text" class="form-control" name="post_description" placeholder="Describe where the transmitter being placed"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Location/Address</label>
+                        <input type="text" class="form-control" name="location" placeholder="Enter location or address">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <legend class="text-danger">Distance equivalent alert</legend>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="" style="color:red">Red</label> (meter(s))
+                                <input type="text" name="_red" class="form-control text-danger" placeholder="Dangerous/Red level">
+                            </div>
+                            <div class="form-group">
+                                <label for="" style="color:orange">Orange</label> (meter(s))
+                                <input type="text" name="_orange" class="form-control" placeholder="Orange level">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="" style="color:yellow">Yellow</label> (meter(s))
+                                <input type="text" name="_yellow" class="form-control" placeholder="Yellow level">
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="text-primary">Normal</label> (meter(s))
+                                <input type="text" name="_normal" class="form-control" placeholder="Normal level">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){		
+
+		function makeToast(type, message) {
+			if (type == 'success') {			
+				toastr.success(message);
+			}
+			else if (type == 'failed') {			
+				toastr.warning(message);
+			}
+			else if (type == 'missing data') {
+				toastr.warning(message);
+			}
+			else if (type == 'error') {
+				toastr.error(message);
+			}
+			else {
+				toastr.info(message);
+			}
+		}
+
+        
+
+		$("#add_form").on('submit', function(e) {
+			e.preventDefault();
+			// alert('hi');
+			$.ajax({
+				url:'/transmitter/store',
+				method:'post',
+				processData:false,
+				contentType:false,
+				data: new FormData(this),
+				success: function(data) {
+					makeToast(data, 'Report: '+data);
+					$("#add_transmitter_modal").modal('hide');
+					$("#add_form")[0].reset();
+					refresh();
+				}
+			});
+		});
+    })
+</script>
+{% endblock %}
+

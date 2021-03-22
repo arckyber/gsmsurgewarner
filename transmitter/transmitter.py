@@ -18,7 +18,7 @@ def show():
 	output = TransmitterSchema(many=True).dump(results)
 	return jsonify(output)
 
-@transmitter.route('/add', methods=['POST'])
+@transmitter.route('/store', methods=['POST'])
 def add():
 	# return request.form['name']	
 	transmitter = Transmitter(
@@ -75,3 +75,7 @@ def des():
 	# t1 = Transmitter('Transmitter 1', '09097454445', 2, 'Near the gate', 'Tagum Sur, Trinidad, Bohol')
 	# t2 = Transmitter('Transmitter 2', '09097454465', 2, 'Below Bridge', 'San Jose, Talibon, Bohol')
 	# t3 = Transmitter('Transmitter 2', '09097454465', 2, 'Near the Nara tree', 'Ubay, Bohol')
+
+@transmitter.route('/add')
+def addtest():
+	return render_template('add.html')

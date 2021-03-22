@@ -94,25 +94,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
 <script type="text/javascript">
-	$(document).ready(function(){			
-
-		function makeToast(type, message) {
-			if (type == 'success') {			
-				toastr.success(message);
-			}
-			else if (type == 'failed') {			
-				toastr.warning(message);
-			}
-			else if (type == 'missing data') {
-				toastr.warning(message);
-			}
-			else if (type == 'error') {
-				toastr.error(message);
-			}
-			else {
-				toastr.info(message);
-			}
-		}
+	$(document).ready(function(){	
 		
 		$("#transmitters_table").DataTable({
 			"pageLength":8,
@@ -162,7 +144,7 @@
 					// 'text': '<span class="fas fa-plus"></span>',
 					'text': '<i class="fas fa-pencil-alt"></i> Add',
 					'action': function(e, dt, node, config) {
-						$("#add_transmitter_modal").modal("show");
+						window.location.href="/transmitter/add";
 					}
 				},
 				'copyHtml5',
@@ -176,23 +158,7 @@
 			$("#transmitters_table").DataTable().ajax.reload(null, false);
 		}
 
-		$("#add_form").on('submit', function(e) {
-			e.preventDefault();
-			// alert('hi');
-			$.ajax({
-				url:'/transmitter/add',
-				method:'post',
-				processData:false,
-				contentType:false,
-				data: new FormData(this),
-				success: function(data) {
-					makeToast(data, 'Report: '+data);
-					$("#add_transmitter_modal").modal('hide');
-					$("#add_form")[0].reset();
-					refresh();
-				}
-			});
-		});
+		console.log($("#transmitters_table").DataTable().buttons()[0]);
 	});
 </script>
 {% endblock %}
