@@ -47,7 +47,7 @@ def login():
 		user = User.query.filter(User.email == email, User.password == password).first()
 		if user:
 			session['email'] = user.email
-			return redirect(url_for('transmitter.index'))
+			return redirect(url_for('dashboard'))
 		else:
 			return "user not found"
 	else:

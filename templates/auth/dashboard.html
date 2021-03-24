@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Chart.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Chart.min.css') }}">
+<link href="{{ url_for('static', filename='vendor/fullcalendar/main.css') }}" rel='stylesheet' />
+
+<style>
+  #script-warning {
+      display: none;
+      background: #eee;
+      border-bottom: 1px solid #ddd;
+      padding: 0 10px;
+      line-height: 40px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 12px;
+      color: red;
+    }
+
+    #loading {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    #calendar {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 10px;
+    }
+
+    .fc-daygrid-day-number, .fc-col-header-cell-cushion {
+      color: white !important
+    }
+    .fc-day-today{
+      background: rgb(9, 118, 151) !important;
+    }
+
+</style>
+
+<script src="{{ url_for('static', filename='vendor/fullcalendar/main.js') }}"></script>
+<script>
+      // FULL CALENDER
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        // var calendarEl = $('#calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          displayEventTime: false,
+          initialDate: '2019-04-01',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,listYear'
+          },
+          events: {
+            url: 'ics/feed.ics',
+            format: 'ics',
+            failure: function() {
+              document.getElementById('script-warning').style.display = 'block';
+            }
+          },
+          loading: function(bool) {
+            document.getElementById('loading').style.display =
+              bool ? 'block' : 'none';
+          }
+        });
+
+        calendar.render();
+        calendar.today();
+      });
+</script>
+{% endblock %}
+
+{% block body %}
+<div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Dashboard</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <div class="breadcrumb text-success float-sm-right">
+              <div class="breadcrumb-item">
+                <div>
+                  <i class="fas fa-microchip"></i>
+                  <span>Connected</span>
+                </div>
+              </div>
+            </div>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <div class="container-fluid">
+      <!-- boxes -->
+      <div class="row">
+        <div class="col-md-3">
+            <div class="card bg-info">
+              <!-- <div class="card-header"></div> -->
+              <div class="card-body text-light">
+                <div class="row">
+                  <div class="col-sm-6 text-left">
+                    <h1>23%</h1>
+                    <span>
+                      The Title
+                    </span>
+                  </div>
+                  <div class="col-sm-6 text-muted text-center align-center">
+                    <h1 class="fas fa-edit" style="font-size: 3rem;"></h1>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center text-white">
+                <a href="#">
+                  <span class="text-white">More info</span>
+                  <i class="fas fa-arrow-circle-right text-light"></i>
+                </a>
+              </div>
+            </div>
+        </div>
+
+        
+        <div class="col-md-3">
+            <div class="card bg-success">
+              <!-- <div class="card-header"></div> -->
+              <div class="card-body text-light">
+                <div class="row">
+                  <div class="col-sm-6 text-left">
+                    <h1>23%</h1>
+                    <span>
+                      The Title
+                    </span>
+                  </div>
+                  <div class="col-sm-6 text-muted text-center align-center">
+                    <h1 class="fas fa-pen" style="font-size: 3rem;"></h1>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center text-white">
+                <a href="#">
+                  <span class="text-white">More info</span>
+                  <i class="fas fa-arrow-circle-right text-light"></i>
+                </a>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning">
+              <!-- <div class="card-header"></div> -->
+              <div class="card-body text-light">
+                <div class="row">
+                  <div class="col-sm-6 text-left">
+                    <h1>23%</h1>
+                    <span>
+                      The Title
+                    </span>
+                  </div>
+                  <div class="col-sm-6 text-muted text-center align-center">
+                    <h1 class="fas fa-cog" style="font-size: 3rem;"></h1>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center text-white">
+                <a href="#">
+                  <span class="text-white">More info</span>
+                  <i class="fas fa-arrow-circle-right text-light"></i>
+                </a>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+          <div class="card bg-danger">
+            <!-- <div class="card-header"></div> -->
+            <div class="card-body text-light">
+              <div class="row">
+                <div class="col-sm-6 text-left">
+                  <h1>23%</h1>
+                  <span>
+                    The Title
+                  </span>
+                </div>
+                <div class="col-sm-6 text-muted text-center align-center">
+                  <h1 class="fas fa-trash" style="font-size: 3rem;"></h1>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-center text-white">
+              <a href="#">
+                <span class="text-white">More info</span>
+                <i class="fas fa-arrow-circle-right text-light"></i>
+              </a>
+            </div>
+          </div>
+      </div>
+      </div>
+      <!-- end boxes -->
+
+      <br>
+
+      <!-- chart main -->
+      <div class="card bg-info">
+        <div class="card-header">
+          <h3 class="card-titlen text-light">
+            <i class="fas fa-chart-pie mr-1"></i>
+            Water level history
+          </h3>
+          <div class="card-tools">
+          </div>
+        </div><!-- /.card-header -->
+        <div class="card-body bg-light">
+          <div class="tab-content p-0">
+            <div>              
+				      <canvas id="myChart" height="300" style="margin: auto; width: 100%;"></canvas>
+            </div>
+          </div>
+        </div><!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+      <!-- end chart main -->
+
+      <br>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card bg-light">
+            <div class="card-header">
+              <h5 class="card-titlen">
+                <i class="fas fa-line mr-1"></i>
+                Latest
+              </h5>
+            </div>
+            <div class="card-body">
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- calendar -->
+          <div class="card bg-success text-light">
+            <div class="card-header">
+              <b class="card-titlen text-light">
+                <i class="fas fa-calendar mr-1"></i>
+                Calender
+              </b>
+              <div class="card-tools">
+              </div>
+            </div>
+            <div class="card-body">
+              <div>              
+                <div id='script-warning'>
+                  <code>ics/feed.ics</code> must be servable
+                </div>
+              
+                <div id='loading'>loading...</div>
+              
+                <div id='calendar' style="color: white !important; margin-top: -10px;"></div>
+              </div>
+            </div><!-- /.card-body -->
+          </div>
+          <!-- end calendar -->
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.bundle.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.bundle.min.js') }}"></script>
+<!-- <script language="javascript" src="{{ url_for('static', filename='vendor/fullcalendar/main.js') }}"></script> -->
+<!-- <script src="{{ url_for('static', filename='js/dashboard/history-chart.js') }}"></script> -->
+<script>
+  $(document).ready(function(){
+    Chart.defaults.global.responsive = false;
+
+		// var times = {{times|safe}};
+
+		// var data = {{water_distance|safe}};
+
+    var times = ['jan', 'feb', 'mar', 'apr'];
+
+    var data = [4, 3, 5, 2];
+
+		var legend = "Water distance from sensor";
+
+		var chartData = {
+			labels : times,
+			datasets: [
+				{
+					label: legend,
+					fill: true,
+					lineTension: 0.1,
+					backgroundColor: "rgba(75,192,192,0.4)",
+					borderColor: "rgba(75,192,192,1)",
+					borderCapStyle: 'butt',
+					borderDash: [],
+					borderDashOffset: 0.0,
+					borderJoinStyle: 'miter',
+					pointBorderColor: "rgba(75,192,192,1)",
+					pointBackgroundColor: "#fff",
+					pointBorderWidth: 1,
+					pointHoverRadius: 5,
+					pointHoverBackgroundColor: "rgba(75,192,192,1)",
+					pointHoverBorderColor: "rgba(220,220,220,1)",
+					pointHoverBorderWidth: 2,
+					pointRadius: 1,
+					pointHitRadius: 10,
+					data: data,
+					spanGaps: false,
+					options: {
+						scales: {
+							yAxes: [{
+								ticks: {
+									reverse: true,
+									beginAtZero:true,
+									start: 0,
+									callback: function(value, index, values) {
+										return value + "m";
+									},
+								}
+							}],
+							xAxes: [{
+									ticks: {
+									reverse: true,
+									beginAtZero: true,
+									start: 0,
+								}
+							}]
+						},
+						rotation: (0.5 * Math.PI)
+					}
+				}
+			]
+		};
+
+		var holder = document.getElementById("myChart");
+		var ctx = document.getElementById("myChart").getContext("2d");
+
+		// create the chart using the chart canvas
+		var myChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+          tooltips: {
+            enabled: true,
+            mode: 'single',
+            callbacks: {
+              label: function(tooltipItems, data) {
+					return tooltipItems.yLabel + ' degrees';
+				}
+            }
+          },
+        }
+      });
+
+      // get the text element below the chart
+      var pointSelected = document.getElementById("pointSelected");
+
+      // create a callback function for updating the selected index on the chart
+      holder.onclick = function(evt){
+        var activePoint = myChart.getElementAtEvent(evt);
+        console.log(activePoint);
+        console.log('x:' + activePoint[0]._view.x);
+        console.log('maxWidth: ' + activePoint[0]._xScale.maxWidth);
+        console.log('y: ' + activePoint[0]._view.y);
+        console.log('index: ' + activePoint[0]._index);
+        pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
+      };
+
+	//   $('#datePicker1').val(new Date().toDateInputValue());
+
+  })
+</script>
+{% endblock %}

@@ -69,10 +69,16 @@ fa = FontAwesome(app)
 def index():
 	return render_template('home/index.html')
 
+@app.route('/dashboard')
+def dashboard():
+	if 'email' not in session:
+		return redirect(url_for('login'))
+	return render_template('auth/dashboard.html')
+
 @app.route('/login')
 def login():
 	if 'email' in session:
-		return redirect(url_for('transmitter.index'))
+		return redirect(url_for('dashboard'))
 	return render_template("auth/login.html")
 
 @app.route('/register')
@@ -90,6 +96,10 @@ def showtime():
 def logout():
 	session.pop('email', None)
 	return render_template('auth/login.html')
+
+@app.route('/test')
+def test():
+	return render_template('home/test.html')
 
 if __name__ == '__main__':
 	# with app.app_context():

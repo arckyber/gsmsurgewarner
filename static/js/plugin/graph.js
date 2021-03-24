@@ -89,13 +89,13 @@ $(document).ready(function(){
   })
 
   // Sparkline charts
-  // var sparkline1 = new Sparkline($("#sparkline-1")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
-  // var sparkline2 = new Sparkline($("#sparkline-2")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
-  // var sparkline3 = new Sparkline($("#sparkline-3")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
+  var sparkline1 = new Sparkline($("#sparkline-1")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
+  var sparkline2 = new Sparkline($("#sparkline-2")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
+  var sparkline3 = new Sparkline($("#sparkline-3")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
 
-  // sparkline1.draw([1000, 1200, 920, 927, 931, 1027, 819, 930, 1021]);
-  // sparkline2.draw([515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921]);
-  // sparkline3.draw([15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21]);
+  sparkline1.draw([1000, 1200, 920, 927, 931, 1027, 819, 930, 1021]);
+  sparkline2.draw([515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921]);
+  sparkline3.draw([15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21]);
 
   // The Calender
   $('#calendar').datetimepicker({
@@ -110,8 +110,8 @@ $(document).ready(function(){
 
   /* Chart.js Charts */
   // Sales chart
-  // var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
-  //$('#revenue-chart').get(0).getContext('2d');
+  var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
+  $('#revenue-chart').get(0).getContext('2d');
 
   var salesChartData = {
     labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -162,53 +162,53 @@ $(document).ready(function(){
   }
 
   // This will get the first returned node in the jQuery collection.
-  // var salesChart = new Chart(salesChartCanvas, { 
-  //     type: 'line', 
-  //     data: salesChartData, 
-  //     options: salesChartOptions
-  //   }
-  // )
+  var salesChart = new Chart(salesChartCanvas, { 
+      type: 'line', 
+      data: salesChartData, 
+      options: salesChartOptions
+    }
+  )
 
   // Donut Chart
-  // var pieChartCanvas = $('#sales-chart-canvas').get(0).getContext('2d')
-  // var pieData        = {
-  //   labels: [
-  //       'Instore Sales', 
-  //       'Download Sales',
-  //       'Mail-Order Sales', 
-  //   ],
-  //   datasets: [
-  //     {
-  //       data: [30,12,20],
-  //       backgroundColor : ['#f56954', '#00a65a', '#f39c12'],
-  //     }
-  //   ]
-  // }
-  // var pieOptions = {
-  //   legend: {
-  //     display: false
-  //   },
-  //   maintainAspectRatio : false,
-  //   responsive : true,
-  // }
-  //Create pie or douhnut chart
+  var pieChartCanvas = $('#sales-chart-canvas').get(0).getContext('2d')
+  var pieData        = {
+    labels: [
+        'Instore Sales', 
+        'Download Sales',
+        'Mail-Order Sales', 
+    ],
+    datasets: [
+      {
+        data: [30,12,20],
+        backgroundColor : ['#f56954', '#00a65a', '#f39c12'],
+      }
+    ]
+  }
+  var pieOptions = {
+    legend: {
+      display: false
+    },
+    maintainAspectRatio : false,
+    responsive : true,
+  }
+  // Create pie or douhnut chart
   // You can switch between pie and douhnut using the method below.
-  // var pieChart = new Chart(pieChartCanvas, {
-  //   type: 'doughnut',
-  //   data: pieData,
-  //   options: pieOptions      
-  // });
+  var pieChart = new Chart(pieChartCanvas, {
+    type: 'doughnut',
+    data: pieData,
+    options: pieOptions      
+  });
 
   // Sales graph chart
   var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d');
-  //$('#revenue-chart').get(0).getContext('2d');
+  $('#revenue-chart').get(0).getContext('2d');
 
   /*
   *   This data is dependent on what the controller has given
   */
 
- var times = {{ times|safe }};
- console.log(times);
+//  var times = {{ times|safe }};
+//  console.log(times);
 
 //  var data = {{water_distance|safe}};
 
