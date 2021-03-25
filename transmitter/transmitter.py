@@ -79,3 +79,49 @@ def des():
 @transmitter.route('/add')
 def addtest():
 	return render_template('add.html')
+
+@transmitter.route('/edit/<id>')
+def edit(id):
+	transmitter = Transmitter.query.filter(Transmitter.id==id).first()
+	res = Transmitter.query.filter(Transmitter.id==id).first()
+	output = TransmitterSchema(many=False).dump(res)
+	# return jsonify(output)
+	return render_template('edit.html', transmitter=output)
+
+@transmitter.route('/update', methods=['POST'])
+def update():
+		# return request.form['name']	
+	transmitter = Transmitter(
+		name = request.form['name'],
+		sim_number = request.form['sim_number'],
+		post_number = request.form['post_number'],
+		post_description = request.form['post_description'],
+		location = request.form['location']
+	)
+			
+	desequivalert = Desequivalert(
+		_normal = request.form['_normal'],
+		_yellow = request.form['_yellow'],
+		_orange = request.form['_orange'],
+		_red = request.form['_red'],
+		transmitter_id = request.form['id']
+	)
+	if transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location and desequivalert._normal and desequivalert._yellow and desequivalert._orange and desequivalert._red:
+		try:
+			trans = Transmitter.query.filter(Transmitter.id == request.form['id']).first()
+
+			trans.name = transmitter.name
+			trans.sim_number = transmitter.sim_number
+			trans.post_number = transmitter.post_number
+			trans.post_description = transmitter.post_description
+			trans.location = transmitter.location
+			trans.desequivalert = desequivalert
+
+			db.session.commit()
+
+			return SUCCESS
+		except Exception as e:
+			print(str(e))
+			return ERROR
+	else:
+		return MISSING_DATA

@@ -130,8 +130,7 @@
 					"data": "id",
 					"render": function(data) {
 						var btn = "<div class='text-center'>";
-						btn += "<a class='text-primary fas fa-paper-plane'></a>";
-						btn += "<a class='text-warning fas fa-recycle'></a>  ";
+						btn += "<a class='text-warning fas fa-edit' href='/transmitter/edit/"+data+"'></a>  ";
 						btn += "<a class='text-danger fas fa-trash'></a>";
 						btn += '</div>';
 						return btn;

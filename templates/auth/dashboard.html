@@ -5,7 +5,9 @@
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Chart.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Chart.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/chat/style.css') }}">
 <link href="{{ url_for('static', filename='vendor/fullcalendar/main.css') }}" rel='stylesheet' />
+<link href="{{ url_for('static', filename='vendor/map/style.css') }}" rel='stylesheet' />
 
 <style>
   #script-warning {
@@ -39,6 +41,19 @@
     .fc-day-today{
       background: rgb(9, 118, 151) !important;
     }
+
+    #map {
+      height: 100%;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
 
 </style>
 
@@ -110,14 +125,14 @@
               <!-- <div class="card-header"></div> -->
               <div class="card-body text-light">
                 <div class="row">
-                  <div class="col-sm-6 text-left">
-                    <h1>23%</h1>
+                  <div class="col-sm-7 text-left">
+                    <h1>100</h1>
                     <span>
-                      The Title
+                      Transmitters
                     </span>
                   </div>
-                  <div class="col-sm-6 text-muted text-center align-center">
-                    <h1 class="fas fa-edit" style="font-size: 3rem;"></h1>
+                  <div class="col-sm-5 text-muted text-center align-center">
+                    <h1 class="fas fa-broadcast-tower" style="font-size: 3rem;"></h1>
                   </div>
                 </div>
               </div>
@@ -136,14 +151,14 @@
               <!-- <div class="card-header"></div> -->
               <div class="card-body text-light">
                 <div class="row">
-                  <div class="col-sm-6 text-left">
-                    <h1>23%</h1>
+                  <div class="col-sm-7 text-left">
+                    <h1>24</h1>
                     <span>
-                      The Title
+                      Users
                     </span>
                   </div>
-                  <div class="col-sm-6 text-muted text-center align-center">
-                    <h1 class="fas fa-pen" style="font-size: 3rem;"></h1>
+                  <div class="col-sm-5 text-muted text-center align-center">
+                    <h1 class="fas fa-user" style="font-size: 3rem;"></h1>
                   </div>
                 </div>
               </div>
@@ -161,14 +176,14 @@
               <!-- <div class="card-header"></div> -->
               <div class="card-body text-light">
                 <div class="row">
-                  <div class="col-sm-6 text-left">
-                    <h1>23%</h1>
+                  <div class="col-sm-7 text-left">
+                    <h1>1450</h1>
                     <span>
-                      The Title
+                      Messages
                     </span>
                   </div>
-                  <div class="col-sm-6 text-muted text-center align-center">
-                    <h1 class="fas fa-cog" style="font-size: 3rem;"></h1>
+                  <div class="col-sm-5 text-muted text-center align-center">
+                    <h1 class="fas fa-mail-bulk" style="font-size: 3rem;"></h1>
                   </div>
                 </div>
               </div>
@@ -187,14 +202,14 @@
             <!-- <div class="card-header"></div> -->
             <div class="card-body text-light">
               <div class="row">
-                <div class="col-sm-6 text-left">
-                  <h1>23%</h1>
+                <div class="col-sm-7 text-left">
+                  <h1>120</h1>
                   <span>
-                    The Title
+                    Alerts
                   </span>
                 </div>
-                <div class="col-sm-6 text-muted text-center align-center">
-                  <h1 class="fas fa-trash" style="font-size: 3rem;"></h1>
+                <div class="col-sm-5 text-muted text-center align-center">
+                  <h1 class="fas fa-warning" style="font-size: 3rem;"></h1>
                 </div>
               </div>
             </div>
@@ -215,7 +230,7 @@
       <div class="card bg-info">
         <div class="card-header">
           <h3 class="card-titlen text-light">
-            <i class="fas fa-chart-pie mr-1"></i>
+            <i class="fas fa-chart-line mr-1"></i>
             Water level history
           </h3>
           <div class="card-tools">
@@ -224,7 +239,7 @@
         <div class="card-body bg-light">
           <div class="tab-content p-0">
             <div>              
-				      <canvas id="myChart" height="300" style="margin: auto; width: 100%;"></canvas>
+				      <canvas id="historyChart" height="300" style="margin: auto; width: 100%;"></canvas>
             </div>
           </div>
         </div><!-- /.card-body -->
@@ -235,20 +250,41 @@
       <br>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
           <div class="card bg-light">
             <div class="card-header">
-              <h5 class="card-titlen">
-                <i class="fas fa-line mr-1"></i>
-                Latest
-              </h5>
+              <b class="card-titlen text-default">
+                <i class="fas fa-chart-bar mr-1"></i>
+                Messages
+              </b>
             </div>
             <div class="card-body">
+              <div class="tab-content p-0">
+                <canvas id="dangerAlertChart" style="width: 100%;"></canvas>
+               </div>
+            </div>
+          </div>
 
+          <br>
+
+          <div class="card bg-light">
+            <div class="card-header">
+              <b class="card-titlen text-default">
+                <i class="fas fa-chart-pie mr-1"></i>
+                Users
+              </b>
+            </div>
+            <div class="card-body">
+              <div class="container">
+                <canvas id="userChart"></canvas>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+
+        <br>
+
+        <div class="col-md-7">
           <!-- calendar -->
           <div class="card bg-success text-light">
             <div class="card-header">
@@ -268,12 +304,18 @@
                 <div id='loading'>loading...</div>
               
                 <div id='calendar' style="color: white !important; margin-top: -10px;"></div>
+                
               </div>
             </div><!-- /.card-body -->
           </div>
           <!-- end calendar -->
         </div>
       </div>
+
+      <div>
+        <div id="map"></div>
+      </div>
+
     </div>
 </div>
 {% endblock %}
@@ -285,6 +327,9 @@
 <script language="javascript" src="{{ url_for('static', filename='js/Chart.bundle.min.js') }}"></script>
 <!-- <script language="javascript" src="{{ url_for('static', filename='vendor/fullcalendar/main.js') }}"></script> -->
 <!-- <script src="{{ url_for('static', filename='js/dashboard/history-chart.js') }}"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly" async></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"></script>
+
 <script>
   $(document).ready(function(){
     Chart.defaults.global.responsive = false;
@@ -293,9 +338,9 @@
 
 		// var data = {{water_distance|safe}};
 
-    var times = ['jan', 'feb', 'mar', 'apr'];
+    var times = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
-    var data = [4, 3, 5, 2];
+    var data = [4, 3, 5, 2, 3, 1, 5, 6, 3.5 , 4, 2.8, 3.8];
 
 		var legend = "Water distance from sensor";
 
@@ -349,11 +394,11 @@
 			]
 		};
 
-		var holder = document.getElementById("myChart");
-		var ctx = document.getElementById("myChart").getContext("2d");
+		var holder = document.getElementById("historyChart");
+		var ctx = document.getElementById("historyChart").getContext("2d");
 
 		// create the chart using the chart canvas
-		var myChart = new Chart(ctx, {
+		var historyChart = new Chart(ctx, {
         type: 'line',
         data: chartData,
         options: {
@@ -374,7 +419,7 @@
 
       // create a callback function for updating the selected index on the chart
       holder.onclick = function(evt){
-        var activePoint = myChart.getElementAtEvent(evt);
+        var activePoint = historyChart.getElementAtEvent(evt);
         console.log(activePoint);
         console.log('x:' + activePoint[0]._view.x);
         console.log('maxWidth: ' + activePoint[0]._xScale.maxWidth);
@@ -383,7 +428,61 @@
         pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
       };
 
-	//   $('#datePicker1').val(new Date().toDateInputValue());
+	    //   $('#datePicker1').val(new Date().toDateInputValue());
+
+      var ctx = document.getElementById("userChart").getContext('2d');
+      var userChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ["Green", "Blue", "Gray", "Purple", "Yellow", "Red", "Black"],
+          datasets: [{
+            backgroundColor: [
+              "#2ecc71",
+              "#3498db",
+              "#95a5a6",
+              "#9b59b6",
+              "#f1c40f",
+              "#e74c3c",
+              "#34495e"
+            ],
+            data: [12, 19, 3, 17, 28, 24, 7]
+          }]
+        }
+      });
+      // End user chart
+
+      // Danger Alert Chart
+      new Chart(document.getElementById("dangerAlertChart"), {
+        type: 'bar',
+        data: {
+          labels: ["1900", "1950", "1999", "2050"],
+          datasets: [
+            {
+              label: "Africa",
+              backgroundColor: "#3e95cd",
+              data: [133,221,783,2478]
+            }, {
+              label: "Europe",
+              backgroundColor: "#8e5ea2",
+              data: [408,547,675,734]
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Population growth (millions)'
+          }
+        }
+    });
+    // end danger alert chart
+
+    // Google map
+
+
+
+    // End google map
+
 
   })
 </script>
