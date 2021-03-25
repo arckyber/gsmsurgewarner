@@ -115,7 +115,16 @@ def update():
 			trans.post_number = transmitter.post_number
 			trans.post_description = transmitter.post_description
 			trans.location = transmitter.location
-			trans.desequivalert = desequivalert
+
+			time.sleep(.5)			
+			db.session.commit()
+
+			desequiv = Desequivalert.query.filter(Desequivalert.transmitter_id==request.form['id']).first()
+			
+			desequiv._normal = desequivalert._normal
+			desequiv._yellow = desequivalert._yellow
+			desequiv._orange = desequivalert._orange
+			desequiv._red = desequivalert._red
 
 			db.session.commit()
 

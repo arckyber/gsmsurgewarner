@@ -1,74 +1,39 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/" style="margin-left: 10px;"><span class="fas fa-broadcast-tower"></span> GSM</a>
-    <span id="r_status"></span>
-    <div class="collapse navbar-collapse" id="navbarColor02">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <div class="dropdown">
-                    <a class="nav-link" href="#"><span class="fas fa-bell dropdown-toggle" data-toggle="dropdown"></span> 
-                        <small class="badge badge-pill badge-danger">1</small>
-                        <div class="dropdown-menu bg-dark">
-                            <div style="width: 400px; overflow-y: scroll; height: 450px;">
-                            <strong style="margin-left: 5px;" class="fas fa-comment-alt text-light"> Messages</strong>
-                            <hr class="bg-light">                   
-                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
-                                <small><strong class="text-primary">Transmitter name</strong></small>
-                                <br>
-								<small class="font-weight-bold text-small">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
-								<br>
-								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
-								<br>
-                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-danger">Red Warning</span>
-							</p>                            
-                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
-                                <small><strong class="text-primary">Transmitter name</strong></small>
-                                <br>
-								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
-								<br>
-								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
-								<br>
-                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-warning">Orange Warning</span>
-							</p>                            
-                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
-                                <small><strong class="text-primary">Transmitter name</strong></small>
-                                <br>
-								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
-								<br>
-								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
-								<br>
-                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-danger">Red Warning</span>
-							</p>                         
-                            <p class="bg-white" style="border: 1px solid rgb(236, 233, 233); border-radius: 3px; padding: 5px; margin: 5px;">
-                                <small><strong class="text-primary">Transmitter name</strong></small>
-                                <br>
-								<small class="font-weight-bold">Date: </small><small class="text-muted">12/12/12 12:00pm</small>
-								<br>
-								<small class="font-weight-bold">Water Distance: </small><small class="text-muted">20m</small>
-								<br>
-                                <small class="font-weight-bold">Alert Condition: </small><span class="badge badge-button badge-danger">Red Warning</span>
-							</p>
-                            <p class="text-center bg-light">
-                                <form class="text-center" action="/sms" method="GET">
-                                    <button class="fas fa-chevron-circle-down btn btn-round"></button>
-                                </form>
-                            </p>
-                        </div></div>
-                    </a>
-                </div>
-            </li>
-        </ul>
-    </div>
-    
-    {% if 'email' in session %}
-    <div class="toggle">
-        <a href="#" class="js-menu-toggle menu-toggle">
-            <span class="fas fa-bars"></span>
-        </a>
-    </div>
-    {% else %}
-    <div>
-        <i class="fas fa-comment text-light" style="font-size: 2rem;"></i>
-    </div>
-    {% endif %}
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
 
-</nav>
+      <h1 class="logo mr-auto"><a href="/">GSM Surge Warner</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <!-- <li><a href="#services">Maps</a></li>
+          <li><a href="#about">About</a></li> -->
+          <li>
+            <a href="#">
+              <span class="fas fa-bell"></span>
+            </a>
+          </li>
+          {% if 'email' in session %}
+            <li id="dashboard"><a href="/dashboard"><i class="text-danger fas fa-tachometer-alt"></i></a></li>
+          {% endif %}
+
+        </ul>
+      </nav><!-- .nav-menu -->
+
+      
+
+      {% if 'email' in session %}
+        <div class="toggle">
+            <a href="#" class="js-menu-toggle menu-toggle get-started-btn scrollto">
+                <span class="fas fa-bars" style="font-size: 1rem;"></span>
+            </a>
+        </div>
+        {% else %}
+        <a href="/login" class="get-started-btn scrollto">Get Started</a>
+        {% endif %}
+
+    </div>
+  </header><!-- End Header -->

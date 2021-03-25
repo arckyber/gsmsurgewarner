@@ -9,6 +9,14 @@
 <link href="{{ url_for('static', filename='vendor/fullcalendar/main.css') }}" rel='stylesheet' />
 <link href="{{ url_for('static', filename='vendor/map/style.css') }}" rel='stylesheet' />
 
+	
+<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+
+
 <style>
   #script-warning {
       display: none;
@@ -39,7 +47,13 @@
       color: white !important
     }
     .fc-day-today{
-      background: rgb(9, 118, 151) !important;
+      background: rgb(233, 240, 241) !important;
+    }
+    .fc-day-today:hover {
+      background: rgb(186, 194, 196) !important;
+    }
+    .fc-day-today .fc-daygrid-day-number{
+      color: grey !important;
     }
 
     #map {
@@ -312,9 +326,19 @@
         </div>
       </div>
 
-      <div>
-        <div id="map"></div>
-      </div>
+      <section>
+        <div class="card bg-light">
+          <div class="card-header">
+            <b class="card-titlen text-default">
+              <i class="fas fa-map mr-1"></i>
+              Map
+            </b>
+          </div>
+          <div class="">
+            <div id="mapid" style="width: 100%; height: 500px;"></div>
+          </div>
+        </div>
+      </section>
 
     </div>
 </div>
@@ -407,7 +431,7 @@
             mode: 'single',
             callbacks: {
               label: function(tooltipItems, data) {
-					return tooltipItems.yLabel + ' degrees';
+					return tooltipItems.yLabel + ' percent';
 				}
             }
           },
@@ -479,11 +503,52 @@
 
     // Google map
 
+    // document.getElementById("mapid").style.height = screen.height+"px"; 
 
+    // console.log(screen.height);
+
+    var mymap = L.map('mapid').setView([7.5047, 124.8845], 7);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1
+    }).addTo(mymap);
+
+    L.marker([7.5047, 124.8845]).addTo(mymap)
+      .bindPopup("<b>Hello!</b><br />Be there soon!").openPopup();
+
+    L.circle([51.508, -0.11], 500, {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.5
+    }).addTo(mymap).bindPopup("I am a circle.");
+
+    L.polygon([
+      [51.509, -0.08],
+      [51.503, -0.06],
+      [51.51, -0.047]
+    ]).addTo(mymap).bindPopup("I am a polygon.");
+
+
+    var popup = L.popup();
+
+    function onMapClick(e) {
+      popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+    }
+
+    mymap.on('click', onMapClick);
 
     // End google map
 
 
+    $("#dashboard").addClass('active');
   })
 </script>
 {% endblock %}

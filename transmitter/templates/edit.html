@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="card-footer text-right">
-            <button type="button" class="btn btn-secondary">Back</button>
+            <button type="button" class="btn btn-secondary back">Back</button>
             <button type="submit" class="btn btn-warning">Update</button>
         </div>
     </form>
@@ -95,8 +95,6 @@
 			}
 		}
 
-        
-
 		$("#add_form").on('submit', function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -107,6 +105,9 @@
 				data: new FormData(this),
 				success: function(data) {
 					makeToast(data, 'Report: '+data+ ' reload page to validate update.');
+                    setTimeout(function(){
+                        location.href="/transmitter"
+                    }, 2000)
 				}
 			});
 		});

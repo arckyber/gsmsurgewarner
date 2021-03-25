@@ -4,6 +4,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+<script src="{{ url_for('static', filenam='vendor/asteroid/as-min.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -139,6 +140,16 @@
 			],
 			dom: 'Bfrtip',
 			buttons: [
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+				'pdfHtml5',
+				{
+					text: '<i class="fas fa-search-location"></i> Maps',
+					action: function(e, dt, node, config) {
+						window.location.href="/tramsmitter/map";
+					}
+				},
 				{
 					// 'text': '<span class="fas fa-plus"></span>',
 					'text': '<i class="fas fa-pencil-alt"></i> Add',
@@ -146,10 +157,6 @@
 						window.location.href="/transmitter/add";
 					}
 				},
-				'copyHtml5',
-				'excelHtml5',
-				'csvHtml5',
-				'pdfHtml5',
 			],
 		});
 
@@ -158,6 +165,8 @@
 		}
 
 		console.log($("#transmitters_table").DataTable().buttons()[0]);
+
+		
 	});
 </script>
 {% endblock %}
