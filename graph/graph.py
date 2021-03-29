@@ -53,3 +53,8 @@ def graph_index():
 		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
 	transmitters = Transmitter.query.all()
 	return render_template('graph_index.html', legend=t_name, water_distance=water_distance, times=times, transmitters=transmitters)
+
+
+@graph.route('/test')
+def test():
+	return render_template('test.html')

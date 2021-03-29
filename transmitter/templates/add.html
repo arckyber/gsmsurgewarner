@@ -3,6 +3,7 @@
 {% block title %}Transmitters/Add{% endblock %}
 
 {% block head %}
+<script src="{{ url_for('static', filename='vendor/asteroid/as-min.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -31,9 +32,21 @@
                         <label for="exampleInputEmail1">Post description</label>
                         <textarea type="text" class="form-control" name="post_description" placeholder="Describe where the transmitter being placed"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Location/Address</label>
-                        <input type="text" class="form-control" name="location" placeholder="Enter location or address">
+                    <div class="container" style="border: 1px solid lightgrey; border-radius: 5px; margin-top: 5%;">
+                        <div class="form-group">
+                            <br>
+                            <label for="exampleInputEmail1">Location/Address</label>
+                            <input type="text" class="form-control" name="location" placeholder="Enter address">
+                        </div>
+                        <small class="text-danger">Supply information below in order to be visible in map</small>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Longitude</label>
+                            <input type="text" class="form-control" name="longitude" placeholder="Longitude">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Latitude</label>
+                            <input type="text" class="form-control" name="latitude" placeholder="Latitude">
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">

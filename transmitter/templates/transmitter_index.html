@@ -4,70 +4,10 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
-<script src="{{ url_for('static', filenam='vendor/asteroid/as-min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/asteroid/as-min.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-<div class="modal fade" id="add_transmitter_modal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-			<form role="form" id="add_form">
-				<div class="card-header bg-primary text-light">
-					<h5><i class="fas fa-pencil-alt"></i> Add Transmitter Module</h5>
-				</div>
-				<div class="card-body">
-					<div class="form-group">
-						<label for="exampleInputEmail1">Transmiiter name</label>
-						<input type="text" class="form-control" name="name" placeholder="Give transmitter a name">
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Simcard number</label>
-						<input type="text" class="form-control" name="sim_number" placeholder="Enter simcard number">
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Post number</label>
-						<input type="number" class="form-control" name="post_number" placeholder="Enter post number">
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Post description</label>
-						<textarea type="text" class="form-control" name="post_description" placeholder="Describe where the transmitter being placed"></textarea>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Location/Address</label>
-						<input type="text" class="form-control" name="location" placeholder="Enter location or address">
-					</div>
-					<hr>
-					<legend class="text-danger">Distance equivalent alert</legend>
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label for="" style="color:red">Red</label> (meter(s))
-								<input type="text" name="_red" class="form-control text-danger" placeholder="Dangerous/Red level">
-							</div>
-							<div class="form-group">
-								<label for="" style="color:orange">Orange</label> (meter(s))
-								<input type="text" name="_orange" class="form-control" placeholder="Orange level">
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label for="" style="color:yellow">Yellow</label> (meter(s))
-								<input type="text" name="_yellow" class="form-control" placeholder="Yellow level">
-							</div>
-							<div class="form-group">
-								<label for="" class="text-primary">Normal</label> (meter(s))
-								<input type="text" name="_normal" class="form-control" placeholder="Normal level">
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer text-right">
-					<button type="submit" class="btn btn-primary">Submit</button>
-				</div>
-			</form>
-        </div>
-    </div>
-</div>
 	<div class="row">
 		<div class="col-md-3" style="border-right: 1px solid grey;">		
 			{% include 'arduino.html' %}
@@ -132,7 +72,7 @@
 					"render": function(data) {
 						var btn = "<div class='text-center'>";
 						btn += "<a class='text-warning fas fa-edit' href='/transmitter/edit/"+data+"'></a>  ";
-						btn += "<a class='text-danger fas fa-trash'></a>";
+						btn += "<a class='text-danger fas fa-trash delete' id='"+data+"'></a>";
 						btn += '</div>';
 						return btn;
 					}
@@ -166,7 +106,26 @@
 
 		console.log($("#transmitters_table").DataTable().buttons()[0]);
 
-		
+		$(document).on('click', '.delete', function(){
+			var id = $(this).attr('id');
+			$confirm("Do you want to delete?", "#FF9100")
+			.then(() => {
+				$.ajax({
+					url:'/transmitter/delete',
+					method:'post',
+					data:{id:id},
+					success:function(data){
+						if (data == 'success') {
+							refresh();
+							$toast("Deleted", "#dc3545");
+						}
+						else 
+							$toast("Failed", "#dc3545");
+					}
+				})
+			})
+		})
+
 	});
 </script>
 {% endblock %}

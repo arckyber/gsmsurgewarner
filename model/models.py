@@ -38,6 +38,8 @@ class Transmitter(db.Model):
 	post_number = db.Column(db.Integer)
 	post_description = db.Column(db.Text())
 	location = db.Column(db.Text())
+	longitude = db.Column(db.Float)
+	latitude = db.Column(db.Float)
 	create_at = db.Column(db.DateTime)
 	updated_at = db.Column(db.DateTime)
 	status = db.Column(db.Boolean)
@@ -45,12 +47,14 @@ class Transmitter(db.Model):
 	# desequivealert_id = db.Column(db.Integer, db.ForeignKey('desequivalert.id'))
 	desequivealert = db.relationship('Desequivalert')
 
-	def __init__(self, name, sim_number, post_number, post_description, location):
+	def __init__(self, name, sim_number, post_number, post_description, location, longitude, latitude):
 		self.name = name
 		self.sim_number = sim_number
 		self.post_number = post_number
 		self.post_description = post_description
 		self.location = location
+		self.longitude = longitude
+		self.latitude = latitude
 		self.create_at = datetime.datetime.now()
 		self.updated_at = datetime.datetime.now()
 

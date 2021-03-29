@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Add role{% endblock %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="register-box" style="width: 100%; margin: auto;">
+            <div class="register-logo text-center">
+              <!-- <h1 class="text-muted">Add role</h1> -->
+            </div>
+          
+            <div class="card">
+              <div class="card-body register-card-body">
+                <p class="login-box-msg">Add Role</p>
+          
+                <form action="/admin/addrole" method="post">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="role" placeholder="Role">
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        <span class="fas fa-user"></span>
+                      </div>
+                    </div>
+                  </div>
+        
+                  <div class="row">
+                    <!-- /.col -->
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                    <!-- /.col -->
+                  </div>
+                </form>
+              </div>
+              <!-- /.form-box -->
+            </div><!-- /.card -->
+          </div>
+          <!-- /.register-box -->
+    </div>
+    <div class="col-md-8">
+        <h1>Roles</h1>
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Role</th>
+                    <th><i class="fas fa-cog"></i></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+{% endblock %}
+<br>
+<br>
+{% block script %}
+<!-- <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/graph.js') }}"></script> -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

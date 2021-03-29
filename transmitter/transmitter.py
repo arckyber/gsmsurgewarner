@@ -26,9 +26,11 @@ def add():
 		sim_number = request.form['sim_number'],
 		post_number = request.form['post_number'],
 		post_description = request.form['post_description'],
-		location = request.form['location']
+		location = request.form['location'],
+		longitude = request.form['longitude'],
+		latitude = request.form['latitude'],
 	)
-	if transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location:
+	if transmitter.longitude and transmitter.latitude and transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location:
 		try:
 			db.session.add(transmitter)
 			db.session.commit()
@@ -96,7 +98,9 @@ def update():
 		sim_number = request.form['sim_number'],
 		post_number = request.form['post_number'],
 		post_description = request.form['post_description'],
-		location = request.form['location']
+		location = request.form['location'],
+		longitude = request.form['longitude'],
+		latitude = request.form['latitude'],
 	)
 			
 	desequivalert = Desequivalert(
@@ -106,7 +110,7 @@ def update():
 		_red = request.form['_red'],
 		transmitter_id = request.form['id']
 	)
-	if transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location and desequivalert._normal and desequivalert._yellow and desequivalert._orange and desequivalert._red:
+	if transmitter.longitude and transmitter.latitude and  transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location and desequivalert._normal and desequivalert._yellow and desequivalert._orange and desequivalert._red:
 		try:
 			trans = Transmitter.query.filter(Transmitter.id == request.form['id']).first()
 
@@ -134,3 +138,20 @@ def update():
 			return ERROR
 	else:
 		return MISSING_DATA
+
+@transmitter.route('/delete', methods=['POST'])
+def delete():
+	id = request.form['id']
+	try:
+		Transmitter.query.filter(Transmitter.id==id).delete()
+		db.session.commit()
+	except Exception as e:
+		print(str(e))
+		return ERROR
+	return SUCCESS
+
+@transmitter.route('/map')
+def map():
+	result = Transmitter.query.all()
+	output = TransmitterSchema(many=True).dump(result)
+	return render_template('map.html', transmitters=output)

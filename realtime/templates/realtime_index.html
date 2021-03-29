@@ -2,134 +2,165 @@
 
 {% block title %}Realtime{% endblock %}
 
-{% block head %} {% endblock %}
-
-{% block body %}
-	<div class="row">
-		<div class="col-md-4" style="border-right: 1px solid grey;">		
-			{% include 'arduino.html' %}
-		</div>
-		<div class="col-md-8">
-			<div>
-				<h3><span class="fas fa-clock"></span> Realtime
-					<small class="badge badge-pill badge-success text-white"><span class="fas fa-rss"></span></small>
-					<i class="fas fa-spinner"></i>
-				</h3>
-			</div>
-			<hr>
-			<div class="container" style="overflow-y: scroll;">
-				<div class="card-header">
-					<form class="form-inline justify-content-end">
-						<div class="input-group mb-2 mr-sm-2 mb-sm-0">
-							<!-- <input type="text" class="form-control" id="yourEmail" placeholder="Your Email"> -->
-							<select class="form-control">
-								<option>Transmitter 21</option>
-								<option>Transmitter 22</option>
-								<option>Transmitter 25</option>
-							</select>
-						</div>
-						<button type="button" class="btn btn-md btn-primary fas fa-paper-plane" style="margin-right: 5px;"></button>
-						<button type="button" class="btn btn-md btn-success fas fa-walking" style="margin-right: 5px;"></button>
-						<button type="button" class="btn btn-md btn-danger fas fa-stop"></button>
-					</form>
-				</div>
-				<canvas id="myChart" width="700" height="450" style="margin: auto;"></canvas>
-			</div>
-		</div>
-	</div>
+{% block head %}
+  <!-- MAPS JS -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='vendor/map/style.css')}}" />
+  <script src="{{url_for('static', filename='vendor/map/js.js')}}"></script>
+    <!-- search -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>   
+  <style>
+    #mapid {
+      border: 1px solid rgb(185, 184, 184);
+    }
+    #mapform {
+      margin-top: 5% !important;
+    }
+  </style>
 {% endblock %}
+
+{% block body %}	
+<div class="">
+  <div id="mapid" style="width: 100%;">  
+    <div class="leaflet-top leaflet-right" id="mapform">
+      <div class="leaflet leaflet-control">
+        <div class="container">
+          <div class="text-center">
+            <strong>Realtime</strong>
+            <br>
+            <small>Monitoring</small>
+          </div>
+          <hr>
+          <div class="text-center">
+            <div>
+              <button class="btn btn-sm btn-success fas fa-paper-plane"></button>
+            </div>
+            <br>
+            <div>
+              <button class="btn btn-sm btn-primary fas fa-pen"></button>
+            </div>
+            <br>
+            <div>
+              <button class="btn btn-sm btn-danger fas fa-warning"></button>
+            </div>
+          </div>
+          <hr>
+          <div class="text-center">
+            <strong id="time"></strong>
+          </div>
+          <br>
+          <div class="text-center">
+            <!-- <h5 class="fas fa-spinner fa-pulse text-success"></h5> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
 {% block script %}
-<script language="javascript" src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
 <script>
-	$(document).ready(function() {
-		Chart.defaults.global.responsive = false;
+  $(document).ready(function(){
 
-		var times = {{times|safe}};
+    document.getElementById("mapid").style.height = screen.height+"px"; 
 
-		var data = {{water_distance|safe}};
+    var mymap = undefined;
 
-		var legend = "Water distance from sensor";
+    var longit, latit;
 
-		var chartData = {
-			labels : times,
-			datasets: [
-				{
-					label: legend,
-					fill: true,
-					lineTension: 0.1,
-					backgroundColor: "rgba(75,192,192,0.4)",
-					borderColor: "rgba(75,192,192,1)",
-					borderCapStyle: 'butt',
-					borderDash: [],
-					borderDashOffset: 0.0,
-					borderJoinStyle: 'miter',
-					pointBorderColor: "rgba(75,192,192,1)",
-					pointBackgroundColor: "#fff",
-					pointBorderWidth: 1,
-					pointHoverRadius: 5,
-					pointHoverBackgroundColor: "rgba(75,192,192,1)",
-					pointHoverBorderColor: "rgba(220,220,220,1)",
-					pointHoverBorderWidth: 2,
-					pointRadius: 1,
-					pointHitRadius: 10,
-					data: data,
-					spanGaps: false,
-					options: {
-						scales: {
-							yAxes: [{
-								ticks: {
-									reverse: true,
-									beginAtZero:true,
-									start: 0,
-								}
-							}],
-							xAxes: [{
-									ticks: {
-									reverse: true,
-									beginAtZero: true,
-									start: 0,
-								}
-							}]
-						},
-						rotation: (0.5 * Math.PI)
-					}
-				}
-			]
-		};
-
-		var holder = document.getElementById("myChart");
-		var ctx = document.getElementById("myChart").getContext("2d");
-
-		// create the chart using the chart canvas
-		var myChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-          tooltips: {
-            enabled: true,
-            mode: 'single',
-            callbacks: {
-              label: function(tooltipItems, data) {
-                       return tooltipItems.yLabel + ' degrees';
-                     }
-            }
-          },
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(setPosition);
+      } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+        
+    function setPosition(position) {
+        longit = position.coords.latitude;
+        latit = position.coords.longitude;
+        
+        if(longit != undefined && latit != undefined) {
+          if (mymap == undefined)
+            displayMap();
         }
+    }
+
+    getLocation();
+
+    function displayMap() {
+      
+      // var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+      if (mymap == undefined)
+      {
+        mymap = L.map('mapid').setView([longit, latit], 10);
+      }
+
+      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+      }).addTo(mymap);
+
+      // L.marker([8.170712, 125.109558]).addTo(mymap)
+      L.marker([longit, latit]).addTo(mymap)
+        .bindPopup("<b>Hi Gay!</b><br />This is your location.").openPopup();
+
+      // Setting up markers of transmitters
+
+      var trans = JSON.parse('{{transmitters | tojson | safe}}');
+
+      trans.forEach(element => {
+        L.marker([element.longitude, element.latitude]).addTo(mymap)
+          .bindPopup("<b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small>");
       });
 
-      // get the text element below the chart
-      var pointSelected = document.getElementById("pointSelected");
+      // end setting up markers of transmitters
 
-      // create a callback function for updating the selected index on the chart
-      holder.onclick = function(evt){
-        var activePoint = myChart.getElementAtEvent(evt);
-        console.log(activePoint);
-        console.log('x:' + activePoint[0]._view.x);
-        console.log('maxWidth: ' + activePoint[0]._xScale.maxWidth);
-        console.log('y: ' + activePoint[0]._view.y);
-        console.log('index: ' + activePoint[0]._index);
-        pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
-      };
-	});
+      L.circle([51.508, -0.11], 500, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+      }).addTo(mymap).bindPopup("I am a circle.");
+
+      L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047]
+      ]).addTo(mymap).bindPopup("I am a polygon.");
+
+
+      var popup = L.popup();
+
+      function onMapClick(e) {
+        popup
+          .setLatLng(e.latlng)
+          .setContent("You clicked the map at " + e.latlng.toString())
+          .openOn(mymap);
+      }
+      
+      // search
+      L.Control.geocoder().addTo(mymap);
+
+      mymap.on('click', onMapClick);
+    }
+
+
+    // tick time
+    function ticktime() {
+        var d = new Date(Date.now());
+        var target = document.getElementById("time");
+        $("#time").text(d.toLocaleTimeString());
+    }
+    setInterval(ticktime, 1000);
+    // end tick time
+
+  })
+
 </script>
 {% endblock %}

@@ -85,6 +85,10 @@ def login():
 def register():
 	return render_template('auth/register.html')
 
+@app.route('/roles')
+def roles():
+	return render_template('/auth/addrole.html')
+
 @app.route('/showtime')
 def showtime():
 	def generate():
@@ -96,6 +100,14 @@ def showtime():
 def logout():
 	session.pop('email', None)
 	return render_template('auth/login.html')
+
+@app.route('/destroy')
+def destroy():
+	try:
+		db.drop_all()
+		return "Database cleared!"
+	except Exception as e:
+		return str(e)
 
 @app.route('/test')
 def test():

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Sms{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Chart.css') }}"> -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Chart.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/jqvmap/jqvmap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/daterangepicker/daterangepicker.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/summernote/summernote-bs4.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/plugins/adminlte.min.css') }}">
+<style>
+    .panel-actions {
+        margin-top: -20px;
+        margin-bottom: 0;
+        text-align: right;
+    }
+    .panel-actions a {
+        color:#333;
+    }
+    .panel-fullscreen {
+        display: block;
+        z-index: 9999;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        overflow: auto;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-3" style="border-right: 1px solid grey;">		
+			{% include 'arduino.html' %}
+		</div>
+		<div class="col-md-9">
+			<div>
+				<h3><span class="fas fa-line-chart"></span> Graph</h3>
+			</div>
+			<hr>
+			<div class="container" style="overflow-y: scroll; height: 500px;">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>Fullscreen toggle</h2>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Panel title</h3>
+                                <ul class="list-inline panel-actions">
+                                    <li><a href="#" id="panel-fullscreen" role="button" title="Toggle fullscreen"><i class="glyphicon glyphicon-resize-full"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="panel-body">
+                                <h3>Panel body</h3>
+                                <p>Click the resize icon in the top right to make this fullscreen.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.bundle.js') }}"></script>
+<script language="javascript" src="{{ url_for('static', filename='js/Chart.bundle.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/sparklines/sparkline.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/jqvmap/jquery.vmap.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/jquery-knob/jquery.knob.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/moment/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/summernote/summernote-bs4.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugin/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/plugin/graph.js') }}"></script> -->
+<script>
+	$(document).ready(function() {
+        $(document).ready(function () {
+        //Toggle fullscreen
+        $("#panel-fullscreen").click(function (e) {
+            e.preventDefault();
+            
+            var $this = $(this);
+        
+            if ($this.children('i').hasClass('glyphicon-resize-full'))
+            {
+                $this.children('i').removeClass('glyphicon-resize-full');
+                $this.children('i').addClass('glyphicon-resize-small');
+            }
+            else if ($this.children('i').hasClass('glyphicon-resize-small'))
+            {
+                $this.children('i').removeClass('glyphicon-resize-small');
+                $this.children('i').addClass('glyphicon-resize-full');
+            }
+            $(this).closest('.panel').toggleClass('panel-fullscreen');
+        });
+    });
+
+	});
+</script>
+{% endblock %}

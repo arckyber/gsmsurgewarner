@@ -73,3 +73,15 @@ def roles():
 	results = Role.query.all()
 	output = RoleSchema(many=True).dump(results)
 	return jsonify(output)
+
+@admin.route('/addrole', methods=['POST'])
+def addrole():
+	role = request.form['role']
+	try:
+		role = Role(role=role)
+		db.session.add(role)
+		db.session.commit()
+	except Exception as e:
+		return str(e)
+	return "Done"
+ 

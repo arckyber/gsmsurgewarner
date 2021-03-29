@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Transmitter/Map{% endblock %}
+
+{% block head %}
+  <!-- MAPS JS -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='vendor/map/style.css')}}" />
+  <script src="{{url_for('static', filename='vendor/map/js.js')}}"></script>
+    <!-- search -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>   
+  <style>
+    #mapid {
+      border: 1px solid rgb(185, 184, 184);
+    }
+  </style>
+{% endblock %}
+
+{% block body %}	
+<div>
+    <h5><i class="fas fa-map-marker-alt"></i> Transmitter map view </h5>
+</div>
+<div class="">
+  <div id="mapid" style="width: 100%;"></div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function(){
+
+    document.getElementById("mapid").style.height = screen.height+"px"; 
+
+    var mymap = undefined;
+
+    var longit, latit;
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(setPosition);
+      } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+        
+    function setPosition(position) {
+        longit = position.coords.latitude;
+        latit = position.coords.longitude;
+        
+        if(longit != undefined && latit != undefined) {
+          if (mymap == undefined)
+            displayMap();
+        }
+    }
+
+    getLocation();
+
+    function displayMap() {
+      
+      // var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+      if (mymap == undefined)
+      {
+        mymap = L.map('mapid').setView([longit, latit], 12);
+      }
+
+      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+      }).addTo(mymap);
+
+      // L.marker([8.170712, 125.109558]).addTo(mymap)
+      L.marker([longit, latit]).addTo(mymap)
+        .bindPopup("<b>Hi Gay!</b><br />This is your location.").openPopup();
+
+      // Setting up markers of transmitters
+
+      var trans = JSON.parse('{{transmitters | tojson | safe}}');
+
+      trans.forEach(element => {
+        L.marker([element.longitude, element.latitude]).addTo(mymap)
+          .bindPopup("<b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small>");
+      });
+
+      // end setting up markers of transmitters
+
+      L.circle([51.508, -0.11], 500, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+      }).addTo(mymap).bindPopup("I am a circle.");
+
+      L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047]
+      ]).addTo(mymap).bindPopup("I am a polygon.");
+
+
+      var popup = L.popup();
+
+      function onMapClick(e) {
+        popup
+          .setLatLng(e.latlng)
+          .setContent("You clicked the map at " + e.latlng.toString())
+          .openOn(mymap);
+      }
+      
+      // search
+      L.Control.geocoder().addTo(mymap);
+
+      mymap.on('click', onMapClick);
+    }
+
+  })
+
+</script>
+{% endblock %}

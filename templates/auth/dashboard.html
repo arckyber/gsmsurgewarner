@@ -12,11 +12,15 @@
 	
 <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
+<!-- maps -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>     
+<!-- end maps -->
 
-
+ 
 <style>
   #script-warning {
       display: none;
@@ -117,11 +121,15 @@
             <h1 class="m-0 text-dark">Dashboard</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
-            <div class="breadcrumb text-success float-sm-right">
+            <div class="breadcrumb float-sm-right">
               <div class="breadcrumb-item">
                 <div>
-                  <i class="fas fa-microchip"></i>
-                  <span>Connected</span>
+                  <i id="status" class="fas fa-microchip"></i>
+                  |
+                  <span>
+                    <strong class="text-dark" id="time"></strong>
+                    <small class="text-info" id="date"></small>
+                  </span>
                 </div>
               </div>
             </div>
@@ -151,7 +159,7 @@
                 </div>
               </div>
               <div class="card-footer text-center text-white">
-                <a href="#">
+                <a href="/transmitter">
                   <span class="text-white">More info</span>
                   <i class="fas fa-arrow-circle-right text-light"></i>
                 </a>
@@ -177,7 +185,7 @@
                 </div>
               </div>
               <div class="card-footer text-center text-white">
-                <a href="#">
+                <a href="/users">
                   <span class="text-white">More info</span>
                   <i class="fas fa-arrow-circle-right text-light"></i>
                 </a>
@@ -202,7 +210,7 @@
                 </div>
               </div>
               <div class="card-footer text-center text-white">
-                <a href="#">
+                <a href="/sms">
                   <span class="text-white">More info</span>
                   <i class="fas fa-arrow-circle-right text-light"></i>
                 </a>
@@ -351,8 +359,8 @@
 <script language="javascript" src="{{ url_for('static', filename='js/Chart.bundle.min.js') }}"></script>
 <!-- <script language="javascript" src="{{ url_for('static', filename='vendor/fullcalendar/main.js') }}"></script> -->
 <!-- <script src="{{ url_for('static', filename='js/dashboard/history-chart.js') }}"></script> -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly" async></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly" async></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"></script> -->
 
 <script>
   $(document).ready(function(){
@@ -543,12 +551,50 @@
         .openOn(mymap);
     }
 
+    // search
+    L.Control.geocoder().addTo(mymap);
+
     mymap.on('click', onMapClick);
 
     // End google map
 
 
     $("#dashboard").addClass('active');
+
+    // tick time
+    function ticktime() {
+        var d = new Date(Date.now());
+        var target = document.getElementById("time");
+        target.innerHTML = d.toLocaleTimeString();
+        $("#date").text(d.toDateString());
+    }
+    setInterval(ticktime, 1000);
+    // end tick time
+
+    // detect arduino
+    
+    function detectArduino() {
+      $.ajax({
+            url:'/arduino/render',
+            type:'post',
+            data:{},
+            success:function(data) {
+                if(data.connected) {
+                    $("#status").removeClass("text-danger");
+                    $("#status").addClass("text-success");
+                    $("#status").text(" Connected!");
+                }
+                else {
+                    $("#status").removeClass("text-success");
+                    $("#status").addClass("text-danger");
+                    $("#status").text(" Disconnected!");
+                }
+                $("#r_status").removeClass("fas fa-spinner fa-spin text-light");
+            }
+        })
+    }
+    detectArduino();
+    // end detect arduino
   })
 </script>
 {% endblock %}

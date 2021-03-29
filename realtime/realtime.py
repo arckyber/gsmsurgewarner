@@ -1,25 +1,18 @@
-from flask import Blueprint, render_template, url_for, current_app, request, flash
+from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify
+from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema
+import datetime
 
 realtime = Blueprint('realtime', __name__, static_folder='static', template_folder='templates')
 
 @realtime.route('/index')
 @realtime.route('/')
 def index():
-	legend = "Water Distance"
-	water_distance = [
-		3.3,
-		1.2,
-		4.4,
-		2.2,
-		4.5,
-		2.3,
-	]
-	times = [
-		'12:00pm',
-		'1:00pm',
-		'2:00pm',
-		'2:30pm',
-		'2:50pm',
-		'3:30pm',
-	]
-	return render_template('realtime_index.html', legend=legend, water_distance=water_distance, times=times)
+	result = Transmitter.query.all()
+	output = TransmitterSchema(many=True).dump(result)
+	return render_template('realtime_index.html', transmitters=output)
+
+@realtime.route('/query')
+def query():
+	days_ago = datetime.datetime.now() - datetime.timedelta(days=3)
+	messages = Sms.query.filter(Sms.date_sent == datetime.datetime.now(), Sms.date_sent >= days_ago).all()
+	return jsonify(messages)
