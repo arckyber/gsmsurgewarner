@@ -188,6 +188,8 @@
         var table = $('#sms_table').DataTable(); 
         // Hide two columns
         table.columns( [4] ).visible( false );
+
+        setInterval(refresh, 5000);
     })
 </script>
 {% endblock %}

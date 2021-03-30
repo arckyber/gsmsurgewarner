@@ -18,8 +18,8 @@ SAVE = "SAVE"
 
 # CMD:SIM_NUMBER:MESSAGE:DATE
 # Example:
-# =>  SEND:+639207823026:Gagay:12/1/2021
-# =>  SAVE:+639207823026:1.0m:12/1/2021
+# =>  
+# =>  
 
 
 arduino = Blueprint("arduino", __name__, static_folder="static", template_folder="templates")
@@ -44,7 +44,7 @@ def smsdum():
 def send():
 	number = request.form['number']
 	msg = request.form['message']
-	data = "RECEIVER&SEND&"+number+"&"+msg+"&"+str(datetime.datetime.now())
+	data = "RECEIVER&SEND&"+msg+"&"+number+"&"+str(datetime.datetime.now())
 	print('Printing message to be send....................')
 	print(data)
 	if ard.write(data):
@@ -60,29 +60,37 @@ def receivedum():
 			data = data.replace('b\'', '')
 			data = data.replace('b\"', '')
 			data = data[:-1]
-			print(data)
+			print('receive dum..............')
 			if "TRANSMITTER" in data:
 				# Split the string and store in array
 				dataArr = data.split('&')
+				print("inside transmitter condition...................................")
+				print(dataArr)
 				transmitter = Transmitter.query.filter(Transmitter.sim_number == dataArr[SIMNUMBER_INDEX]).first()
+				print("Found transmitter:")
+				transmitter_dict = TransmitterSchema(many=False).dump(transmitter)
+				print(transmitter_dict['desequivealert'][0])
 				if transmitter:
-					alert_level = get_alert_level(transmitter, dataArr[MSG_INDEX])
+					alert_level = get_alert_level(transmitter_dict['desequivealert'][0], dataArr[MSG_INDEX])
+					# alert_level = 4
 					sms = Sms(
 						alert_level = alert_level,
 						water_distance = dataArr[MSG_INDEX],
 						transmitter_id = transmitter.id,
 						created_at = datetime.datetime.now(),
-						date_sent = dataArr[DATETIME_INDEX],
+						date_sent = dateparser.parse(dataArr[DATETIME_INDEX][:-3]),
 						status = True,
 						is_opened = False,
 					)
 					db.session.add(sms)
 					db.session.commit()
+					print("saved.................................................")
 					return jsonify({
 						'sucess': True
 					})
 			else:
 				dataArr = data.split('&')
+				print(dataArr)
 				extra_obj = Extra(
 					number = dataArr[SIMNUMBER_INDEX],
 					message = dataArr[MSG_INDEX],

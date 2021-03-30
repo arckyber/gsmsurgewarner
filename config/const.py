@@ -13,8 +13,9 @@ YELLOW = 2
 ORANGE = 3
 RED = 4
 
+# dapat mag coincide ni sa arduino code
 SOURCE_INDEX = 0
 CMD_INDEX = 1
-SIMNUMBER_INDEX = 2
-MSG_INDEX = 3
+MSG_INDEX = 2
+SIMNUMBER_INDEX = 3
 DATETIME_INDEX = 4

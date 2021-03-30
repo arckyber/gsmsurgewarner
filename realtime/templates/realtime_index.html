@@ -17,12 +17,34 @@
     #mapform {
       margin-top: 5% !important;
     }
+    #leftControl {
+      margin-top: 10% !important;
+      margin-left: -1.6% !important;
+    }
+    .text-yellow {
+      color: yellow;
+    }
+    .legend {
+      font-size: 1.5rem;
+    }
   </style>
 {% endblock %}
 
 {% block body %}	
 <div class="">
   <div id="mapid" style="width: 100%;">  
+    <!-- left panel control -->
+    <div class="leaflet-top leaflet-left" id="leftControl">
+      <div class="leaflet leaflet-control">
+        <div class="container">
+          <div class="text-center">
+            <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end left panel control -->
+    <!-- right panel control -->
     <div class="leaflet-top leaflet-right" id="mapform">
       <div class="leaflet leaflet-control">
         <div class="container">
@@ -34,15 +56,19 @@
           <hr>
           <div class="text-center">
             <div>
-              <button class="btn btn-sm btn-success fas fa-paper-plane"></button>
+              <i class="text-primary fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Normal water level"></i>
             </div>
             <br>
             <div>
-              <button class="btn btn-sm btn-primary fas fa-pen"></button>
+              <i class="text-yellow fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Above normal water level"></i>
             </div>
             <br>
             <div>
-              <button class="btn btn-sm btn-danger fas fa-warning"></button>
+              <i class="text-warning fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Warning alert"></i>
+            </div>
+            <br>
+            <div>
+              <i class="text-danger fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Danger. Residents need to be evacuated"></i>
             </div>
           </div>
           <hr>
@@ -67,6 +93,8 @@
     document.getElementById("mapid").style.height = screen.height+"px"; 
 
     var mymap = undefined;
+
+    var markers = [];
 
     var longit, latit;
 
@@ -111,13 +139,38 @@
       L.marker([longit, latit]).addTo(mymap)
         .bindPopup("<b>Hi Gay!</b><br />This is your location.").openPopup();
 
-      // Setting up markers of transmitters
+      // define transmitter marker icon
+      var trasnIcon = L.icon({
+          iconUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker.png') }}",
+          // shadowUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker-shadow.png') }}",
 
+          iconSize:     [55, 55], // size of the icon
+          shadowSize:   [50, 64], // size of the shadow
+          iconAnchor:   [12, 54], // point of the icon which will correspond to marker's location
+          shadowAnchor: [4, 62],  // the same for the shadow
+          popupAnchor:  [-2, -46] // point from which the popup should open relative to the iconAnchor
+      });
+
+      // Setting up markers of transmitters
       var trans = JSON.parse('{{transmitters | tojson | safe}}');
 
       trans.forEach(element => {
-        L.marker([element.longitude, element.latitude]).addTo(mymap)
-          .bindPopup("<b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small>");
+        var id = element.name.replace(' ', '');
+        console.log('id: '+id);
+
+        var mrker = L.marker([element.longitude, element.latitude], {id:id});
+        console.log(mrker.options.id);
+
+        
+        mrker.bindPopup("<div><b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small></div>");
+        mrker.addTo(mymap);
+
+        console.log(mrker._icon);
+
+        markers.push(mrker);
+
+          // L.marker([element.longitude, element.latitude], {icon:trasnIcon}).addTo(mymap)
+          // .bindPopup("<div><b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small></div>");
       });
 
       // end setting up markers of transmitters
@@ -146,6 +199,74 @@
       
       // search
       L.Control.geocoder().addTo(mymap);
+      // query latest alert updaet
+
+    // markers
+    var LeafIcon = L.Icon.extend({
+        options: {
+            // shadowUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker-shadow.png') }}",
+            iconSize:     [55, 55],
+            shadowSize:   [55, 64],
+            iconAnchor:   [27, 56],
+            shadowAnchor: [4, 62],
+            popupAnchor:  [1, -50]
+        }
+    });
+
+    var normalIcon = new LeafIcon({iconUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker-normal.png') }}"});
+    var yellowIcon = new LeafIcon({iconUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker-yellow.png') }}"});
+    var orangeIcon = new LeafIcon({iconUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker-orange.png') }}"});
+    var redIcon = new LeafIcon({iconUrl: "{{ url_for('static', filename='vendor/leaflet/images/marker-red.png') }}"});
+
+    function query() {
+      $.ajax({
+        url:'/realtime/query',
+        method:'GET',
+        data:{},
+        success:function(sms) {
+          var trans = sms.transmitter;
+
+          console.log("query");
+
+          var id = trans.name.replace(' ', '');
+
+          markers.forEach(element => {
+            if (element.options.id == id) {
+
+              switch(parseInt(sms.alert_level)) 
+              {
+                case 1:
+                  element.setIcon(normalIcon);
+                  element.bindPopup("<div><strong class='fas fa-warning text-primary'> Normal level</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  break;
+                case 2:
+                  element.setIcon(yellowIcon);
+                  element.bindPopup("<div><strong class='fas fa-warning text-yellow'> Yellow warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  break;
+                case 3:
+                  element.setIcon(orangeIcon);
+                  element.bindPopup("<div><strong class='fas fa-warning text-warning'> Orange warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  break;
+                case 4:
+                  element.setIcon(redIcon);
+                  element.bindPopup("<div><strong class='fas fa-warning text-danger'> Danger</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  break;
+              }
+
+              element.openPopup();
+
+            }
+          });
+        }
+      })
+    }
+
+    query();
+
+    setInterval(query, 5000);
+
+
+    // end query latest alert update
 
       mymap.on('click', onMapClick);
     }
@@ -159,6 +280,37 @@
     }
     setInterval(ticktime, 1000);
     // end tick time
+
+
+
+    // detect arduino
+    
+    function detectArduino() {
+      $.ajax({
+            url:'/arduino/render',
+            type:'post',
+            data:{},
+            success:function(data) {
+                if(data.connected) {
+                    $("#status").removeClass("text-danger");
+                    $("#status").removeClass("fas fa-warning");
+                    $("#status").addClass("text-success");
+                    $("#status").addClass("fas fa-spinner fa-pulse");
+                    // $("#status").text(" Connected!");
+                }
+                else {
+                    $("#status").removeClass("text-success");
+                    $("#status").removeClass("fas fa-spinner fa-pulse");
+                    $("#status").addClass("text-danger");
+                    $("#status").addClass("fas fa-warning");
+                    // $("#status").text(" Disconnected!");
+                }
+                // $("#r_status").removeClass("fas fa-spinner fa-spin text-light");
+            }
+        })
+    }
+    detectArduino();
+    // end detect arduino
 
   })
 

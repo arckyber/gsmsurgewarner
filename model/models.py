@@ -75,6 +75,7 @@ class Sms(db.Model):
 	status = db.Column(db.Boolean)
 
 class SmsSchema(ModelSchema):
+	transmitter_id = fields.Integer()
 	transmitter = fields.Nested(TransmitterSchema)
 	class Meta:
 		model = Sms

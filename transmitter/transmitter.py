@@ -155,3 +155,10 @@ def map():
 	result = Transmitter.query.all()
 	output = TransmitterSchema(many=True).dump(result)
 	return render_template('map.html', transmitters=output)
+
+
+@transmitter.route('/hoy')
+def hoy():
+	res = Transmitter.query.first()
+	out = TransmitterSchema(many=False).dump(res)
+	return str(out['desequivealert'][0]['_red'])
