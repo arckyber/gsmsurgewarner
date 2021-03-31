@@ -9,16 +9,17 @@
       <nav class="nav-menu d-none d-lg-block">
         <ul>
           <li><a href="/">Home</a></li>
-          <!-- <li><a href="#services">Maps</a></li>
-          <li><a href="#about">About</a></li> -->
+          {% if 'email' in session %}
+          <li id="dashboard"><a href="/dashboard">Dashboard</a></li>
+          <li id="sms"><a href="/sms">sms</a></li>
+          <li id="graph"><a href="/graph">graph</a></li>
+          <li id="realtime"><a href="/realtime">Monitor</a></li>
+          {% endif %}
           <li>
             <a href="#">
               <span class="fas fa-bell"></span>
             </a>
           </li>
-          {% if 'email' in session %}
-            <li id="dashboard"><a href="/dashboard"><i class="text-danger fas fa-tachometer-alt"></i></a></li>
-          {% endif %}
 
         </ul>
       </nav><!-- .nav-menu -->

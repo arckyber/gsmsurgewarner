@@ -1,6 +1,7 @@
 import json, traceback
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, Response
 from model.models import db, TransmitterSchema, Transmitter, Desequivalert, DesequivalertSchema
+from sqlalchemy import func
 from util.query_serializer import serialize
 from config.const import SUCCESS, FAILED, ERROR, MISSING_DATA
 import datetime, time
@@ -29,6 +30,7 @@ def add():
 		location = request.form['location'],
 		longitude = request.form['longitude'],
 		latitude = request.form['latitude'],
+		status = True
 	)
 	if transmitter.longitude and transmitter.latitude and transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location:
 		try:
@@ -157,8 +159,7 @@ def map():
 	return render_template('map.html', transmitters=output)
 
 
-@transmitter.route('/hoy')
-def hoy():
-	res = Transmitter.query.first()
-	out = TransmitterSchema(many=False).dump(res)
-	return str(out['desequivealert'][0]['_red'])
+@transmitter.route('/count', methods=['GET'])
+def count():
+	trans = db.session.query(func.count(Transmitter.id)).scalar()
+	return str(trans)

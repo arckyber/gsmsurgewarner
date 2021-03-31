@@ -13,7 +13,7 @@ def index():
 
 @realtime.route('/query')
 def query():
-	days_ago = datetime.datetime.now() - datetime.timedelta(days=3)
+	days_ago = datetime.datetime.now() - datetime.timedelta(hours=12)
 	# return str(days_ago)
 	# return str(datetime.datetime.now() >= days_ago)
 	messages = Sms.query.distinct(Sms.transmitter_id).filter(Sms.date_sent >= days_ago).order_by(Sms.id.desc()).first()

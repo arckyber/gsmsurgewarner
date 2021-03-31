@@ -3,13 +3,16 @@
 {% block title %}Realtime{% endblock %}
 
 {% block head %}
-  <!-- MAPS JS -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='vendor/map/style.css')}}" />
-  <script src="{{url_for('static', filename='vendor/map/js.js')}}"></script>
-    <!-- search -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>   
+<!-- MAPS JS -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='vendor/map/style.css')}}" />
+<!-- <script src="{{url_for('static', filename='vendor/map/js.js')}}"></script> -->
+
+<!-- search -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>   
+<!-- end map js -->
+
   <style>
     #mapid {
       border: 1px solid rgb(185, 184, 184);
@@ -27,25 +30,35 @@
     .legend {
       font-size: 1.5rem;
     }
+    .hide {
+      display: none;
+    }
+    .show {
+      display: inherit;
+    }
   </style>
 {% endblock %}
 
 {% block body %}	
 <div class="">
   <div id="mapid" style="width: 100%;">  
+    <div style="margin: auto;">
+      <h5 class="text-muted text-center" style="margin: auto; width: 30%;">No internet connection</h5>
+    </div>
     <!-- left panel control -->
-    <div class="leaflet-top leaflet-left" id="leftControl">
+    <div class="leaflet-top leaflet-left hide" id="leftControl">
       <div class="leaflet leaflet-control">
         <div class="container">
           <div class="text-center">
-            <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5>
+            <a href="#">
+              <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5></a>
           </div>
         </div>
       </div>
     </div>
     <!-- end left panel control -->
     <!-- right panel control -->
-    <div class="leaflet-top leaflet-right" id="mapform">
+    <div class="leaflet-top leaflet-right hide" id="mapform">
       <div class="leaflet leaflet-control">
         <div class="container">
           <div class="text-center">
@@ -69,6 +82,10 @@
             <br>
             <div>
               <i class="text-danger fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Danger. Residents need to be evacuated"></i>
+            </div>
+            <br>
+            <div>
+              <i class="text-center">Legends</i>
             </div>
           </div>
           <hr>
@@ -109,7 +126,7 @@
     function setPosition(position) {
         longit = position.coords.latitude;
         latit = position.coords.longitude;
-        
+
         if(longit != undefined && latit != undefined) {
           if (mymap == undefined)
             displayMap();
@@ -156,16 +173,12 @@
 
       trans.forEach(element => {
         var id = element.name.replace(' ', '');
-        console.log('id: '+id);
 
         var mrker = L.marker([element.longitude, element.latitude], {id:id});
-        console.log(mrker.options.id);
 
         
         mrker.bindPopup("<div><b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small></div>");
         mrker.addTo(mymap);
-
-        console.log(mrker._icon);
 
         markers.push(mrker);
 
@@ -226,8 +239,6 @@
         success:function(sms) {
           var trans = sms.transmitter;
 
-          console.log("query");
-
           var id = trans.name.replace(' ', '');
 
           markers.forEach(element => {
@@ -269,6 +280,11 @@
     // end query latest alert update
 
       mymap.on('click', onMapClick);
+
+      $("#leftControl").removeClass("hidden");
+      $("#leftControl").addClass("show");
+      $("#mapform").removeClass("hidden");
+      $("#mapform").addClass("show");
     }
 
 
@@ -311,6 +327,8 @@
     }
     detectArduino();
     // end detect arduino
+
+    $("#realtime").addClass('active');
 
   })
 

@@ -7,28 +7,36 @@
     .control-center {
         text-align: center;
     }
+    #sectionhead #legends {
+        display: inline;
+    }
+    #legends {
+        right: 0;
+    }
 </style>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
 {% endblock %}
 
 {% block body %}
 	<div class="row">
-		<div class="col-md-3" style="border-right: 1px solid grey;">		
+		<div class="col-md-3" style="border-right: 1px solid rgb(209, 206, 206);">		
 			{% include 'arduino.html' %}
 		</div>
 		<div class="col-md-9">
-			<div>
-                <span style="font-size: 2rem;" class="fas fa-comment-alt"> SMS | </span>
-                <span class="text-muted">Warning Legends: </span>
-				<i class="fas fa-circle text-primary"> Normal</i>
-				<i class="fas fa-circle" style="color: yellow"> Above normal</i>
-				<i class="fas fa-circle text-warning"> Warning</i>
-				<i class="fas fa-circle text-danger"> Danger</i>
+			<div id="sectionhead">
+                <span style="font-size: 2rem;" class="fas fa-comment-alt"> SMS </span>
+                <div id="legends">
+                    <i class="text-muted">Warning Legends: </i>
+                    <i class="fas fa-circle text-primary"> Normal</i>
+                    <i class="fas fa-circle" style="color: yellow"> Above normal</i>
+                    <i class="fas fa-circle text-warning"> Warning</i>
+                    <i class="fas fa-circle text-danger"> Danger</i>
+                </div>
 			</div>
 			<hr>
             <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
                 <table class="table table-sm table-stripped table-hover" id="sms_table">
-                    <thead></thead>
+                    <thead class=""></thead>
                     <tbody>
                         <tr>
                             <td class="align-top"></td>
@@ -79,7 +87,7 @@
             },
             'columns': [
                 {
-                    'title': '<i class="fas fa-exclamation-triangle text-danger"></i> Alert Level',
+                    'title': 'Alert',
                     'data': {
                         'alert_level': 'alert_level',
                         'water_distance': 'water_distance',
@@ -100,14 +108,14 @@
                     }
                 },
                 {
-                    'title': '<i class="fas fa-broadcast-tower"></i> Transmitter',
+                    'title': 'Transmitter',
                     'data': 'transmitter',
                     'render': function(data) {
                         return "<small class='text-primary font-weight-bold'>"+data.name+"</small>";
                     }
                 },
                 {
-                    'title': '<i class="fas fa-list-alt"></i> Details',
+                    'title': 'Details',
                     'data': 'transmitter',
                     'render': function(data) {
                         var view = "<div class='text-left text-muted'>";
@@ -190,6 +198,8 @@
         table.columns( [4] ).visible( false );
 
         setInterval(refresh, 5000);
+
+        $("#sms").addClass('active');
     })
 </script>
 {% endblock %}
