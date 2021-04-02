@@ -10,10 +10,10 @@
         <ul>
           <li><a href="/">Home</a></li>
           {% if 'email' in session %}
-          <li id="dashboard"><a href="/dashboard">Dashboard</a></li>
+          <li id="dashboard"><a href="/users/dashboard">Dashboard</a></li>
           <li id="sms"><a href="/sms">sms</a></li>
           <li id="graph"><a href="/graph">graph</a></li>
-          <li id="realtime"><a href="/realtime">Monitor</a></li>
+          <li id="realtime"><a href="/map">map</a></li>
           {% endif %}
           <li>
             <a href="#">
@@ -27,14 +27,14 @@
       
 
       {% if 'email' in session %}
-        <div class="toggle">
-            <a href="#" class="js-menu-toggle menu-toggle get-started-btn scrollto">
-                <span class="fas fa-bars" style="font-size: 1rem;"></span>
-            </a>
-        </div>
-        {% else %}
-        <a href="/login" class="get-started-btn scrollto">Get Started</a>
-        {% endif %}
+      <div class="toggle">
+          <a href="#" class="js-menu-toggle menu-toggle get-started-btn scrollto">
+              <span class="fas fa-bars" style="font-size: 1rem;"></span>
+          </a>
+      </div>        
+      {% else %}
+      <a href="/users/login" class="get-started-btn scrollto">Get Started</a>
+      {% endif %}
 
     </div>
   </header><!-- End Header -->

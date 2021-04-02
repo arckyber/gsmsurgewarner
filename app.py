@@ -12,10 +12,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'll340s0fj340'
 app.permanent_session_lifetime = timedelta(minutes=60)
 
-
-from admin.admin import admin	
-app.register_blueprint(admin, url_prefix="/admin")
-
 from transmitter.transmitter import transmitter
 app.register_blueprint(transmitter, url_prefix="/transmitter")
 
@@ -28,8 +24,8 @@ app.register_blueprint(sms, url_prefix="/sms")
 from graph.graph import graph
 app.register_blueprint(graph, url_prefix="/graph")
 
-from realtime.realtime import realtime
-app.register_blueprint(realtime, url_prefix='/realtime')
+from map.route import map
+app.register_blueprint(map, url_prefix='/map')
 
 from users.route import users
 app.register_blueprint(users, url_prefix="/users")
@@ -69,49 +65,12 @@ fa = FontAwesome(app)
 def index():
 	return render_template('home/index.html')
 
-@app.route('/dashboard')
-def dashboard():
-	if 'email' not in session:
-		return redirect(url_for('login'))
-	return render_template('auth/dashboard.html')
-
-@app.route('/login')
-def login():
-	if 'email' in session:
-		return redirect(url_for('dashboard'))
-	return render_template("auth/login.html")
-
-@app.route('/register')
-def register():
-	return render_template('auth/register.html')
-
-@app.route('/roles')
-def roles():
-	return render_template('/auth/addrole.html')
-
 @app.route('/showtime')
 def showtime():
 	def generate():
 		yield datetime.now().strftime("%b. %d, %Y %I:%M:%S %p")
 	return Response(generate(), mimetype='text')
 	# return generate()
-
-@app.route('/logout')
-def logout():
-	session.pop('email', None)
-	return render_template('auth/login.html')
-
-@app.route('/destroy')
-def destroy():
-	try:
-		db.drop_all()
-		return "Database cleared!"
-	except Exception as e:
-		return str(e)
-
-@app.route('/test')
-def test():
-	return render_template('home/test.html')
 
 if __name__ == '__main__':
 	# with app.app_context():

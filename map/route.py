@@ -2,16 +2,16 @@ from flask import Blueprint, render_template, url_for, current_app, request, fla
 from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema
 import datetime
 
-realtime = Blueprint('realtime', __name__, static_folder='static', template_folder='templates')
+map = Blueprint('map', __name__, static_folder='static', template_folder='templates')
 
-@realtime.route('/index')
-@realtime.route('/')
+@map.route('/index')
+@map.route('/')
 def index():
 	result = Transmitter.query.all()
 	output = TransmitterSchema(many=True).dump(result)
-	return render_template('realtime_index.html', transmitters=output)
+	return render_template('index.html', transmitters=output)
 
-@realtime.route('/query')
+@map.route('/query')
 def query():
 	days_ago = datetime.datetime.now() - datetime.timedelta(hours=12)
 	# return str(days_ago)
