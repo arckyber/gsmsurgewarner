@@ -1,3 +1,11 @@
+<style>
+    .hover-green:hover {
+        color: green;
+    }
+    .hover-red:hover {
+        color: red;
+    }
+</style>
 <aside class="sidebar" style="background-color: rgb(255, 255, 255);">
 		
     <div class="side-inner">
@@ -11,22 +19,22 @@
         <ul style="list-style-type: none;">
             <strong class="text-muted">Main</strong>
             <li>
-                <a class="nav-link text-muted" href="/"><h5><span class="fas fa-home"></span> Home</h5></a>
+                <a class="nav-link text-muted" href="/"><h5 class="hover-green"><span class="fas fa-home"></span> Home</h5></a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/users/dashboard"><h5><span class="fas fa-tachometer-alt"></span> Dashboard</h5></a>
+                <a class="nav-link text-muted" href="/users/dashboard"><h5 class="hover-green"><span class="fas fa-tachometer-alt"></span> Dashboard</h5></a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/transmitter"><h5><span class="fas fa-broadcast-tower"></span> Transmitters</h5></a>
+                <a class="nav-link text-muted" href="/transmitter"><h5 class="hover-green"><span class="fas fa-broadcast-tower"></span> Transmitters</h5></a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/configurations"><h5><span class="fas fa-cog"></span> Configuration</h5></a>
+                <a class="nav-link text-muted" href="/configurations"><h5 class="hover-green"><span class="fas fa-cog"></span> Configuration</h5></a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="#"><h5><span class="fas fa-user-circle"></span> Profile</h5></a>
+                <a class="nav-link text-muted" href="#"><h5 class="hover-green"><span class="fas fa-user-circle"></span> Profile</h5></a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/users/logout"><h5><span class="fas fa-sign-out-alt"></span> Logout</h5></a>
+                <a class="nav-link text-muted" href="/users/logout"><h5 class="hover-red"><span class="fas fa-sign-out-alt"></span> Logout</h5></a>
             </li>
         </ul>
         <hr>
@@ -34,16 +42,19 @@
             <strong class="text-muted">Presentation</strong>
             <li>
                 <a class="nav-link text-muted" href="/sms">
-                    <h5><span class="fas fa-comment-alt"></span> SMS
+                    <h5 class="hover-green"><span class="fas fa-comment-alt"></span> SMS
                         <small class="badge badge-pill badge-danger">12</small>
                     </h5>
                 </a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/graph"><h5><span class="fas fa-line-chart"></span> Graph</h5></a>
+                <a class="nav-link text-muted" href="/graph">
+                    <h5 class="hover-green"><span class="fas fa-line-chart"></span> Graph</h5>
+                </a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/map"><h5><span class="fas fa-map"></span> Map
+                <a class="nav-link text-muted" href="/map">
+                    <h5 class="hover-green"><span class="fas fa-map"></span> Map
                     <small class="badge badge-pill badge-success text-white"><span class="fas fa-rss"></span></small>
                 </h5>
             </a>
@@ -54,20 +65,23 @@
             <strong class="text-muted">Others</strong>
             <li>
                 <a class="nav-link text-muted" href="/extrasms">
-                    <h5><span class="fas fa-comment-dots"></span> Extra SMS
+                    <h5 class="hover-green"><span class="fas fa-comment-dots"></span> Extra SMS
                         <small class="badge badge-pill badge-danger">12</small>
                     </h5>
                 </a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="/users"><h5><span class="fas fa-users"></span> Users</h5></a>
+                <a class="nav-link text-muted" href="/users">
+                    <h5 class="hover-green"><span class="fas fa-users"></span> Users</h5>
+                </a>
             </li>
         </ul>
         <hr>
         <ul style="list-style-type: none;">
             <strong class="text-muted">Miscellaneous</strong>
             <li>
-                <a class="nav-link text-muted" href="#"><h5><span class="fas fa-trash"></span> Recycle bin
+                <a class="nav-link text-muted" href="#">
+                    <h5 class="hover-green"><span class="fas fa-trash"></span> Recycle bin
                 </h5>
             </a>
             </li>

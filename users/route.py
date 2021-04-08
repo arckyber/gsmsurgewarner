@@ -1,17 +1,26 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, session, redirect
 from model.models import User, db, Role, RoleSchema
+from users import dashboard_data as dd
 
 users = Blueprint("users", __name__, static_folder="static", template_folder="templates")
 
 @users.route('/dashboard')
 def dashboard():
+	data = {
+		"transmitter_count": dd.transmitters_count(),
+		"message_count": dd.sms_count(),
+		"users_count": dd.users_count(),
+		"alerts_count": dd.alert_count(),
+		"detection_history": dd.detection_history(),
+		"users": dd.users(),
+	}
 	if 'email' not in session:
 		return redirect(url_for('users.login'))
-	return render_template('dashboard.html')
+	return render_template('dashboard.html', data=data)
 
 @users.route('/register')
 def register():
-	return render_template('register copy.html')
+	return render_template('register.html')
 
 @users.route('/store', methods=['POST'])
 def store():
@@ -88,4 +97,8 @@ def addrole():
 	except Exception as e:
 		return str(e)
 	return "Done"
+
+@users.route('/test')
+def test():
+	return dd.detection_history()
  

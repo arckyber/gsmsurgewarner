@@ -57,6 +57,7 @@ class Transmitter(db.Model):
 		self.latitude = latitude
 		self.create_at = datetime.datetime.now()
 		self.updated_at = datetime.datetime.now()
+		self.status = True
 
 class TransmitterSchema(ModelSchema):
 	desequivealert = fields.List(fields.Nested(DesequivalertSchema, required=True))
@@ -74,9 +75,13 @@ class Sms(db.Model):
 	is_opened = db.Column(db.Boolean)
 	status = db.Column(db.Boolean)
 
+	def create_at_year(self):
+		return str(created_at)[0:4]
+
 class SmsSchema(ModelSchema):
 	transmitter_id = fields.Integer()
 	transmitter = fields.Nested(TransmitterSchema)
+	create_at_year = fields.Function()
 	class Meta:
 		model = Sms
 

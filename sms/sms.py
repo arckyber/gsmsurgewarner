@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify
-from model.models import db, Sms, SmsSchema
-from datetime import datetime
+from model.models import db, Sms, SmsSchema, Transmitter
+import datetime
 from sqlalchemy import desc, asc
 import random
 from config.const import SUCCESS, FAILED, ERROR
@@ -15,14 +15,18 @@ def index():
 
 @sms.route('/add', methods=['POST'])
 def add():
-	sms_obj = Sms(
-		alert_level = random.randint(1, 4),
-		water_distance = random.randint(0, 10),
-		transmitter_id = random.randint(1,1),
-		created_at = datetime.now(),
+	transmitter_id = Transmitter.query.first().id
+	sms = Sms(
+		alert_level = int(1),
+		water_distance = float(1.2),
+		transmitter_id = int(1),
+		created_at = datetime.datetime.now(),
+		date_sent = datetime.datetime.now(),
+		status = True,
+		is_opened = False,
 	)
 	try:
-		db.session.add(sms_obj)
+		db.session.add(sms)
 		db.session.commit()
 		return SUCCESS
 	except:
@@ -41,7 +45,7 @@ def dummy():
 
 @sms.route('/show')
 def show():
-	query = Sms.query.order_by(desc(Sms.created_at)).all()
-	schema = SmsSchema(many=True)
-	output = schema.dump(query)
+	# query = Sms.query.order_by(desc(Sms.created_at)).all()
+	query =  Sms.query.all()
+	output = SmsSchema(many=True).dump(query)
 	return jsonify(output)

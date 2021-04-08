@@ -20,7 +20,7 @@ def index():
 		water_distance.append(o.get('water_distance'))
 		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
 	transmitters = Transmitter.query.all()
-	return render_template('graph.html', legend=t_name, water_distance=water_distance, times=times, transmitters=transmitters)
+	return render_template('graph1.html', legend=t_name, water_distance=water_distance, times=times, transmitters=transmitters)
 
 @graph.route('/process', methods=['POST'])
 def process():

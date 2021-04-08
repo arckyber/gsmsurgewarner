@@ -29,8 +29,7 @@ def add():
 		post_description = request.form['post_description'],
 		location = request.form['location'],
 		longitude = request.form['longitude'],
-		latitude = request.form['latitude'],
-		status = True
+		latitude = request.form['latitude']
 	)
 	if transmitter.longitude and transmitter.latitude and transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location:
 		try:
