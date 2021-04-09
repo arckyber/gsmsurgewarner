@@ -40,7 +40,7 @@
 {% endblock %}
 
 {% block body %}	
-<div class="">
+<div id="full">
   <div id="mapid" style="width: 100%;">  
     <div style="margin: auto;">
       <h5 class="text-muted text-center" style="margin: auto; width: 30%;">No internet connection</h5>
@@ -51,7 +51,12 @@
         <div class="container">
           <div class="text-center">
             <a href="#">
-              <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5></a>
+              <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5>
+            </a>
+            <br>
+            <a href="#">
+              <button id="fullscreen_btn" class="btn fas fa-search-plus"></button>
+            </a>
           </div>
         </div>
       </div>
@@ -329,6 +334,15 @@
     // end detect arduino
 
     $("#realtime").addClass('active');
+
+    $("#fullscreen_btn").on('click', function(){
+      if ($("#full").hasClass('fullscreen')){
+				$("#full").removeClass('fullscreen');
+			}
+			else {
+				$("#full").addClass('fullscreen');
+			}
+    })
 
   })
 

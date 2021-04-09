@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, session, redirect
-from model.models import User, db, Role, RoleSchema
+from model.models import User, db, Role, RoleSchema, UserSchema
 from users import dashboard_data as dd
 
 users = Blueprint("users", __name__, static_folder="static", template_folder="templates")
@@ -97,6 +97,16 @@ def addrole():
 	except Exception as e:
 		return str(e)
 	return "Done"
+
+@users.route('/list')
+def users_list():
+   return render_template('list.html')
+
+@users.route('/show')
+def show():
+	users = User.query.all()
+	output = UserSchema(many=True).dump(users)
+	return jsonify(output)
 
 @users.route('/test')
 def test():

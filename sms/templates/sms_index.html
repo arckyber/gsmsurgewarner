@@ -35,14 +35,16 @@
 			</div>
 			<hr>
             <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
-                <table class="table table-sm table-stripped table-hover" id="sms_table">
-                    <thead class=""></thead>
-                    <tbody>
-                        <tr>
-                            <td class="align-top"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="fullscreen">
+                    <table class="table table-sm table-stripped table-hover" id="sms_table">
+                        <thead class=""></thead>
+                        <tbody>
+                            <tr>
+                                <td class="align-top"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -200,6 +202,16 @@
         setInterval(refresh, 5000);
 
         $("#sms").addClass('active');
+
+        $("#fullscreen").dblclick(function(){
+			if ($(this).hasClass('fullscreen')){
+				$(this).removeClass('fullscreen');
+			}
+			else {
+				$(this).addClass('fullscreen');
+                $(".fullscreen").children().css('color', '#000000 !important');
+			}
+		});
     })
 </script>
 {% endblock %}

@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'll340s0fj340'
-app.permanent_session_lifetime = timedelta(minutes=60)
+# app.permanent_session_lifetime = timedelta(minutes=60)
 
 from transmitter.transmitter import transmitter
 app.register_blueprint(transmitter, url_prefix="/transmitter")
@@ -65,18 +65,12 @@ fa = FontAwesome(app)
 def index():
 	return render_template('home/index.html')
 
-@app.route('/showtime')
-def showtime():
-	def generate():
-		yield datetime.now().strftime("%b. %d, %Y %I:%M:%S %p")
-	return Response(generate(), mimetype='text')
-	# return generate()
+# @app.route('/showtime')
+# def showtime():
+# 	def generate():
+# 		yield datetime.now().strftime("%b. %d, %Y %I:%M:%S %p")
+# 	return Response(generate(), mimetype='text')
 
 if __name__ == '__main__':
-	# with app.app_context():
-	# 	db.create_all()
 	db.create_all()
-	# role = Role(role="Operator")
-	# db.session.add(role)
-	# db.session.commit()
 	app.run(debug=True)
