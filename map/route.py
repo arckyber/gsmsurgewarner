@@ -9,7 +9,7 @@ map = Blueprint('map', __name__, static_folder='static', template_folder='templa
 def index():
 	result = Transmitter.query.all()
 	output = TransmitterSchema(many=True).dump(result)
-	return render_template('index.html', transmitters=output)
+	return render_template('save.html', transmitters=output)
 
 @map.route('/query')
 def query():
