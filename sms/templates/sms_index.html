@@ -143,10 +143,10 @@
                     'render': function(data) {
                         // return "<div class='text-muted text-center'><small>"+new Date(data)+"</small></div>";
                         // var date = $.format.data(new Date(data), 'yyyy/MM/dd HH:mm:ss');
-                        var date = new Date(data).toLocaleString('en-US');
-                        var now = new Date(Date.now());
+                        // var date = new Date(data).toLocaleString('en-US');
+                        // var now = new Date(Date.now());
                         // var timediff = diff_minutes(date, now);
-                        return "<div class='text-muted text-center'><small>"+date+"</small></div>";
+                        return "<div class='text-muted text-center'><small>"+data+"</small></div>";
                     }
                 },
                 {

@@ -17,9 +17,9 @@ def index():
 def add():
 	transmitter_id = Transmitter.query.first().id
 	sms = Sms(
-		alert_level = int(1),
-		water_distance = float(1.2),
-		transmitter_id = int(1),
+		alert_level = int(3),
+		water_distance = float(2),
+		transmitter_id = 1,
 		created_at = datetime.datetime.now(),
 		date_sent = datetime.datetime.now(),
 		status = True,

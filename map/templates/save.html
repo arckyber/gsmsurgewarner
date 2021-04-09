@@ -73,7 +73,7 @@
                             <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5>
                           </a> -->
                           <br>
-                          <a href="#">
+                          <a>
                             <button id="fullscreen_btn" class="btn btn-info btn-sm fas fa-search-plus"></button>
                           </a>
                         </div>
@@ -183,7 +183,7 @@
 
       // L.marker([8.170712, 125.109558]).addTo(mymap)
       L.marker([longit, latit]).addTo(mymap)
-        .bindPopup("<b>Hi Gay!</b><br />This is your location.").openPopup();
+        .bindPopup("<b>Hi {}!</b><br />This is your location.").openPopup();
 
       // define transmitter marker icon
       var trasnIcon = L.icon({
@@ -262,34 +262,39 @@
 
     function query() {
       $.ajax({
-        url:'/realtime/query',
+        url:'/map/query',
         method:'GET',
         data:{},
-        success:function(sms) {
-          var trans = sms.transmitter;
+        success:function(smss) {
 
-          var id = trans.name.replace(' ', '');
+          smss.forEach(sms => {
 
-          markers.forEach(element => {
+            var trans = sms.transmitter;
+
+            var id = trans.name.replace(' ', '');
+
+            markers.forEach(element => {
             if (element.options.id == id) {
+
+              // element.removeIcon();
 
               switch(parseInt(sms.alert_level)) 
               {
-                case 1:
-                  element.setIcon(normalIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-primary'> Normal level</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
-                  break;
+                // case 1:
+                //   element.setIcon(normalIcon);
+                //   element.bindPopup("<div><strong class='fas fa-warning text-primary'> Normal level</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                //   break;
                 case 2:
                   element.setIcon(yellowIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-yellow'> Yellow warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  element.bindPopup("<div><strong class='fas fa-warning text-yellow'> Yellow warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>", {autoClose:false});
                   break;
                 case 3:
                   element.setIcon(orangeIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-warning'> Orange warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  element.bindPopup("<div><strong class='fas fa-warning text-warning'> Orange warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>", {autoClose:false});
                   break;
                 case 4:
                   element.setIcon(redIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-danger'> Danger</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  element.bindPopup("<div><strong class='fas fa-warning text-danger'> Danger</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>", {autoClose:false});
                   break;
               }
 
@@ -297,6 +302,8 @@
 
             }
           });
+          })
+         
         }
       })
     }
