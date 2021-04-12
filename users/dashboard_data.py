@@ -1,5 +1,6 @@
 from flask import jsonify
-from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema, User, UserSchema, Extra, ExtraSchema, db
+from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema, User, UserSchema, Extra, ExtraSchema, db,\
+    Role, RoleSchema
 from sqlalchemy import func, extract
 import datetime
 
@@ -41,3 +42,11 @@ def detection_history():
     query = Sms.query.all()
     output = SmsSchema(many=True).dump(query)
     return jsonify(output)
+
+def roles_():
+    roles = Role.query.all()
+    data = {}
+    for r in roles:
+        user_count = db.session.query(func.count(User.id)).filter(User.role_id == r.id).scalar()
+        data[r.role] = user_count
+    return jsonify(data)

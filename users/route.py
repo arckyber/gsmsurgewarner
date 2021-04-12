@@ -13,6 +13,7 @@ def dashboard():
 		"alerts_count": dd.alert_count(),
 		"detection_history": dd.detection_history(),
 		"users": dd.users(),
+		"roles": dd.roles_(),
 	}
 	if 'email' not in session:
 		return redirect(url_for('users.login'))
@@ -110,5 +111,5 @@ def show():
 
 @users.route('/test')
 def test():
-	return dd.detection_history()
+	return dd.roles_()
  

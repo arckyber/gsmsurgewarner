@@ -48,6 +48,7 @@
     .carousel-background {
       background-size: auto !important;
     }
+		.dropdown-toggle:after { content: none }
   </style>
 
 
@@ -67,10 +68,49 @@
         <ul>
           <li class="active"><a href="#hero">Home</a></li>
           <li><a href="#maps">Maps</a></li>
-          <li><a href="#about">About</a></li>
-          <li>
-            <span class="fas fa-bell text-light"></span>
+          <li><a href="#about">About</a></li>          
+          
+          
+          <li style="cursor: pointer;">
+            <div class="dropdown">              
+              <span class="fas fa-broadcast-tower text-light dropdown-toggle" id="alert_dropdownmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="badge badge-pill badge-danger alert_notification"></span>
+                <div class="dropdown-menu" aria-labelledby="alert_dropdownmenu">
+                  <div class="container">
+                    <h6 class="dropdown-header text-center fas fa-broadcast-tower"> Warnings</h6>
+                    <div id="alert_notification_holder">
+                    </div>
+                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                  </div>
+                </div>
+              </span>
+            </div>
           </li>
+          
+          <li style="cursor: pointer;">
+            <div class="dropdown">              
+              <span class="fas fa-comment text-light dropdown-toggle" id="extrasms_dropdownmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="badge badge-pill badge-danger extrasms_notification"></span>
+                <div class="dropdown-menu" aria-labelledby="extrasms_dropdownmenu">
+                  <div class="container">
+                    <h6 class="dropdown-header text-center fas fa-comment"> Messages</h6>
+                    <div id="extrasms_notification_holder">
+                      <!-- <div class="dropdown-item border rounded">
+                        <span class="fas fa-user-circle"></span>
+                        <small>+63932156465</small>
+                        <br>
+                        <small>
+                          <small class="textdot">Messagelkjslfkjlkjsdflkjsdflkjsdflkj</small>
+                        </small>
+                      </div> -->
+                    </div>
+                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </li>
+
         </ul>
       </nav><!-- .nav-menu -->
 
@@ -365,6 +405,113 @@
       }
 
       getLocation();
+
+      function queryAlertCount()
+			{
+				$.ajax({
+					url:'/sms/unread_count',
+					method:'post',
+					data:{},
+					success:function(count){
+						if (count != 0)
+							$(".alert_notification").text(count);
+					}
+				})
+			}
+
+			setInterval(queryAlertCount, 3000);
+
+			function queryExtraSms()
+			{
+				$.ajax({
+					url:'/extrasms/unread_count',
+					method:'post',
+					data:{},
+					success:function(count){
+						if (count != 0)
+							$(".extrasms_notification").html(count);
+					}
+				})
+			}
+
+			function queryAlert(){
+				$.ajax({
+					url:'/sms/unread',
+					method:'post',
+					data:{},
+					success:function(datas) {
+						var div = "";
+						datas.forEach(data => {
+							div += "<div class='dropdown-item container-fluid border rounded'>";
+								div += "<div>";
+									div += "<span>";
+										if (data.alert_level == 1) {
+											div += "<span class='fas fa-circle text-info'></span>";
+										}
+										else if (data.alert_level == 2) {
+											div += "<span class='fas fa-circle text-yellow'></span>";
+										}
+										else if (data.alert_level == 3) {
+											div += "<span class='fas fa-circle text-warning'></span>";
+										}
+										else if (data.alert_level == 4) {
+											div += "<span class='fas fa-circle text-danger'></span>";
+										}
+										div += "<small> "+data.transmitter.name+"</small>";
+									div += "</span>";
+									div += "<br>";
+									div += "<small>";
+										div += "<small>";
+											div += "<span>Water level: </span>";
+											div += "<span class='text-muted'>"+ data.water_distance +"m from sensor</span>"
+										div += "</small>";
+										div += "<br>";
+										div += "<small>";
+											div += "<span>Location: </span>";
+											div += "<span class='text-muted'>"+data.transmitter.location+"</span>";
+										div += "</small>";
+										div += "<div class='text-center'>";
+											div += "<small class='text-info'>"+data.date_sent+"</small>";
+										div += "</div>";
+									div += "</small>";
+								div += "</div>";
+							div += "</div>";
+						});
+						$("#alert_notification_holder").html(div);
+					}
+				})
+			}
+			queryAlert();
+
+			function queryExtraSms(){
+				$.ajax({
+					url:'/extrasms/unread',
+					method:'post',
+					data:{},
+					success:function(datas){
+						var div = "";
+						datas.forEach(data=>{
+							div += '<div class="dropdown-item border rounded">';
+								div += '<span class="fas fa-user-circle"></span>';
+								div += '<small>'+data.number+'</small>';
+								div += '<br>';
+								div += '<small>';
+									div += '<small class="textdot">'+data.message+'</small>';
+								div += '</small>';
+							div += '</div>';
+						});
+						$("#extrasms_notification_holder").html(div);
+					}
+				})
+			}
+
+			queryExtraSms();
+
+			var name = $('.textdot').text();
+			if (name.length > 15) {
+				var shortname = name.substring(0, 15) + " ...";
+				$('.textdot').replaceWith(shortname);
+			}
     })
 
   </script>

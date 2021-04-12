@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify
 from model.models import db, Sms, SmsSchema, Transmitter
 import datetime
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, func
 import random
 from config.const import SUCCESS, FAILED, ERROR
 from model.alert import get_alert_level
@@ -17,9 +17,9 @@ def index():
 def add():
 	transmitter_id = Transmitter.query.first().id
 	sms = Sms(
-		alert_level = int(3),
-		water_distance = float(2),
-		transmitter_id = 1,
+		alert_level = int(4),
+		water_distance = float(1.4),
+		transmitter_id = 2,
 		created_at = datetime.datetime.now(),
 		date_sent = datetime.datetime.now(),
 		status = True,
@@ -46,6 +46,31 @@ def dummy():
 @sms.route('/show')
 def show():
 	# query = Sms.query.order_by(desc(Sms.created_at)).all()
-	query =  Sms.query.all()
+	query =  Sms.query.order_by(desc(Sms.date_sent)).all()
 	output = SmsSchema(many=True).dump(query)
+	return jsonify(output)
+
+@sms.route('/get', methods=['POST'])
+def get():
+	sms_id = request.form['id']
+	sms = Sms.query.filter(Sms.id == sms_id).first()
+	output = SmsSchema(many=False).dump(sms)
+	return jsonify(output)
+
+@sms.route('/mark_read', methods=['POST'])
+def mark_read():
+	sms = Sms.query.filter(Sms.id == request.form['id']).first()
+	sms.is_opened = True
+	db.session.commit()
+	return ""
+
+@sms.route('/unread_count', methods=['POST'])
+def unread_count():
+	count = db.session.query(func.count(Sms.id)).filter(Sms.is_opened == False).scalar()
+	return str(count)
+
+@sms.route('/unread', methods=['POST'])
+def unread():
+	sms = Sms.query.filter(Sms.is_opened == False).order_by(desc(Sms.created_at)).limit(3)
+	output = SmsSchema(many=True).dump(sms)
 	return jsonify(output)

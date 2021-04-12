@@ -4,7 +4,10 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
-<script src="{{ url_for('static', filename='vendor/asteroid/as-min.js') }}"></script>
+<script>
+	// $(window).load(function() {
+	// 		});
+</script>
 {% endblock %}
 
 {% block body %}
@@ -36,6 +39,12 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){	
+		// loading animation
+		$loader_show("#b3b3c1");
+		setTimeout(()=>{
+			$loader_hide()
+		}, 1000);
+		// end loading animation
 		
 		$("#transmitters_table").DataTable({
 			"pageLength":8,

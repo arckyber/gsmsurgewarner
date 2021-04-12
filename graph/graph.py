@@ -11,14 +11,17 @@ graph = Blueprint('graph', __name__, static_folder='static', template_folder='te
 @graph.route('/')
 def index():
 	# t_name = request.form['transmitter_name']
-	t_name = (lambda: Transmitter.query.first().name, lambda: "Transmitter name")[Transmitter.query.first() == None]()
+	t_name = (lambda: Transmitter.query.first().name, lambda: "No transmitter found!")[Transmitter.query.first() == None]()
 	sms = db.session.query(Sms).join(Transmitter).filter(Transmitter.name == t_name).order_by(desc(Sms.created_at)).all()
 	output = SmsSchema(many=True).dump(sms)
+	# return jsonify(output)
 	water_distance = []
 	times = []
 	for o in output:
 		water_distance.append(o.get('water_distance'))
 		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
+	times.reverse()
+	water_distance.reverse()
 	transmitters = Transmitter.query.all()
 	return render_template('graph.html', legend=t_name, water_distance=water_distance, times=times, transmitters=transmitters)
 

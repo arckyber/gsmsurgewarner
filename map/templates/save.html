@@ -62,7 +62,7 @@
             <div id="full">
                 <div id="mapid" style="width: 100%;">  
                   <div style="margin: auto;">
-                    <h5 class="text-muted text-center" style="margin: auto; width: 30%;">No internet connection</h5>
+                    <div id="my-loader" class="text-danger ldld bare"></div>
                   </div>
                   <!-- left panel control -->
                   <div class="leaflet-top leaflet-left hide leftControl" id="leftControl">
@@ -74,7 +74,7 @@
                           </a> -->
                           <br>
                           <a>
-                            <button id="fullscreen_btn" class="btn btn-info btn-sm fas fa-search-plus"></button>
+                            <button id="fullscreen_btn" class="btn btn-info btn-sm fas fa-expand-arrows-alt"></button>
                           </a>
                         </div>
                       </div>
@@ -135,6 +135,18 @@
 <script>
   $(document).ready(function(){
 
+		// loading animation
+		$loader_show("#b3b3c1");
+
+    setTimeout(()=>{
+      $loader_hide();
+    }, 3000);
+		// end loading animation
+
+    // var ldld = new ldLoader({ root: "#my-loader" }); 
+    /* 4. active this loader */
+    // ldld.on();
+
     // document.getElementById("mapid").style.height = screen.height+"px"; 
     document.getElementById("mapid").style.height = "400px";
 
@@ -159,6 +171,7 @@
         if(longit != undefined && latit != undefined) {
           if (mymap == undefined)
             displayMap();
+            // ldld.off();
         }
     }
 
@@ -276,7 +289,7 @@
             markers.forEach(element => {
             if (element.options.id == id) {
 
-              // element.removeIcon();
+              element.closePopup();
 
               switch(parseInt(sms.alert_level)) 
               {

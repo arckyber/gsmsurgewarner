@@ -36,9 +36,6 @@
 			<hr>
             <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
 				<div class="container">
-					<!-- <div class="card-header">
-						 <button>&#x279A;</button>
-					</div> -->
 					<div class="card-body border rounded" id="card_body">
 						<canvas id="chart" height="300" style="margin: auto; width: 100%;background-color:#c2eee4;"></canvas>
 					</div>
@@ -132,28 +129,28 @@
 					pointHitRadius: 10,
 					data: data,
 					spanGaps: false,
-					options: {
-						scales: {
-							yAxes: [{
-								ticks: {
-									reverse: true,
-									beginAtZero:true,
-									start: 0,
-									callback: function(value, index, values) {
-										return value + "m";
-									},
-								}
-							}],
-							xAxes: [{
-									ticks: {
-									reverse: true,
-									beginAtZero: true,
-									start: 0,
-								}
-							}]
-						},
-						rotation: (0.5 * Math.PI)
-					}
+					// options: {
+					// 	scales: {
+					// 		yAxes: [{
+					// 			ticks: {
+					// 				reverse: true,
+					// 				beginAtZero:true,
+					// 				start: 0,
+					// 				callback: function(value, index, values) {
+					// 					return value + "m";
+					// 				},
+					// 			}
+					// 		}],
+					// 		xAxes: [{
+					// 				ticks: {
+					// 				reverse: true,
+					// 				beginAtZero: true,
+					// 				start: 0,
+					// 			}
+					// 		}]
+					// 	},
+					// 	rotation: (0.5 * Math.PI)
+					// }
 				}
 			]
 		};
@@ -171,7 +168,7 @@
             mode: 'single',
             callbacks: {
               label: function(tooltipItems, data) {
-					return tooltipItems.yLabel + ' percent';
+					return tooltipItems.yLabel + ' meter(s)';
 				}
             }
           },

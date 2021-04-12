@@ -15,10 +15,44 @@
           <li id="graph"><a href="/graph">graph</a></li>
           <li id="realtime"><a href="/map">map</a></li>
           {% endif %}
-          <li>
-            <a href="#">
-              <span class="fas fa-bell"></span>
-            </a>
+          <li style="cursor: pointer;">
+            <div class="dropdown">              
+              <span class="fas fa-broadcast-tower text-light dropdown-toggle" id="alert_dropdownmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="badge badge-pill badge-danger alert_notification"></span>
+                <div class="dropdown-menu" aria-labelledby="alert_dropdownmenu">
+                  <div class="container">
+                    <h6 class="dropdown-header text-center fas fa-broadcast-tower"> Warnings</h6>
+                    <div id="alert_notification_holder">
+                    </div>
+                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </li>
+          
+          <li style="cursor: pointer;">
+            <div class="dropdown">              
+              <span class="fas fa-comment text-light dropdown-toggle" id="extrasms_dropdownmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="badge badge-pill badge-danger extrasms_notification"></span>
+                <div class="dropdown-menu" aria-labelledby="extrasms_dropdownmenu">
+                  <div class="container">
+                    <h6 class="dropdown-header text-center fas fa-comment"> Messages</h6>
+                    <div id="extrasms_notification_holder">
+                      <!-- <div class="dropdown-item border rounded">
+                        <span class="fas fa-user-circle"></span>
+                        <small>+63932156465</small>
+                        <br>
+                        <small>
+                          <small class="textdot">Messagelkjslfkjlkjsdflkjsdflkjsdflkj</small>
+                        </small>
+                      </div> -->
+                    </div>
+                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                  </div>
+                </div>
+              </span>
+            </div>
           </li>
 
         </ul>
