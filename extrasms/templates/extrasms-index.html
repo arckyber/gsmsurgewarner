@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Transmitters{% endblock %}
+{% block title %}GSM Surge Warner - Extra SMS{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
@@ -70,7 +70,8 @@
 			</div>
             <hr>
             <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
-                <table id="smstable"></table>
+                <table id="smstable">
+                </table>
             </div>
         </div>
     </div>
@@ -100,8 +101,18 @@
             },
             'columns':[
                 {
-                    title:'ID',
-                    data:'id',
+                    title:'<div class="text-center"><i class="fas fa-envelope"></i></div>',
+                    data:'is_opened',
+                    render: function(data) {
+                        var div = "<div class='text-center'>";
+                            if (data == true) {
+                                div += "<i class='fas fa-envelope-open text-muted'></i>";
+                            }
+                            else {
+                                div += "<i class='fas fa-envelope text-muted'></i>";
+                            }
+                        return div += "</div>";
+                    }
                 },
                 {
                     title:'Number',
@@ -112,7 +123,7 @@
                     data:'message',
                 },
                 {
-                    title:'<i class="fas fa-clock">',
+                    title:'Datetime',
                     data:'date_sent',
                     render:function(data) {
                         // console.log(data);
@@ -120,6 +131,17 @@
                         // console.log(dd);
                         // var d = jQuery.format.prettyDate(data);
                         return "<span>"+dd+"</span>";
+                    }
+                },
+                {
+                    title:'<div class="text-center">Actions</div>',
+                    data:'id',
+                    render:function(data) {
+                        var div = "<div class='text-center'>";
+                                div += "<button class='fas fa-eye text-info'></button>";
+                                div += "<button class='fas fa-trash text-danger'></button>";
+                            div += "</div>";
+                        return div;
                     }
                 },
             ],

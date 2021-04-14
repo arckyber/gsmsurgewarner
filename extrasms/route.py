@@ -19,3 +19,15 @@ def unread():
 	sms = Extra.query.filter(Extra.is_opened == False).order_by(desc(Extra.created_at)).limit(3)
 	output = ExtraSchema(many=True).dump(sms)
 	return jsonify(output)
+
+@extrasms.route('/unreads')
+def unreads():
+	sms = Extra.query.filter(Extra.is_opened == False).order_by(desc(Extra.created_at)).limit(3)
+	output = ExtraSchema(many=True).dump(sms)
+	return jsonify(output)
+
+@extrasms.route('/clear')
+def clear():
+	db.session.query(Extra).delete()
+	db.session.commit()
+	return "Delted"

@@ -92,10 +92,6 @@
 <script language="javascript">
 	$(document).ready(function(){
 
-        var times = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-
-    	// var data = [4, 3, 5, 2, 3, 1, 5, 6, 3.5 , 4, 2.8, 0];
-
 		var times = JSON.parse('{{ times | tojson }}');
 
 		var data = JSON.parse(' {{ water_distance | tojson }} ')
@@ -129,28 +125,15 @@
 					pointHitRadius: 10,
 					data: data,
 					spanGaps: false,
-					// options: {
-					// 	scales: {
-					// 		yAxes: [{
-					// 			ticks: {
-					// 				reverse: true,
-					// 				beginAtZero:true,
-					// 				start: 0,
-					// 				callback: function(value, index, values) {
-					// 					return value + "m";
-					// 				},
-					// 			}
-					// 		}],
-					// 		xAxes: [{
-					// 				ticks: {
-					// 				reverse: true,
-					// 				beginAtZero: true,
-					// 				start: 0,
-					// 			}
-					// 		}]
-					// 	},
-					// 	rotation: (0.5 * Math.PI)
-					// }
+					options: {
+						scales: {
+							yAxes: [{
+							ticks: {
+								reverse: true,
+							}
+							}]
+						}
+					},
 				}
 			]
 		};

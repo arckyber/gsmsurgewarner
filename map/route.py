@@ -16,7 +16,7 @@ def query():
 	days_ago = datetime.datetime.now() - datetime.timedelta(hours=12)
 	# return str(days_ago)
 	# return str(datetime.datetime.now() >= days_ago)
-	query = Sms.query.filter(Sms.date_sent >= days_ago).order_by(Sms.id.desc())
+	query = Sms.query.filter(Sms.created_at >= days_ago).order_by(Sms.id.desc())
 	messages = query.distinct().all()
 	output = SmsSchema(many=True).dump(messages)
 	return jsonify(output)

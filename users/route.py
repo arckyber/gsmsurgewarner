@@ -111,5 +111,5 @@ def show():
 
 @users.route('/test')
 def test():
-	return dd.roles_()
+	return str(dd.detection_history())
  

@@ -8,3 +8,7 @@
 .mr-md {
 	margin-right: 10px;
 }
+
+.text-yellow {
+	color: yellow !important;
+}

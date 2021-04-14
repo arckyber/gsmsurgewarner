@@ -31,17 +31,10 @@ def users():
     return jsonify(output)
 
 def detection_history():
-    # init months
-    months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'sep', 'oct', 'nov', 'dec']
-    # set current date
-    current_date = datetime.datetime.now()
-    # filter create_at field with the current YEAR
-    cur_year_str = str(current_date.year)
-    # query = Sms.query.filter((str(Sms.created_at)[0:4]) == cur_year_str).all()
-    return ""
-    query = Sms.query.all()
-    output = SmsSchema(many=True).dump(query)
-    return jsonify(output)
+    current_year = datetime.datetime.now().year
+    sms = Sms.query.first()
+    output = SmsSchema(many=False).dump(sms)
+    return str(output['created_at'])
 
 def roles_():
     roles = Role.query.all()

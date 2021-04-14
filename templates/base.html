@@ -238,34 +238,7 @@
 		// $.notify("Hello World!", {class:"mytestclass", delay:0, align:"left", verticalAlign:"left", animationType:"scale"});
 
 		$(document).ready(function(){
-			function queryAlertCount()
-			{
-				$.ajax({
-					url:'/sms/unread_count',
-					method:'post',
-					data:{},
-					success:function(count){
-						if (count != 0)
-							$(".alert_notification").text(count);
-					}
-				})
-			}
-
-			setInterval(queryAlertCount, 3000);
-
-			function queryExtraSms()
-			{
-				$.ajax({
-					url:'/extrasms/unread_count',
-					method:'post',
-					data:{},
-					success:function(count){
-						if (count != 0)
-							$(".extrasms_notification").html(count);
-					}
-				})
-			}
-
+			
 			function queryAlert(){
 				$.ajax({
 					url:'/sms/unread',
@@ -313,7 +286,6 @@
 					}
 				})
 			}
-			queryAlert();
 
 			function queryExtraSms(){
 				$.ajax({
@@ -321,6 +293,7 @@
 					method:'post',
 					data:{},
 					success:function(datas){
+						console.log(datas);
 						var div = "";
 						datas.forEach(data=>{
 							div += '<div class="dropdown-item border rounded">';
@@ -334,8 +307,45 @@
 						});
 						$("#extrasms_notification_holder").html(div);
 					}
+				});
+			}
+
+			function queryAlertCount()
+			{
+				$.ajax({
+					url:'/sms/unread_count',
+					method:'post',
+					data:{},
+					success:function(count){
+						if (count != 0)
+						{
+							$(".alert_notification").text(count);
+							queryAlert();
+						}
+					}
 				})
 			}
+
+			setInterval(queryAlertCount, 3000);
+
+			function queryExtraSms_Count()
+			{
+				$.ajax({
+					url:'/extrasms/unread_count',
+					method:'post',
+					data:{},
+					success:function(count){
+						if (count != 0){
+							$(".extrasms_notification").html(count);
+							queryExtraSms();
+						}
+					}
+				})
+			}
+
+			setInterval(queryExtraSms_Count, 1500);
+
+			queryAlert();
 
 			queryExtraSms();
 

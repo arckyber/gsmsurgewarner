@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block title %}GSM Surge Warner - SMS{% endblock %}
+
+{% block head %}
+<style>
+    .control-center {
+        text-align: center;
+    }
+    #sectionhead #legends {
+        display: inline;
+    }
+    #legends {
+        right: 0;
+    }
+    .fullscreen{
+        background-color: white !important;  
+        padding: 1% 20% 5%;
+    }
+    /* .fade2 {
+        transform: scale(0.9);
+        opacity: 0;
+        transition: all .2s linear;
+        display: block !important;
+    }
+
+    .fade2.show {
+        opacity: 1;
+        transform: scale(1);
+    } */
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+{% endblock %}
+
+{% block body %}
+    <!-- sms modal  -->
+    {% include 'sms.html' %}
+    <!-- end sms modal -->    
+	<div class="row">
+		<div class="col-md-3" style="border-right: 1px solid rgb(209, 206, 206);">		
+			{% include 'arduino.html' %}
+		</div>
+		<div class="col-md-9">
+			<div id="sectionhead">
+                <span style="font-size: 2rem;" class="fas fa-comment-alt"> SMS </span>
+                <div id="legends">
+                    <i class="text-muted">Warning Legends: </i>
+                    <i class="fas fa-circle text-primary"> Normal</i>
+                    <i class="fas fa-circle" style="color: yellow"> Above normal</i>
+                    <i class="fas fa-circle text-warning"> Warning</i>
+                    <i class="fas fa-circle text-danger"> Danger</i>
+                </div>
+			</div>
+			<hr>
+            <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
+                <div id="fullscreen">
+                    <table class="table table-sm table-stripped table-hover" id="sms_table">
+                        <thead class=""></thead>
+                        <tbody>
+                            <tr>
+                                <td class="align-top"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script language="javascript">
+	$(document).ready(function(){		
+
+		// loading animation
+		$loader_show("#b3b3c1");
+		// end loading animation
+
+        function makeToast(type, message) {
+            if (type == 'success') {			
+                toastr.success(message);
+            }
+            else if (type == 'failed') {			
+                toastr.warning(message);
+            }
+            else if (type == 'missing data') {
+                toastr.warning(message);
+            }
+            else if (type == 'error') {
+                toastr.error(message);
+            }
+            else {
+                toastr.info(message);
+            }
+        }
+        
+        $("#sms_table").DataTable({
+            'pageLength': 3,
+            'processing': true,
+            'ajax': {
+                'url': '/sms/show',
+                'dataSrc': ''
+            },
+            'columns': [
+                {
+                    'title': ' ',
+                    'data': 'is_opened',
+                    'render': function(data) {
+                        var view="<div class='control-center'>";
+                        if (data == true) {
+                            view += "<h3 class='fas fa-envelope-open text-muted'></h3>";
+                        }
+                        else {
+                            view += "<h3 class='fas fa-envelope text-muted'></h3>";
+                        }
+                        return view+="</div>";
+                    }
+                },
+                {
+                    'title': 'Alert',
+                    'data': {
+                        'alert_level': 'alert_level',
+                        'water_distance': 'water_distance',
+                    },
+                    'render': function(data) {
+                        var view = "<div class=' control-center'>";
+                        if (data.alert_level == 1)
+                            view += "<h3 class='fas fa-exclamation-triangle text-primary'> </h3>";
+                        if (data.alert_level == 2)
+                            view += "<h3 class='fas fa-exclamation-triangle' style='color: yellow;'> </h3>";
+                        if (data.alert_level == 3)
+                            view += "<h3 class='fas fa-exclamation-triangle text-warning'> </h3>";
+                        if (data.alert_level == 4)
+                            view += "<h3 class='fas fa-exclamation-triangle text-danger'> </h3>";
+                        view += "<br><small class='text-small'>"+data.water_distance+"m from sensor</small>";    
+                        view += "</div>";
+                        return view;
+                    }
+                },
+                {
+                    'title': 'Transmitter',
+                    'data': {
+                        "transmitter": "transmitter",
+                        "created_at": "created_at",
+                        "date_sent": "date_sent",
+                    },
+                    'render': function(data) {
+                        // console.log(data);
+                        var view = "<p class='text-primary font-weight-bold'>"+data.transmitter.name+"</p>";
+                            // view += "<small>Date sent: <i class='text-info'>"+data.date_sent+"</i></small>";
+                            // view += "<br><small>Date received: <i class='text-info'>"+data.created_at+"</i></small>";
+                        return view;
+                    }
+                },
+                {
+                    'title': 'Details',
+                    'data': 'transmitter',
+                    'render': function(data) {
+                        var view = "<div class='text-left text-muted'>";
+                            view += "<b class='font-weight-bold fas fa-location-arrow'> Location: </b>";
+                            view += "<span> "+data.location+"</span><br>";
+                            view += "<b class='font-weight-bold fas fa-flag'> Post #: </b>";
+                            view += "<span> "+data.post_number+"</span><br>";
+                            view += "<b class='font-weight-bold fas fa-directions'> Post description: </b>";
+                            view += "<span> "+data.post_description+"</span><br>";                                 
+                            view += "<b class='font-weight-bold fas fa-map-marker-alt'> Longitude: </b>";
+                            view += "<span class='text-warning'> "+data.longitude+"</span><br>";                       
+                            view += "<b class='font-weight-bold fas fa-map-marker-alt'> Latitude: </b>";
+                            view += "<span class='text-warning'> "+data.latitude+"</span><br>";
+                        view += "</div>";
+                        return view;
+                    }
+                },
+                {
+                    'title': 'Actions',
+                    'data': 'id',
+                    'render': function(data) {
+                        var btn = "<div class='control-center'>"
+                        btn += "<button class='btn btn-sm btn-info fas fa-eye open-sms' id='"+data+"'></button> </hr>";
+                        // btn += "<button class='btn btn-sm btn-danger fas fa-trash'> </button>";
+                        btn += "</div>";
+                        return btn;
+                    }
+                }, 
+                {
+                    'title':'Time',
+                    'data':'id',
+                    'render':function(data) {
+                        return "<span>12mins ago</span>";
+                    }
+                }
+            ],
+			dom: 'Bfrtip',
+			buttons: [
+                // {
+                //     'text': '<i class="fas fa-pencil-alt"></i> Compose',
+                //     'action': function(e, dt, node, config) {
+                //         $.ajax({
+                //             url:'/sms/add',
+                //             method:'post',
+                //             data:{},
+                //             success:function(type) {
+                //                 makeToast(type, "Report: " + type.toUpperCase());
+                //                 refresh();
+                //             }
+                //         });
+                //     }
+                // },
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+                'pdfHtml5',
+                {
+                    'text': '<i class="fas fa-ellipsis-h"></i>',
+                    'action': function(e, dt, node, config){
+                        if( colvis ) {
+                            this.columns([4]).visible(false);
+                            colvis = false;
+                        }else {
+                            this.columns([4]).visible(true);
+                            colvis = true;
+                        }
+                    }
+                }
+			]
+        });
+
+        var colvis = false;
+
+        setTimeout(()=>{
+            $loader_hide();
+        }, 1000)
+
+        function refresh() {
+			$("#sms_table").DataTable().ajax.reload(null, false);
+		}
+        var table = $('#sms_table').DataTable(); 
+        // Hide two columns
+        table.columns( [4] ).visible( false );
+
+        setInterval(refresh, 5000);
+
+        $("#sms").addClass('active');
+
+        $("#fullscreen").dblclick(function(){
+			if ($(this).hasClass('fullscreen')){
+				$(this).removeClass('fullscreen');
+			}
+			else {
+				$(this).addClass('fullscreen');
+                $(".fullscreen").children().css('color', '#000000 !important');
+			}
+		});
+
+        $(document).on('click', '.open-sms', function(){
+            var id = $(this).attr('id');
+            // console.log(id);
+            $.ajax({
+                url:'/sms/get',
+                method:'post',
+                data:{id:id},
+                success:function(data){
+                    $("#sms_trans_name").text(data.transmitter.name);
+                    $("#sms_location").text(data.location);
+                    $("#sms_post_desc").text(data.post_description);
+                    $("#sms_post_num").text(data.post_number);
+                    $("#sms_longitude").text(data.longitude);
+                    $("#sms_latitude").text(data.latitude);
+                    $("#sms_date_sent").text(data.date_sent);
+                    $("#sms_date_received").text(data.created_at);
+                    $("#sms_water_level").text(data.water_distance + " meter(s) from sensor.");
+                    $("#sms_moment").text(data.date_sent);
+
+                    // console.log(data.alert_level);
+                    
+                    $("#sms_alert").removeAttr('class');
+
+                    if (data.alert_level == 1){
+                        $("#sms_alert").addClass("fas fa-warning text-info");
+                    }
+                    else if(data.alert_level == 2) {
+                        $("#sms_alert").addClass("fas fa-warning text-yellow");
+                    
+                    }
+                    else if(data.alert_level == 3) {
+                        $("#sms_alert").addClass("fas fa-warning text-warning");
+                    }
+                    else {
+                        $("#sms_alert").addClass("fas fa-warning text-danger");
+                    }
+
+                    $.ajax({
+                        url:'/sms/mark_read',
+                        method:'post',
+                        data:{id:id},
+                        success:function(data) {
+                            // alert(data);
+                        }
+                    })
+                }
+            })
+            $("#sms_modal_card").modal('show');
+
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+                $(this).css('z-index', zIndex);
+                setTimeout(function() {
+                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                }, 0);
+            });
+
+        $('.panel-collapse').on('show.bs.collapse', function () {
+            $("#expand_stat").removeAttr('class');
+            $("#expand_stat").addClass("fas fa-angle-up");
+            $("#expand_stat").text(" Hide info");
+        });
+
+        $('.panel-collapse').on('hide.bs.collapse', function () {
+            $("#expand_stat").removeAttr('class');
+            $("#expand_stat").addClass("fas fa-angle-right");
+            $("#expand_stat").text(" Show info");
+        });
+
+    })
+</script>
+{% endblock %}

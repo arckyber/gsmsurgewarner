@@ -37,7 +37,7 @@ def smsdum():
 	smsdum = Extra.query.order_by(desc(Extra.date_sent)).all()
 	schema = ExtraSchema(many=True)
 	output = schema.dump(smsdum)
-	print("printing smsdumoutput........................")
+	# print("printing smsdumoutput........................")
 	return jsonify(output)
 
 @arduino.route('/send', methods=['POST'])
@@ -45,8 +45,8 @@ def send():
 	number = request.form['number']
 	msg = request.form['message']
 	data = "RECEIVER&SEND&"+msg+"&"+number+"&"+str(datetime.datetime.now())
-	print('Printing message to be send....................')
-	print(data)
+	# print('Printing message to be send....................')
+	# print(data)
 	if ard.write(data):
 		return SUCCESS
 	else:
@@ -64,15 +64,17 @@ def receivedum():
 			if "TRANSMITTER" in data:
 				# Split the string and store in array
 				dataArr = data.split('&')
-				print("inside transmitter condition...................................")
+				# print("inside transmitter condition...................................")
 				print(dataArr)
 				transmitter = Transmitter.query.filter(Transmitter.sim_number == dataArr[SIMNUMBER_INDEX]).first()
-				print("Found transmitter:")
+				# print("Found transmitter:")
 				transmitter_dict = TransmitterSchema(many=False).dump(transmitter)
-				print(transmitter_dict['desequivealert'][0])
+				# print(transmitter_dict['desequivealert'][0])
 				if transmitter:
 					alert_level = get_alert_level(transmitter_dict['desequivealert'][0], dataArr[MSG_INDEX])
 					# alert_level = 4
+					print("printing alert level....................")
+					print(alert_level)
 					sms = Sms(
 						alert_level = alert_level,
 						water_distance = dataArr[MSG_INDEX],
@@ -82,15 +84,16 @@ def receivedum():
 						status = True,
 						is_opened = False,
 					)
+					print(sms)
 					db.session.add(sms)
 					db.session.commit()
-					print("saved.................................................")
+					# print("saved.................................................")
 					return jsonify({
 						'sucess': True
 					})
 			else:
 				dataArr = data.split('&')
-				print(dataArr)
+				# print(dataArr)
 				extra_obj = Extra(
 					number = dataArr[SIMNUMBER_INDEX],
 					message = dataArr[MSG_INDEX],
@@ -115,7 +118,7 @@ def receivedum():
 
 @arduino.route('/delete-all-sms', methods=['POST'])
 def delete_all_sms():
-	print("arduino/delete-all-sms is called ................")
+	# print("arduino/delete-all-sms is called ................")
 	try:
 		db.session.query(Extra).delete()
 		db.session.commit()
@@ -148,5 +151,5 @@ def render():
 
 if __name__ == '__main__':
 	while True:
-		print('in main........')
+		# print('in main........')
 		time.sleep(1)

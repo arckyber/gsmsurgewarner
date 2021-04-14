@@ -74,3 +74,9 @@ def unread():
 	sms = Sms.query.filter(Sms.is_opened == False).order_by(desc(Sms.created_at)).limit(3)
 	output = SmsSchema(many=True).dump(sms)
 	return jsonify(output)
+
+@sms.route('/clear')
+def clear():
+	db.session.query(Sms).delete()
+	db.session.commit()
+	return "Deleted"
