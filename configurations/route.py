@@ -5,3 +5,7 @@ configurations = Blueprint('configurations', __name__, static_folder="static", t
 @configurations.route('/')
 def index():
     return render_template('configurations_index.html')
+
+@configurations.route('/trans-tester')
+def transTester():
+    return render_template('trans-tester.html')

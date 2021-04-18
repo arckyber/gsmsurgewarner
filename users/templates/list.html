@@ -13,6 +13,13 @@
     #legends {
         right: 0;
     }
+	button.btn-success{
+		background-color: green !important;
+		color: white !important;
+	}
+	button.btn-warning{
+		background-color: orange !important;
+	}
 </style>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
 {% endblock %}
@@ -29,7 +36,9 @@
 			<hr>
             <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
                 <table class="table table-sm table-stripped table-hover" id="users_table">
-                    <thead class=""></thead>
+                    <thead class="">
+						
+					</thead>
                     <tbody>
                         <tr>
                             <td class="align-top"></td>
@@ -61,27 +70,86 @@
             },
             'columns': [
 				{
-					'title': '#',
+					'title': 'ID',
 					'data': 'id'
 				},
                 {
-					'title': 'Name',
-					'data': 'name'
+					'title': 'Username',
+					'data': 'username'
 				},
                 {
 					'title': 'Email',
 					'data': 'email'
 				},
                 {
-					'title': 'Action',
+					'title': '<div class="text-center">Action</div>',
 					'data': 'id',
 					'render': function (data) {
-						var view = "<button class='btn btn-sm fas fa-recycle text-warning'></button>";
-							view += "<button class='btn btn-sm fas fa-trash text-danger'></button>";
+						var view = "<div class='text-center'><a class='btn btn-sm fas fa-search text-info view' href='/users/user-info/"+data+"'> </a>";
+							view += "<a class='btn btn-sm fas fa-recycle text-warning' href='/users/edit-info/"+data+"'> </a>";
+							view += "<a class='btn btn-sm fas fa-lock text-primary'> </a>";
+							view += "<a class='btn btn-sm fas fa-trash text-danger delete' id='"+data+"'> </a></div>";
 						return view;
 					}
 				},
+			],
+			dom: 'Bfrtip',
+			buttons: [
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+                'pdfHtml5',
+				{
+					text:'<i class="fas fa-lock"></i> Roles/Access',
+					className:'btn-warning',
+					action:function(e, dt, node, config) {
+						window.location = "/users/roles";
+					}
+				},
+				{
+					text:'<i class="fas fa-pen"></i> Add',
+					className:'btn-success',
+					action:function(e, dt, node, config) {
+						window.location = "/users/register";
+					}
+				}
 			]
+		})
+
+		$(document).on('click', '.view', function(){
+			var id = $(this).attr('id');
+			$.ajax({
+				url:'',
+				method:'',
+				data:{id:id},
+				success:function(data){
+
+				}
+			})
+		})
+
+		function refresh() {
+			$("#users_table").DataTable().ajax.reload(null, false);
+		}
+		
+		$(document).on('click', '.delete', function(){
+			var id = $(this).attr('id');
+			$confirm("Do you want to delete?", "#FF9100")
+			.then(() => {
+				$.ajax({
+					url:'/users/delete',
+					method:'post',
+					data:{id:id},
+					success:function(data){
+						if (data == 'success') {
+							refresh();
+							$toast(data, "#dc3545");
+						}
+						else 
+							$toast(data, "#dc3545");
+					}
+				})
+			})
 		})
     })
 </script>

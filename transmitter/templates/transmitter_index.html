@@ -7,7 +7,14 @@
 <script>
 	// $(window).load(function() {
 	// 		});
+
 </script>
+<style>
+	button.dt-button.btn-success{
+		background-color: green !important;
+		color: white !important;
+	}
+</style>
 {% endblock %}
 
 {% block body %}
@@ -39,12 +46,6 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){	
-		// loading animation
-		$loader_show("#b3b3c1");
-		setTimeout(()=>{
-			$loader_hide()
-		}, 1000);
-		// end loading animation
 		
 		$("#transmitters_table").DataTable({
 			"pageLength":8,
@@ -94,14 +95,7 @@
 				'csvHtml5',
 				'pdfHtml5',
 				{
-					text: '<i class="fas fa-search-location"></i> Maps',
-					action: function(e, dt, node, config) {
-						window.location.href="/tramsmitter/map";
-					}
-				},
-				{
-					// 'text': '<span class="fas fa-plus"></span>',
-					'text': '<i class="fas fa-pencil-alt"></i> Add',
+					'text': '<i class="fas fa-pencil-alt"></i> Add', className :'btn btn-success', 
 					'action': function(e, dt, node, config) {
 						window.location.href="/transmitter/add";
 					}

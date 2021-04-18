@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Add role{% endblock %}
+{% block title %}GSM Surge Warner - Users roles{% endblock %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -14,14 +15,27 @@
           
             <div class="card">
               <div class="card-body register-card-body">
-                <p class="login-box-msg">Add Role</p>
+                <h5 class="login-box-msg">Add Role</h5>
           
-                <form action="/users/addrole" method="post">
+                <form id="addrole">
                   <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="role" placeholder="Role">
+                    <input type="text" class="form-control" id="role" name="role" placeholder="Role">
                     <div class="input-group-append">
                       <div class="input-group-text">
                         <span class="fas fa-user"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="input-group">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        {% for module in modules %}
+                        <div class="form-group">
+                          <input type="checkbox" name="{{module}}" class="from-control">
+                          <label class="text-capitalize" for="{{module}}">{{module}}</label>
+                        </div>
+                        {% endfor %}
                       </div>
                     </div>
                   </div>
@@ -29,7 +43,7 @@
                   <div class="row">
                     <!-- /.col -->
                     <div class="col-12">
-                      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                      <button type="submit" class="btn btn-primary fas fa-save"> Save</button>
                     </div>
                     <!-- /.col -->
                   </div>
@@ -42,14 +56,8 @@
     </div>
     <div class="col-md-8">
         <h1>Roles</h1>
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Role</th>
-                    <th><i class="fas fa-cog"></i></th>
-                </tr>
-            </thead>
+        <hr>
+        <table class="table table-sm table-hover" id="rolesTable">
         </table>
     </div>
 </div>
@@ -60,4 +68,121 @@
 <!-- <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/graph.js') }}"></script> -->
 <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script>
+  $(document).ready(function(){
+    
+    function refresh() {
+			$("#rolesTable").DataTable().ajax.reload(null, false);
+		}
+
+    $("#addrole").on('submit', function(e){
+      e.preventDefault();
+
+      var checkedAccess = Array();
+      $("input:checkbox[type=checkbox]:checked").each(function(){
+        checkedAccess.push($(this).attr('name'));
+      });
+
+      var role = $("#role").val();
+
+      $.ajax({
+        url:'/users/add-role',
+        type:'post',
+        dataType: 'json',
+        data:{
+          role:role,
+          checkedAccess:JSON.stringify(checkedAccess)
+        },
+        success:function(data) {
+          if (data == "success") {
+            $toast("Done!", "#018401");
+          }
+          else {
+            $toast("Failed!", "#dc3545");
+          }
+          refresh();
+        }
+      });
+    })
+
+    $("#rolesTable").DataTable({
+			'pageLength': 5,
+        'processing': true,
+        'ajax': {
+            'url': '/users/roles-list',
+            'dataSrc': ''
+        },
+        'columns': [
+				  {
+            title:'ID',
+            data:'id'
+          },
+          {
+            title:'Role',
+            data:'role',
+          },
+          {
+            title:'<div class="text-center">Access</div>',
+            data:'role_access',
+            render:function(data) {
+              var view = "<div class='text-right'>";
+              data.forEach(element => {
+                view += element.access+" <i class='fas fa-check text-muted'> </i>";
+                view += "<br>";
+              });
+              return view += "</div>";
+            }
+          },
+          {
+            title:'<div class="text-center">Action</div>',
+            data:{
+              'role':'role',
+              'id':'id'
+            },
+            render:function(data){
+              if (data.role.toLowerCase() == 'admin') {
+                return "<div class='text-center'><button class='btn btn-light text-muted fas fa-trash'></button></div>";
+              }
+              
+              var view = "<div class='text-center'>";
+                view += "<button class='btn btn-light text-danger fas fa-trash delete' id='"+data.id+"'></button>";
+              return view += "</div>";
+            }
+          }
+        ],
+    })
+
+
+    $(document).on('click', '.delete', function(){
+      var id = $(this).attr('id');
+			$confirm("Do you want to delete?", "#FF9100")
+			.then(() => {
+        $.ajax({
+          url:'/users/delete-role',
+          method:'post',
+          data:{id:id},
+          success:function(data) {
+            if (data.toLowerCase() == "success") {
+              $toast("Delete successful", "#018401");
+              refresh();
+            }
+            else {
+              $toast("Delete failed!", "#dc3545");
+            }
+          }
+        })
+      });
+    })
+
+  })
+</script>
 {% endblock %}

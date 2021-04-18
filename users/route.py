@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, session, redirect
-from model.models import User, db, Role, RoleSchema, UserSchema
+from model.models import User, db, Role, RoleSchema, UserSchema, UserInfo, UserInfoSchema, RoleAccess, RoleAccessShema
 from users import dashboard_data as dd
+import os, time, json
+from config.const import MODULES
 
 users = Blueprint("users", __name__, static_folder="static", template_folder="templates")
 
@@ -21,25 +23,32 @@ def dashboard():
 
 @users.route('/register')
 def register():
-	return render_template('register.html')
+	role = Role.query.all()
+	output = RoleSchema(many=True).dump(role)
+	if not role:
+		flash("You need to add roles before you can add user.")
+	return render_template('register.html', roles=output)
 
 @users.route('/store', methods=['POST'])
-def store():
-	name = request.form['name']
+def store():	
+
+	# account information
+	username = request.form['username']
 	email = request.form['email']
 	password1 = request.form['password1']
 	password2 = request.form['password2']
 	role = request.form['role']
 
-	if name and email and password1 and password2 and role:
+	if username and email and password1 and password2 and role:
 		if password2 == password1:
 			role_id = Role.query.filter(Role.role == role).first().id
 			if role_id:
 				user = User(
-					name = name,
+					username = username,
 					email = email,
 					password = password1,
-					role_id = role_id
+					role_id = role_id, 
+					status = True,
 				)
 				db.session.add(user)
 				db.session.commit()
@@ -50,28 +59,57 @@ def store():
 	else:
 		return "fields not complete"
 
+	quser = User.query.filter(User.username == username, User.email == email).first()
+
+	if quser:
+		# user information
+		image = request.files['image']
+		path = os.path.join('./upload', image.filename)
+		firstname = request.form['firstname']
+		middlename = request.form['middlename']
+		lastname = request.form['lastname']
+		gender = request.form['gender']
+
+		if image and path and firstname and middlename and lastname and gender:
+			userInfo = UserInfo(
+				firstname = firstname,
+				middlename = middlename,
+				lastname = lastname,
+				gender = gender,
+				user_id = quser.id,
+				image = path
+			)
+			image.save(path)
+
+			db.session.add(userInfo)
+			db.session.commit()
+		else:
+			return "User information fields not complete"
+
 	return redirect(url_for('users.login'))
 
 @users.route('/login', methods=['POST', 'GET'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        if email and password:
-            user = User.query.filter(User.email == email, User.password == password).first()
-            if user:
-                session['email'] = user.email
-                return redirect(url_for('users.dashboard'))
-            else:
-                return "user not found"
-        else:
-            return "all fields are required"
-    elif request.method == 'GET':
-        if 'email' in session:
-            return redirect(url_for('users.dashboard'))
-        return render_template('login.html')
-    else:
-        return redirect(url_for('/'))
+	if request.method == 'POST':
+		email = request.form['email']
+		password = request.form['password']
+		if email and password:
+			user = User.query.filter(User.email == email, User.password == password).first()
+			userS = UserSchema(many=False).dump(user)
+			if user:
+				session['email'] = user.email
+				session['user'] = {'user':userS}
+				return redirect(url_for('users.dashboard'))
+			else:
+				return "user not found"
+		else:
+			return "all fields are required"
+	elif request.method == 'GET':
+		if 'email' in session:
+			return redirect(url_for('users.dashboard'))
+		return render_template('login.html')
+	else:
+		return redirect(url_for('/'))
 
 @users.route('/logout')
 def logout():
@@ -80,7 +118,13 @@ def logout():
 
 @users.route('/roles')
 def roles():
-	return render_template('/roles.html')
+	return render_template('/roles.html', modules=MODULES)
+
+@users.route('/roles-list') 
+def rolesList():
+	roles = Role.query.all()
+	output = RoleSchema(many=True).dump(roles)
+	return jsonify(output)
 
 @users.route('/getroles')
 def getroles():
@@ -88,28 +132,97 @@ def getroles():
 	output = RoleSchema(many=True).dump(results)
 	return jsonify(output)
 
-@users.route('/addrole', methods=['POST'])
-def addrole():
-	role = request.form['role']
-	try:
-		role = Role(role=role)
-		db.session.add(role)
-		db.session.commit()
-	except Exception as e:
-		return str(e)
-	return "Done"
+@users.route('/add-role', methods=['POST'])
+def addRole():
+	if request.method == 'POST':
+		r = request.form['role']
+		access = json.loads(request.form['checkedAccess'])
+
+		print(access)
+		
+		role = Role(
+			role = r
+		)
+
+		try:
+			db.session.add(role)
+			db.session.commit()
+
+			role_id = Role.query.filter(Role.role == r).first().id
+
+			for a in access:
+				ra = RoleAccess(
+					access = a,
+					role_id = role_id
+				)
+				db.session.add(ra)
+			db.session.commit()
+		except Exception as e:
+			return str(e)
+		
+		return "success"
+
+	else:
+		return "Invalid method"
 
 @users.route('/list')
 def users_list():
    return render_template('list.html')
 
+@users.route('/adduserinfo')
+def addUserInfo():
+	role = Role.query.all()
+	output = RoleSchema(many=True).dump(role)
+	return render_template('/adduserinfo.html', roles=output)
+
+@users.route('/user-info/<id>')
+def userInfo(id):
+	user = User.query.filter(User.id == id).first()
+	output = UserSchema(many=False).dump(user)
+	return render_template('/comp/user-info.html', user=user)
+
+@users.route('/edit-info/<id>')
+def editInfo(id):
+	user = User.query.filter(User.id == id).first()
+	output = UserSchema(many=False).dump(user)
+	roles = Role.query.all()
+	return render_template('/comp/edit-info.html', user=user, roles=roles)
+
+@users.route('/profile')
+def profile():
+	return render_template("/profile.html")
+
 @users.route('/show')
 def show():
-	users = User.query.all()
+	users = User.query.filter(User.status == True).all()
 	output = UserSchema(many=True).dump(users)
 	return jsonify(output)
 
-@users.route('/test')
-def test():
-	return str(dd.detection_history())
- 
+@users.route('/delete', methods=['POST'])
+def delete():
+	id = request.form['id']
+	if id:
+		user = User.query.filter(User.id == id).first()
+		user.status = False
+		db.session.commit()
+		return "Delelte successful!"
+	else:
+		return "Identification needed!"
+
+@users.route('/delete-role', methods=['POST'])
+def deleteRole():
+	if request.method == 'POST':
+		id = request.form['id']
+		db.session.query(Role).filter(Role.id == id).delete()
+		db.session.query(RoleAccess).filter(RoleAccess.role_id == id).delete()
+		db.session.commit()
+		return "success"
+	else:
+		return "failed"
+
+@users.route('/clear-role')
+def clearRole():
+	db.session.query(Role).delete()
+	db.session.query(RoleAccess).delete()
+	db.session.commit()
+	return "Done"

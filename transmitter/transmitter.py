@@ -1,6 +1,6 @@
 import json, traceback
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, Response
-from model.models import db, TransmitterSchema, Transmitter, Desequivalert, DesequivalertSchema
+from model.models import db, TransmitterSchema, Transmitter
 from sqlalchemy import func
 from util.query_serializer import serialize
 from config.const import SUCCESS, FAILED, ERROR, MISSING_DATA
@@ -35,31 +35,7 @@ def add():
 		try:
 			db.session.add(transmitter)
 			db.session.commit()
-
-			time.sleep(1)
-
-			trans_id = Transmitter.query.filter(Transmitter.sim_number == request.form['sim_number']).first().id
-
-			# trans_id = db.session.query(Transmitter).filter(Transmitter.sim_number == request.form['sim_number'])
-
-			print("printing trans id_____________________________________________")
-			print(trans_id)
-			
-			desequivalert = Desequivalert(
-				_normal = request.form['_normal'],
-				_yellow = request.form['_yellow'],
-				_orange = request.form['_orange'],
-				_red = request.form['_red'],
-				transmitter_id = trans_id
-			)
-
-			if desequivalert._normal and desequivalert._yellow and desequivalert._orange and desequivalert._red:
-				db.session.add(desequivalert)
-				db.session.commit()
-
-				return SUCCESS
-			else:
-				return ERROR
+			return SUCCESS
 		except Exception as e:
 			print(str(e))
 			return ERROR
@@ -103,15 +79,7 @@ def update():
 		longitude = request.form['longitude'],
 		latitude = request.form['latitude'],
 	)
-			
-	desequivalert = Desequivalert(
-		_normal = request.form['_normal'],
-		_yellow = request.form['_yellow'],
-		_orange = request.form['_orange'],
-		_red = request.form['_red'],
-		transmitter_id = request.form['id']
-	)
-	if transmitter.longitude and transmitter.latitude and  transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location and desequivalert._normal and desequivalert._yellow and desequivalert._orange and desequivalert._red:
+	if transmitter.longitude and transmitter.latitude and  transmitter.name and transmitter.sim_number and transmitter.post_number and transmitter.post_description and transmitter.location:
 		try:
 			trans = Transmitter.query.filter(Transmitter.id == request.form['id']).first()
 
@@ -120,16 +88,6 @@ def update():
 			trans.post_number = transmitter.post_number
 			trans.post_description = transmitter.post_description
 			trans.location = transmitter.location
-
-			time.sleep(.5)			
-			db.session.commit()
-
-			desequiv = Desequivalert.query.filter(Desequivalert.transmitter_id==request.form['id']).first()
-			
-			desequiv._normal = desequivalert._normal
-			desequiv._yellow = desequivalert._yellow
-			desequiv._orange = desequivalert._orange
-			desequiv._red = desequivalert._red
 
 			db.session.commit()
 
@@ -162,3 +120,9 @@ def map():
 def count():
 	trans = db.session.query(func.count(Transmitter.id)).scalar()
 	return str(trans)
+
+@transmitter.route('/test')
+def test():
+	transmitter = Transmitter.query.filter(Transmitter.sim_number == '+639355384161').first()
+	output = TransmitterSchema(many=False).dump(transmitter)
+	return jsonify(output)

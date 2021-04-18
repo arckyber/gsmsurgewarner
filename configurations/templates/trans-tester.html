@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}GSM Surge Warner - Config - TransTester{% endblock %}
+
+{% block head %}
+<style>
+    .control-center {
+        text-align: center;
+    }
+    #sectionhead #legends {
+        display: inline;
+    }
+    #legends {
+        right: 0;
+    }
+    .fullscreen{
+        background-color: white !important;  
+        padding: 1% 20% 5%;
+    }
+    .text-yellow  {
+        color: yellow !important;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <!-- sms modal  -->
+    {% include 'sms.html' %}
+    <!-- end sms modal -->    
+	<div class="row">
+		<div class="col-md-3" style="border-right: 1px solid rgb(209, 206, 206);">		
+			{% include 'arduino.html' %}
+		</div>
+		<div class="col-md-9">
+			<div id="sectionhead">
+                <span style="font-size: 1.8rem;" class="fas fa-gear"> Transmitter Tester </span>
+			</div>
+			<hr>
+            <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
+                <div id="fullscreen">
+                    <div>
+                        <h1 id="result" style="width: 400px; margin: auto; margin-top: 5%;"></h1>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+<script language="javascript">
+	$(document).ready(function(){		
+        function displayDistance() {
+            $.ajax({
+                url:'/arduino/test-trans',
+                method:'get',
+                data:{},
+                success:function(data) {
+                    if (data.length >= 4) {
+                        $("#result").text(data);
+                    }
+                }
+            })
+        }
+
+        setInterval(displayDistance, 2000);
+    })
+</script>
+{% endblock %}

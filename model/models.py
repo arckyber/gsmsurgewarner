@@ -3,33 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 # from flask_marshmallow import Marshmallow
 from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import ModelSchema
-from config.const import NORMAL, YELLOW, ORANGE, RED
 import datetime
 
 db = SQLAlchemy()
-
-
-class Desequivalert(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	_normal = db.Column(db.Float)
-	_yellow = db.Column(db.Float)
-	_orange = db.Column(db.Float)
-	_red = db.Column(db.Float)
-	transmitter_id = db.Column(db.Integer, db.ForeignKey('transmitter.id'))
-	created_at = db.Column(db.DateTime)
-
-	def __init__(self, _normal, _yellow, _orange, _red, transmitter_id):
-		self._normal = _normal
-		self._yellow = _yellow
-		self._orange = _orange
-		self._red = _red
-		self.transmitter_id = transmitter_id
-		self.created_at = datetime.datetime.now()
-
-class DesequivalertSchema(ModelSchema):
-	transmitter_id = fields.Integer()
-	class Meta:
-		model = Desequivalert
 
 class Transmitter(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -44,9 +20,6 @@ class Transmitter(db.Model):
 	updated_at = db.Column(db.DateTime)
 	status = db.Column(db.Boolean)
 
-	# desequivealert_id = db.Column(db.Integer, db.ForeignKey('desequivalert.id'))
-	desequivealert = db.relationship('Desequivalert')
-
 	def __init__(self, name, sim_number, post_number, post_description, location, longitude, latitude):
 		self.name = name
 		self.sim_number = sim_number
@@ -60,13 +33,12 @@ class Transmitter(db.Model):
 		self.status = True
 
 class TransmitterSchema(ModelSchema):
-	desequivealert = fields.List(fields.Nested(DesequivalertSchema, required=True))
 	class Meta:
 		model = Transmitter
 
 class Sms(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	alert_level = db.Column(db.Integer)
+	alert_type = db.Column(db.Integer)
 	water_distance = db.Column(db.Float)
 	transmitter_id = db.Column(db.Integer, db.ForeignKey('transmitter.id'))
 	transmitter = db.relationship('Transmitter')
@@ -95,6 +67,7 @@ class Contact(db.Model):
 class ContactSchema(ModelSchema):
 	class Meta:
 		model = Contact
+
 class ExtraSms(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	message = db.Column(db.Text())
@@ -108,26 +81,56 @@ class ExtraSmsSchema(ModelSchema):
 	class Meta:
 		model = ExtraSms
 
-class User(db.Model):
+class UserInfo(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String())
-	email = db.Column(db.String())
-	password = db.Column(db.String())
+	firstname = db.Column(db.String(50))
+	middlename = db.Column(db.String(50))
+	lastname = db.Column(db.String(50))
+	gender = db.Column(db.String(10))
+	address = db.Column(db.Text())
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	image = db.Column(db.Text(), nullable=True)
+
+class UserInfoSchema(ModelSchema):
+	class Meta:
+		model = UserInfo
+
+class RoleAccess(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
 	role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-	# role = db.relationship('Role')
+	access = db.Column(db.String())
+
+class RoleAccessShema(ModelSchema):
+	role_id = fields.Integer()
+	class Meta:
+		model = RoleAccess
 
 class Role(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	role = db.Column(db.String())
+	role_access = db.relationship('RoleAccess')
 	# user = db.relationship('User')
 
-class UserSchema(ModelSchema):
-	class Meta:
-		model = User
-
 class RoleSchema(ModelSchema):
+	role_access = fields.List(fields.Nested(RoleAccessShema))
 	class Meta:
 		model = Role
+
+class User(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String())
+	email = db.Column(db.String())
+	password = db.Column(db.String())
+	role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+	userinfo = db.relationship('UserInfo')
+	role = db.relationship('Role')
+	status = db.Column(db.Boolean)
+
+class UserSchema(ModelSchema):
+	userinfo = fields.Nested(UserInfoSchema, required=True)
+	role = fields.Nested(RoleSchema, required=True)
+	class Meta:
+		model = User
 
 class Extra(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

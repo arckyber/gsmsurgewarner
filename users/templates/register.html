@@ -1,98 +1,114 @@
 {% extends 'base.html' %}
-{% block title %}Register{% endblock %}
+{% block title %}GSM Surge Warner - Register user{% endblock %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 
 {% block body %}
-<div class="register-box" style="width: 40%; margin: auto;">
-	<div class="register-logo text-center">
-	  <h1>Register</h1>
+<div class="card card-info" style="width: 70%; margin: auto;">
+	<div class="card-header">
+	  <h3 class="card-title">User registration form</h3>
 	</div>
-  
-	<div class="card">
-	  <div class="card-body register-card-body">
-		<p class="login-box-msg">Register a new membership</p>
-  
-		<form action="/users/store" method="post">
-		  <div class="input-group mb-3">
-			<input type="text" class="form-control" name="name" placeholder="Full name">
-			<div class="input-group-append">
-			  <div class="input-group-text">
-				<span class="fas fa-user"></span>
-			  </div>
-			</div>
-		  </div>
-		  <div class="input-group mb-3">
-			<input type="email" class="form-control" name="email" placeholder="Email">
-			<div class="input-group-append">
-			  <div class="input-group-text">
-				<span class="fas fa-envelope"></span>
-			  </div>
-			</div>
-		  </div>
-		  <div class="input-group mb-3">
-			<input type="password" class="form-control" name="password1" placeholder="Password">
-			<div class="input-group-append">
-			  <div class="input-group-text">
-				<span class="fas fa-lock"></span>
-			  </div>
-			</div>
-		  </div>
-		  <div class="input-group mb-3">
-			<input type="password" class="form-control" name="password2" placeholder="Retype password">
-			<div class="input-group-append">
-			  <div class="input-group-text">
-				<span class="fas fa-lock"></span>
-			  </div>
-			</div>
-		  </div>
-		  	<div class="input-group mb-3">
-				<select type="text" class="form-control" name="role" placeholder="Role">
-					<option>Admin</option>
-					<option>Operator</option>
-				</select>
-				<div class="input-group-append">
-				<div class="input-group-text">
-					<span class="fas fa-creative-commons-by"></span>
+	<!-- /.card-header -->
+	<!-- form start -->
+	<form class="form-horizontal" method="post" enctype="multipart/form-data" action="/users/store">
+	  <div class="card-body">	
+        <div>
+            <legend>Account information</legend>
+            <div class="container">
+                <div class="form-group row">
+                    <label for="username" class="col-sm-2 col-form-label">Username</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="password1" class="col-sm-2 col-form-label">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="password1"n name="password1" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="password2" class="col-sm-2 col-form-label">Re-enter password</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Re-enter password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="role" class="col-sm-2 col-form-label">Role</label>
+                    <div class="col-sm-10">
+						<select class="form-control" name="role" id="role">
+							{% for role in roles %}
+								<option>{{role.role}}</option>
+							{% endfor %}
+						</select>
+                    </div>
+                </div>
+            </div>
+        </div>	
+        <div class="container">
+          <hr>
+        </div>	
+		  <div>
+			  <legend>Personal information</legend>
+			  <div class="container">
+				  <div>
+					  <i class="fas fa-user" style="font-size: 3rem;"></i>
+				  </div>
+				<div class="form-group row">
+					<label for="image" class="col-sm-2 col-form-label">Image</label>
+					<div class="input-group col-sm-10">
+						<div class="custom-file">
+						<input type="file" class="custom-file-input" id="image" name="image">
+						<label class="custom-file-label" for="image">Choose file</label>
+						</div>
+					</div>
 				</div>
+				<div class="form-group row">
+					<label for="firstname" class="col-sm-2 col-form-label">First name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name">
+					</div>
 				</div>
-		  </div>
-		  <div class="row">
-			<div class="col-8">
-			  <div class="icheck-primary">
-				<input type="checkbox" id="agreeTerms" name="terms" value="agree">
-				<label for="agreeTerms">
-				 I agree to the <a href="#">terms</a>
-				</label>
+				<div class="form-group row">
+					<label for="middlename" class="col-sm-2 col-form-label">Middle name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="middlename" name="middlename" placeholder="Middle name">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="lastname" class="col-sm-2 col-form-label">Last name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="gender" class="col-sm-2 col-form-label">Gender</label>
+					<div class="col-sm-10">
+						<select name="gender" id="gender" class="form-control">
+							<option>Male</option>
+							<option>Female</option>
+						</select>
+					</div>
+				</div>
 			  </div>
-			</div>
-			<!-- /.col -->
-			<div class="col-4">
-			  <button type="submit" class="btn btn-primary btn-block">Register</button>
-			</div>
-			<!-- /.col -->
 		  </div>
-		</form>
-  
-		<div class="social-auth-links text-center">
-		  <p>- OR -</p>
-		  <a href="#" class="btn btn-block btn-primary">
-			<i class="fab fa-facebook mr-2"></i>
-			Sign up using Facebook
-		  </a>
-		  <a href="#" class="btn btn-block btn-danger">
-			<i class="fab fa-google-plus mr-2"></i>
-			Sign up using Google+
-		  </a>
-		</div>
-  
-		<a href="/login" class="text-center">I already have a membership</a>
 	  </div>
-	  <!-- /.form-box -->
-	</div><!-- /.card -->
+	  <!-- /.card-body -->
+	  <div class="card-footer">
+		<button type="submit" class="btn btn-info">Sign up</button>
+		<button type="submit" id="back" class="btn btn-default float-right">Cancel</button>
+	  </div>
+	  <!-- /.card-footer -->
+	</form>
   </div>
-  <!-- /.register-box -->
+  <!-- /.card -->
 {% endblock %}
 <br>
 <br>

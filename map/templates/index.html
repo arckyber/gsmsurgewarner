@@ -17,13 +17,6 @@
     #mapid {
       border: 1px solid rgb(185, 184, 184);
     }
-    #mapform {
-      margin-top: 5% !important;
-    }
-    #leftControl {
-      margin-top: 10% !important;
-      margin-left: -1.6% !important;
-    }
     .text-yellow {
       color: yellow;
     }
@@ -36,83 +29,126 @@
     .show {
       display: inherit;
     }
+    .rightControl {
+      margin-top: 5% !important;
+      margin-right: -3.5% !important;
+    }
+    .rightControlF{
+      margin-top: 5% !important;
+      margin-right: -2% !important;
+    }
+    .leftControl {
+      margin-top: 10% !important;
+      margin-left: -1.8% !important;
+    }
+    .leftControlF {
+      margin-top: 5% !important;
+      margin-left: -1.1% !important;
+    }
+    #sectionhead #legends {
+        display: inline;
+    }
   </style>
 {% endblock %}
 
 {% block body %}	
-<div id="full">
-  <div id="mapid" style="width: 100%;">  
-    <div style="margin: auto;">
-      <h5 class="text-muted text-center" style="margin: auto; width: 30%;">No internet connection</h5>
+<div class="row">
+    <div class="col-md-3" style="border-right: 1px solid rgb(209, 206, 206);">		
+        {% include 'arduino.html' %}
     </div>
-    <!-- left panel control -->
-    <div class="leaflet-top leaflet-left hide" id="leftControl">
-      <div class="leaflet leaflet-control">
-        <div class="container">
-          <div class="text-center">
-            <a href="#">
-              <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5>
-            </a>
-            <br>
-            <a href="#">
-              <button id="fullscreen_btn" class="btn fas fa-search-plus"></button>
-            </a>
-          </div>
+    <div class="col-md-9">
+        <div id="sectionhead">
+            <h3 style="font-size: 2rem;" class="fas fa-map"> Map </h3>
+            <div id="legends">
+                <i class="text-muted">Warning Legends: </i>
+                <i class="fas fa-map-marker-alt text-warning"> Warning</i>
+                <i class="fas fa-map-marker-alt text-danger"> Danger</i>
+            </div>
         </div>
-      </div>
-    </div>
-    <!-- end left panel control -->
-    <!-- right panel control -->
-    <div class="leaflet-top leaflet-right hide" id="mapform">
-      <div class="leaflet leaflet-control">
-        <div class="container">
-          <div class="text-center">
-            <strong>Realtime</strong>
-            <br>
-            <small>Monitoring</small>
-          </div>
-          <hr>
-          <div class="text-center">
-            <div>
-              <i class="text-primary fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Normal water level"></i>
-            </div>
-            <br>
-            <div>
-              <i class="text-yellow fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Above normal water level"></i>
-            </div>
-            <br>
-            <div>
-              <i class="text-warning fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Warning alert"></i>
-            </div>
-            <br>
-            <div>
-              <i class="text-danger fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Danger. Residents need to be evacuated"></i>
-            </div>
-            <br>
-            <div>
-              <i class="text-center">Legends</i>
-            </div>
-          </div>
-          <hr>
-          <div class="text-center">
-            <strong id="time"></strong>
-          </div>
-          <br>
-          <div class="text-center">
-            <!-- <h5 class="fas fa-spinner fa-pulse text-success"></h5> -->
-          </div>
+        <hr>
+        <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: inherit;">
+            <div id="full">
+                <div id="mapid" style="width: 100%;">  
+                  <div style="margin: auto;">
+                    <div id="my-loader" class="text-danger ldld bare"></div>
+                  </div>
+                  <!-- left panel control -->
+                  <div class="leaflet-top leaflet-left hide leftControl" id="leftControl">
+                    <div class="leaflet leaflet-control">
+                      <div class="container">
+                        <div class="text-center">
+                          <!-- <a href="#">
+                            <h5 id="status" class="" style="font-size: 2.5rem;" data-toggle="tooltip" data-placement="right" title="Receiver module connection status"></h5>
+                          </a> -->
+                          <br>
+                          <a>
+                            <button id="fullscreen_btn" class="btn btn-info btn-sm fas fa-expand-arrows-alt"></button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- end left panel control -->
+                  <!-- right panel control -->
+                  <div class="leaflet-top leaflet-right hide rightControl" id="rightControl">
+                    <div class="leaflet leaflet-control">
+                      <div class="container">
+                        <div class="text-center">
+                          <strong>Realtime</strong>
+                          <br>
+                          <small>Monitoring</small>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                          <div>
+                            <i class="text-warning fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Warning alert"></i>
+                          </div>
+                          <br>
+                          <div>
+                            <i class="text-danger fas fa-map-marker-alt legend" data-toggle="tooltip" data-placement="left" title="Danger. Residents need to be evacuated"></i>
+                          </div>
+                          <br>
+                          <div>
+                            <i class="text-center">Legends</i>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                          <strong id="time_small"></strong>
+                        </div>
+                        <br>
+                        <div class="text-center">
+                          <!-- <h5 class="fas fa-spinner fa-pulse text-success"></h5> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
+
 {% endblock %}
 
 {% block script %}
 <script>
   $(document).ready(function(){
 
-    document.getElementById("mapid").style.height = screen.height+"px"; 
+		// // loading animation
+		// $loader_show("#b3b3c1");
+
+    // setTimeout(()=>{
+    //   $loader_hide();
+    // }, 3000);
+		// end loading animation
+
+    // var ldld = new ldLoader({ root: "#my-loader" }); 
+    /* 4. active this loader */
+    // ldld.on();
+
+    // document.getElementById("mapid").style.height = screen.height+"px"; 
+    document.getElementById("mapid").style.height = "400px";
 
     var mymap = undefined;
 
@@ -135,6 +171,7 @@
         if(longit != undefined && latit != undefined) {
           if (mymap == undefined)
             displayMap();
+            // ldld.off();
         }
     }
 
@@ -159,7 +196,7 @@
 
       // L.marker([8.170712, 125.109558]).addTo(mymap)
       L.marker([longit, latit]).addTo(mymap)
-        .bindPopup("<b>Hi Gay!</b><br />This is your location.").openPopup();
+        .bindPopup("<b>Hi {}!</b><br />This is your location.").openPopup();
 
       // define transmitter marker icon
       var trasnIcon = L.icon({
@@ -176,13 +213,15 @@
       // Setting up markers of transmitters
       var trans = JSON.parse('{{transmitters | tojson | safe}}');
 
+      console.log(trans);
+
       trans.forEach(element => {
         var id = element.name.replace(' ', '');
 
         var mrker = L.marker([element.longitude, element.latitude], {id:id});
 
         
-        mrker.bindPopup("<div><b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+"</small></div>");
+        mrker.bindPopup("<div><b>"+element.name+"</b><br />"+element.location+"<br /><small><i class='fas fa-directions'></i> "+element.post_description+" <br> <i class='fas fa-flag'></i> "+element.post_number+" <br><i class='fas fa-map-marker-alt'></i> Lng: "+element.longitude+", Lat: "+element.latitude+"</small></div>");
         mrker.addTo(mymap);
 
         markers.push(mrker);
@@ -238,34 +277,31 @@
 
     function query() {
       $.ajax({
-        url:'/realtime/query',
+        url:'/map/query',
         method:'GET',
         data:{},
-        success:function(sms) {
-          var trans = sms.transmitter;
+        success:function(smss) {
 
-          var id = trans.name.replace(' ', '');
+          smss.forEach(sms => {
 
-          markers.forEach(element => {
+            var trans = sms.transmitter;
+
+            var id = trans.name.replace(' ', '');
+
+            markers.forEach(element => {
             if (element.options.id == id) {
 
-              switch(parseInt(sms.alert_level)) 
+              element.closePopup();
+
+              switch(parseInt(sms.alert_type)) 
               {
-                case 1:
-                  element.setIcon(normalIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-primary'> Normal level</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
-                  break;
-                case 2:
-                  element.setIcon(yellowIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-yellow'> Yellow warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
-                  break;
                 case 3:
                   element.setIcon(orangeIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-warning'> Orange warning</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  element.bindPopup("<div><strong class='fas fa-warning text-warning'> Critical water level is detected!</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+" <br> <i class='fas fa-flag'></i> "+trans.post_number+" <br><i class='fas fa-map-marker-alt'></i> Lng: "+trans.longitude+", Lat: "+trans.latitude+"</small></div>", {autoClose:false});
                   break;
                 case 4:
                   element.setIcon(redIcon);
-                  element.bindPopup("<div><strong class='fas fa-warning text-danger'> Danger</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+"</small></div>");
+                  element.bindPopup("<div><strong class='fas fa-warning text-danger'> Rapid rise of water is detected!</strong><br><b>"+trans.name+"</b><br />"+trans.location+"<br /><small><i class='fas fa-directions'></i> "+trans.post_description+" <br> <i class='fas fa-flag'></i> "+trans.post_number+" <br><i class='fas fa-map-marker-alt'></i> Lng: "+trans.longitude+", Lat: "+trans.latitude+"</small></div>", {autoClose:false});
                   break;
               }
 
@@ -273,6 +309,8 @@
 
             }
           });
+          })
+         
         }
       })
     }
@@ -288,49 +326,24 @@
 
       $("#leftControl").removeClass("hidden");
       $("#leftControl").addClass("show");
-      $("#mapform").removeClass("hidden");
-      $("#mapform").addClass("show");
+      $("#rightControl").removeClass("hidden");
+      $("#rightControl").addClass("show");
     }
 
 
     // tick time
-    function ticktime() {
+    function ticktime_small() {
         var d = new Date(Date.now());
         var target = document.getElementById("time");
-        $("#time").text(d.toLocaleTimeString());
+        $("#time_small").text(d.toLocaleTimeString());
     }
-    setInterval(ticktime, 1000);
+    setInterval(ticktime_small, 1000);
     // end tick time
 
 
 
     // detect arduino
     
-    function detectArduino() {
-      $.ajax({
-            url:'/arduino/render',
-            type:'post',
-            data:{},
-            success:function(data) {
-                if(data.connected) {
-                    $("#status").removeClass("text-danger");
-                    $("#status").removeClass("fas fa-warning");
-                    $("#status").addClass("text-success");
-                    $("#status").addClass("fas fa-spinner fa-pulse");
-                    // $("#status").text(" Connected!");
-                }
-                else {
-                    $("#status").removeClass("text-success");
-                    $("#status").removeClass("fas fa-spinner fa-pulse");
-                    $("#status").addClass("text-danger");
-                    $("#status").addClass("fas fa-warning");
-                    // $("#status").text(" Disconnected!");
-                }
-                // $("#r_status").removeClass("fas fa-spinner fa-spin text-light");
-            }
-        })
-    }
-    detectArduino();
     // end detect arduino
 
     $("#realtime").addClass('active');
@@ -338,9 +351,24 @@
     $("#fullscreen_btn").on('click', function(){
       if ($("#full").hasClass('fullscreen')){
 				$("#full").removeClass('fullscreen');
+                document.getElementById("mapid").style.height = "400px";
+                // remove class for full screen view
+                $("#leftControl").removeClass("leftControlF");
+                $("#rightControl").removeClass("rightControlF");
+                // add class for small screen
+                $("#leftControl").addClass("leftControl");
+                $("#rightControl").addClass("rightControl");
 			}
 			else {
 				$("#full").addClass('fullscreen');
+                document.getElementById("mapid").style.height = screen.height+"px";
+                $("#rightControl").css("margin-right", "-1px !important");
+                // remove class for small view
+                $("#leftControl").removeClass("leftControl");
+                $("#rightControl").removeClass("rightControl");
+                // add class for full screen
+                $("#leftControl").addClass("leftControlF");
+                $("#rightControl").addClass("rightControlF");
 			}
     })
 

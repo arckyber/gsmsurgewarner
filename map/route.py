@@ -9,7 +9,7 @@ map = Blueprint('map', __name__, static_folder='static', template_folder='templa
 def index():
 	result = Transmitter.query.all()
 	output = TransmitterSchema(many=True).dump(result)
-	return render_template('save.html', transmitters=output)
+	return render_template('index.html', transmitters=output)
 
 @map.route('/query')
 def query():
@@ -19,4 +19,10 @@ def query():
 	query = Sms.query.filter(Sms.created_at >= days_ago).order_by(Sms.id.desc())
 	messages = query.distinct().all()
 	output = SmsSchema(many=True).dump(messages)
+	return jsonify(output)
+
+@map.route('/test')
+def test():
+	result = Transmitter.query.all()
+	output = TransmitterSchema(many=True).dump(result)
 	return jsonify(output)

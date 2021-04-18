@@ -1,12 +1,11 @@
 from flask import Blueprint, render_template, jsonify, request
 from arduino.arduino import Arduino as Ard
 import time
-from config.const import SUCCESS, FAILED, ERROR, MISSING_DATA, SIMNUMBER_INDEX, SOURCE_INDEX, CMD_INDEX, MSG_INDEX, DATETIME_INDEX
+from config.const import SUCCESS, FAILED, ERROR, MISSING_DATA, SIMNUMBER_INDEX, SOURCE_INDEX, CMD_INDEX, MSG_INDEX, DATETIME_INDEX, DISTANCE_INDEX, ALERT_TYPE_INDEX
 from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema, db, Extra, ExtraSchema
 import datetime
 import dateparser
 from sqlalchemy import asc, desc
-from model.alert import get_alert_level
 
 print("diri ni sa arduino nga blueprint..............")
 ard = Ard()
@@ -52,6 +51,15 @@ def send():
 	else:
 		return FAILED
 
+@arduino.route('/test-trans')
+def testTrans():
+	try:
+		data = ard.read()
+		# strd = str(data)[]
+		return str(data)
+	except Exception as e:
+		return str(e)
+
 @arduino.route('/receivedum', methods=['POST'])
 def receivedum():
 	try:
@@ -61,30 +69,27 @@ def receivedum():
 			data = data.replace('b\"', '')
 			data = data[:-1]
 			print('receive dum..............')
+			print(data)
 			if "TRANSMITTER" in data:
 				# Split the string and store in array
 				dataArr = data.split('&')
+				# print(dataArr)
 				# print("inside transmitter condition...................................")
-				print(dataArr)
 				transmitter = Transmitter.query.filter(Transmitter.sim_number == dataArr[SIMNUMBER_INDEX]).first()
+				# print(transmitter)
 				# print("Found transmitter:")
-				transmitter_dict = TransmitterSchema(many=False).dump(transmitter)
+				# transmitter_dict = TransmitterSchema(many=False).dump(transmitter)
 				# print(transmitter_dict['desequivealert'][0])
 				if transmitter:
-					alert_level = get_alert_level(transmitter_dict['desequivealert'][0], dataArr[MSG_INDEX])
-					# alert_level = 4
-					print("printing alert level....................")
-					print(alert_level)
 					sms = Sms(
-						alert_level = alert_level,
-						water_distance = dataArr[MSG_INDEX],
+						alert_type = dataArr[ALERT_TYPE_INDEX],
+						water_distance = dataArr[DISTANCE_INDEX],
 						transmitter_id = transmitter.id,
 						created_at = datetime.datetime.now(),
 						date_sent = dateparser.parse(dataArr[DATETIME_INDEX][:-3]),
 						status = True,
 						is_opened = False,
 					)
-					print(sms)
 					db.session.add(sms)
 					db.session.commit()
 					# print("saved.................................................")

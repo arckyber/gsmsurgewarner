@@ -2,15 +2,26 @@ from flask import Flask, render_template, url_for, Response, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_fontawesome import FontAwesome
 from datetime import datetime, timedelta
-import time
+import time, bisect
 from model.models import db, Role
 
+UPLOAD_FOLDER = './upload'
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'll340s0fj340'
 # app.permanent_session_lifetime = timedelta(minutes=60)
+
+# init celery
+# flask_app.config.update(
+#     CELERY_BROKER_URL='redis://localhost:6379',
+#     CELERY_RESULT_BACKEND='redis://localhost:6379'
+# )
+# celery = make_celery(flask_app)
+
 
 from transmitter.transmitter import transmitter
 app.register_blueprint(transmitter, url_prefix="/transmitter")
@@ -63,6 +74,11 @@ with app.app_context():
 db = SQLAlchemy(app)
 
 fa = FontAwesome(app)
+
+
+# Celery processes
+# @celery.task()
+# end celery processes
 
 @app.route('/')
 def index():

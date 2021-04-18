@@ -6,6 +6,8 @@
         color: rgb(133, 48, 48);
     }
 </style>
+{% import bisect %}
+{% end %}
 <aside class="sidebar" style="background-color: rgb(255, 255, 255);">
 		
     <div class="side-inner">
@@ -21,17 +23,29 @@
             <li>
                 <a class="nav-link text-muted" href="/"><h5 class="hover-green"><span class="fas fa-home"></span> Home</h5></a>
             </li>
+            {% if 'dashboard' in set(session['user'].user.role.role_access) %}   
             <li>
                 <a class="nav-link text-muted" href="/users/dashboard"><h5 class="hover-green"><span class="fas fa-tachometer-alt"></span> Dashboard</h5></a>
             </li>
+            {% endif %}
             <li>
                 <a class="nav-link text-muted" href="/transmitter"><h5 class="hover-green"><span class="fas fa-broadcast-tower"></span> Transmitters</h5></a>
             </li>
-            <li>
+            <!-- <li>
                 <a class="nav-link text-muted" href="/configurations"><h5 class="hover-green"><span class="fas fa-cog"></span> Configuration</h5></a>
+            </li> -->
+            <li>
+                <a class="nav-link text-muted" href="/users/list">
+                    <h5 class="hover-green"><span class="fas fa-users"></span> Users</h5>
+                </a>
             </li>
             <li>
-                <a class="nav-link text-muted" href="#"><h5 class="hover-green"><span class="fas fa-user-circle"></span> Profile</h5></a>
+                <a class="nav-link text-muted" href="/users/roles">
+                    <h5 class="hover-green"><span class="fas fa-lock"></span> Roles</h5>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link text-muted" href="/users/profile"><h5 class="hover-green"><span class="fas fa-user-circle"></span> Profile</h5></a>
             </li>
             <li>
                 <a class="nav-link text-muted" href="/users/logout"><h5 class="hover-red"><span class="fas fa-sign-out-alt"></span> Logout</h5></a>
@@ -69,11 +83,6 @@
                     <h5 class="hover-green"><span class="fas fa-comment-dots"></span> Extra SMS
                         <small class="badge badge-pill badge-warning extrasms_notification" style="margin-left: -5px;"></small>
                     </h5>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link text-muted" href="/users/list">
-                    <h5 class="hover-green"><span class="fas fa-users"></span> Users</h5>
                 </a>
             </li>
         </ul>

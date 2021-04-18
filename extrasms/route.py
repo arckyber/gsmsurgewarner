@@ -31,3 +31,9 @@ def clear():
 	db.session.query(Extra).delete()
 	db.session.commit()
 	return "Delted"
+
+@extrasms.route('/show')
+def show():
+	query = Extra.query.all()
+	output = ExtraSchema(many=True).dump(query)
+	return jsonify(output)

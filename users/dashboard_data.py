@@ -9,7 +9,7 @@ def transmitters_count():
     return count
 
 def users_count():
-    count = db.session.query(func.count(User.id)).scalar()
+    count = db.session.query(func.count(User.id)).filter(User.status == True).scalar()
     return count
 
 def sms_count():
@@ -34,7 +34,7 @@ def detection_history():
     current_year = datetime.datetime.now().year
     sms = Sms.query.first()
     output = SmsSchema(many=False).dump(sms)
-    return str(output['created_at'])
+    return str("output['created_at']")
 
 def roles_():
     roles = Role.query.all()

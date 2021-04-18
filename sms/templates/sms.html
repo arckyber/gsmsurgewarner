@@ -22,7 +22,7 @@
                                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="panel-body bg-light container">                                   
                                             <small>
-                                                <i class="fas fa-location-arrow text-muted"></i>
+                                                <i class="fas fa-location-arrow"></i>
                                                 <div>
                                                     <strong class="fas fa-location"> Location: </strong>
                                                     <span id="sms_location">This is location</span>
@@ -71,12 +71,15 @@
                             <h1 id="sms_alert" style="font-size: 4rem;"></h1>
                         </div>
                         <div class="col-md-7 text-left">
-                            <p id="sms_water_level" class="text-left alert alert-danger">
+                            <h5 class="text-danger" id="water_predection_cause">
+                                Rapid rise of water detected!
+                            </h5>
+                            <h6 id="sms_water_level">
                                 1 meter distance from sensor
-                            </p>
+                            </h6>
+                            <h6 class="text-muted" id="sms_moment">12 mins ago</h6>
                         </div>
                     </div>
-                    <h5 id="sms_moment">12 mins ago</h5>
                 </div>
             </div>
             <div class="modal-footer">

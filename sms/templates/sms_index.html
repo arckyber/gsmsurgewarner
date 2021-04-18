@@ -48,8 +48,6 @@
                 <span style="font-size: 2rem;" class="fas fa-comment-alt"> SMS </span>
                 <div id="legends">
                     <i class="text-muted">Warning Legends: </i>
-                    <i class="fas fa-circle text-primary"> Normal</i>
-                    <i class="fas fa-circle" style="color: yellow"> Above normal</i>
                     <i class="fas fa-circle text-warning"> Warning</i>
                     <i class="fas fa-circle text-danger"> Danger</i>
                 </div>
@@ -130,18 +128,18 @@
                 {
                     'title': '<div class="text-center">Alert</div>',
                     'data': {
-                        'alert_level': 'alert_level',
+                        'alert_type': 'alert_type',
                         'water_distance': 'water_distance',
                     },
                     'render': function(data) {
                         var view = "<div class=' control-center'>";
-                        if (data.alert_level == 1)
+                        if (data.alert_type == 1)
                             view += "<h3 class='fas fa-exclamation-triangle text-primary'> </h3>";
-                        if (data.alert_level == 2)
+                        if (data.alert_type == 2)
                             view += "<h3 class='fas fa-exclamation-triangle' style='color: yellow;'> </h3>";
-                        if (data.alert_level == 3)
+                        if (data.alert_type == 3)
                             view += "<h3 class='fas fa-exclamation-triangle text-warning'> </h3>";
-                        if (data.alert_level == 4)
+                        if (data.alert_type == 4)
                             view += "<h3 class='fas fa-exclamation-triangle text-danger'> </h3>";
                         view += "</div>";
                         return view;
@@ -166,7 +164,7 @@
                     'title':'Water distance',
                     'data':'water_distance',
                     'render':function(data) {
-                        return "<span>"+data+"m from sensor</span>";  
+                        return "<span>"+data+"cm from sensor</span>";  
                     }
                 },
                 {
@@ -254,24 +252,31 @@
                     $("#sms_latitude").text(data.latitude);
                     $("#sms_date_sent").text(data.date_sent);
                     $("#sms_date_received").text(data.created_at);
-                    $("#sms_water_level").text(data.water_distance + " meter(s) from sensor.");
-                    $("#sms_moment").text(data.date_sent);
+                    $("#sms_water_level").text(data.water_distance + "cm from sensor.");
+                    $("#sms_moment").text(data.created_at);
 
-                    // console.log(data.alert_level);
+                    if (data.alert_type == 3) {
+                        $("#water_predection_cause").text("Critical water level is detected!");
+                    } 
+                    else if (data.alert_type == 4) {
+                        $("#water_predection_cause").text("Rapid rise of water is detected!");
+                    }
+
+                    // console.log(data.alert_type);
                     
                     $("#sms_alert").removeAttr('class');
 
-                    if (data.alert_level == 1){
+                    if (data.alert_type == 1){
                         $("#sms_alert").addClass("fas fa-warning text-info");
                     }
-                    else if(data.alert_level == 2) {
+                    else if(data.alert_type == 2) {
                         $("#sms_alert").addClass("fas fa-warning text-yellow");
                     
                     }
-                    else if(data.alert_level == 3) {
+                    else if(data.alert_type == 3) {
                         $("#sms_alert").addClass("fas fa-warning text-warning");
                     }
-                    else {
+                    else if (data.alert_type == 4){
                         $("#sms_alert").addClass("fas fa-warning text-danger");
                     }
 
