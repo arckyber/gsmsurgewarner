@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify
+from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, session, redirect
 from model.models import db, Sms, SmsSchema, Transmitter
 import datetime
 from sqlalchemy import desc, asc, func
@@ -10,6 +10,8 @@ sms = Blueprint('sms', __name__, static_folder='static', template_folder='templa
 @sms.route('/index')
 @sms.route('/')
 def index():
+	if 'sms' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	return render_template('sms_index.html')
 
 @sms.route('/add', methods=['POST'])

@@ -43,5 +43,6 @@ MODULES = [
     'users',
     'profile',
     'extrasms',
-    'roles'
+    'roles',
+    'recyclebin'
 ]

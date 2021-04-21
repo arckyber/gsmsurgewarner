@@ -33,7 +33,7 @@ def smslist():
 
 @arduino.route('/smsdum', methods=['POST', 'GET'])
 def smsdum():
-	smsdum = Extra.query.order_by(desc(Extra.date_sent)).all()
+	smsdum = Extra.query.filter(Extra.status == True).order_by(desc(Extra.date_sent)).all()
 	schema = ExtraSchema(many=True)
 	output = schema.dump(smsdum)
 	# print("printing smsdumoutput........................")
@@ -102,7 +102,8 @@ def receivedum():
 				extra_obj = Extra(
 					number = dataArr[SIMNUMBER_INDEX],
 					message = dataArr[MSG_INDEX],
-					date_sent = dateparser.parse(dataArr[DATETIME_INDEX][:-3]),
+					# date_sent = dateparser.parse(dataArr[DATETIME_INDEX][:-3]),
+					date_sent = datetime.datetime.now(),
 					created_at = datetime.datetime.now(),
 					is_opened = False,
 					status = True

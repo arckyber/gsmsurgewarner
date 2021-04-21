@@ -5,7 +5,7 @@ from sqlalchemy import func, extract
 import datetime
 
 def transmitters_count():
-    count = db.session.query(func.count(Transmitter.id)).scalar()
+    count = db.session.query(func.count(Transmitter.id)).filter(Transmitter.status == True).scalar()
     return count
 
 def users_count():
@@ -13,11 +13,11 @@ def users_count():
     return count
 
 def sms_count():
-    count = db.session.query(func.count(Extra.id)).scalar()
+    count = db.session.query(func.count(Extra.id)).filter(Extra.status == True).scalar()
     return count
 
 def alert_count():
-    count = db.session.query(func.count(Sms.id)).scalar()
+    count = db.session.query(func.count(Sms.id)).filter(Sms.status == True).scalar()
     return count
 
 def transmitters():
@@ -26,7 +26,7 @@ def transmitters():
     return jsonify(output)
 
 def users():
-    query = User.query.all()
+    query = User.query.filter(User.status == True).all()
     output = UserSchema(many=True).dump(query)
     return jsonify(output)
 

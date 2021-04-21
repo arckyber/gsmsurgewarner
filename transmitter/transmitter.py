@@ -1,5 +1,5 @@
 import json, traceback
-from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, Response
+from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, Response, session, redirect
 from model.models import db, TransmitterSchema, Transmitter
 from sqlalchemy import func
 from util.query_serializer import serialize
@@ -11,6 +11,8 @@ transmitter = Blueprint('transmitter', __name__, static_folder='static', templat
 @transmitter.route('/index')
 @transmitter.route('/')
 def index():
+	if 'transmitters' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	return render_template('transmitter_index.html')
 
 @transmitter.route('/show')
@@ -57,10 +59,14 @@ def des():
 
 @transmitter.route('/add')
 def addtest():
+	if 'transmitters' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	return render_template('add.html')
 
 @transmitter.route('/edit/<id>')
 def edit(id):
+	if 'transmitters' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	transmitter = Transmitter.query.filter(Transmitter.id==id).first()
 	res = Transmitter.query.filter(Transmitter.id==id).first()
 	output = TransmitterSchema(many=False).dump(res)
@@ -111,6 +117,8 @@ def delete():
 
 @transmitter.route('/map')
 def map():
+	if 'map' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	result = Transmitter.query.all()
 	output = TransmitterSchema(many=True).dump(result)
 	return render_template('map.html', transmitters=output)

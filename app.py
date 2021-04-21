@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_fontawesome import FontAwesome
 from datetime import datetime, timedelta
 import time, bisect
-from model.models import db, Role
+from model.models import db, Role, RoleSchema, RoleAccess, RoleAccessShema
+from config.const import MODULES
 
 UPLOAD_FOLDER = './upload'
 
@@ -92,4 +93,29 @@ def index():
 
 if __name__ == '__main__':
 	db.create_all()
+
+	try:
+		roles = Role.query.all()
+
+		if roles is None:
+			r = Role(
+				role = 'Admin'
+			)
+			db.session.add(r)
+			db.session.commit()
+
+			role_id = Role.query.filter(Role.role == "Admin").first().id
+
+			for m in MODULES:
+				acc = RoleAccess(
+					access = m,
+					role_id = role_id
+				)
+				db.session.add(acc)
+			db.session.commit()
+
+	except Exception as e:
+		print(str(e))
+
+
 	app.run(debug=True)

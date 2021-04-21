@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, redirect
+from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, redirect, session
 from model.models import db, Sms, SmsSchema, Transmitter, TransmitterSchema
 from datetime import datetime
 from sqlalchemy import desc, asc, and_, func
@@ -10,6 +10,8 @@ graph = Blueprint('graph', __name__, static_folder='static', template_folder='te
 @graph.route('/index')
 @graph.route('/')
 def index():
+	if 'graph' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	# t_name = request.form['transmitter_name']
 	t_name = (lambda: Transmitter.query.first().name, lambda: "No transmitter found!")[Transmitter.query.first() == None]()
 	sms = db.session.query(Sms).join(Transmitter).filter(Transmitter.name == t_name).order_by(desc(Sms.created_at)).all()
@@ -27,6 +29,8 @@ def index():
 
 @graph.route('/process', methods=['POST'])
 def process():
+	if 'graph' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	transmitter = request.form['transmitter']
 	if (transmitter == 'All'):
 		return redirect('/graph')

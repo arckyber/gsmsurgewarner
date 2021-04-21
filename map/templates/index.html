@@ -196,7 +196,7 @@
 
       // L.marker([8.170712, 125.109558]).addTo(mymap)
       L.marker([longit, latit]).addTo(mymap)
-        .bindPopup("<b>Hi {}!</b><br />This is your location.").openPopup();
+        .bindPopup("<b>Hi {{session['username']}}!</b><br />This is your location.").openPopup();
 
       // define transmitter marker icon
       var trasnIcon = L.icon({

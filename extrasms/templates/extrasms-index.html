@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-
+{% include '/comp/sms.html' %}
 <div class="modal fade" role="dialog" id="compose_sms_modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -138,8 +138,8 @@
                     data:'id',
                     render:function(data) {
                         var div = "<div class='text-center'>";
-                                div += "<button class='fas fa-eye text-info'></button>";
-                                div += "<button class='fas fa-trash text-danger'></button>";
+                                div += "<button class='fas fa-eye text-info view-sms'></button>";
+                                div += "<button class='fas fa-trash text-danger delete' id='"+data+"'></button>";
                             div += "</div>";
                         return div;
                     }
@@ -224,8 +224,42 @@
             })
         });
 
-        // var c = jQuery.format.prettyDate("2008-01-27T22:24:17Z");
-        // console.log(c);
+        $(document).on('click', '.delete', function(){
+            var id = $(this).attr('id');
+            
+			$confirm("Do you want to delete?", "#FF9100")
+			.then(() => {
+                $.ajax({
+                    url:'/extrasms/delete',
+                    method:'post',
+                    data:{id:id},
+                    success:function(data){
+                        if (data == "success") {
+                            $toast("Delete successful", "#018401");
+                            refresh();
+                        }
+                        else {
+                            $toast("Delete failed", "#dc3545");
+                        }
+                    }
+                })
+            })
+        })
+
+        $(document).on('click', '.view-sms', function(){
+            // $("#smsModal").modal('show');
+
+            var id = $(this).attr('id');
+
+            $.ajax({
+                url:'/extrasms/view',
+                method:'post',
+                data:{id:id},
+                success:function(data) {
+                    console.log(data);
+                }
+            })
+        })
     })
 </script>
 {% endblock %}

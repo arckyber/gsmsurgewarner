@@ -10,10 +10,18 @@
         <ul>
           <li><a href="/">Home</a></li>
           {% if 'email' in session %}
-          <li id="dashboard"><a href="/users/dashboard">Dashboard</a></li>
-          <li id="sms"><a href="/sms">sms</a></li>
-          <li id="graph"><a href="/graph">graph</a></li>
-          <li id="realtime"><a href="/map">map</a></li>
+            {% if 'dashboard' in session['role_access'] %} 
+            <li id="dashboard"><a href="/users/dashboard">Dashboard</a></li>
+            {% endif %}
+            {% if 'sms' in session['role_access'] %} 
+            <li id="sms"><a href="/sms">sms</a></li>
+            {% endif %}
+            {% if 'graph' in session['role_access'] %} 
+            <li id="graph"><a href="/graph">graph</a></li>
+            {% endif %}
+            {% if 'map' in session['role_access'] %} 
+            <li id="realtime"><a href="/map">map</a></li>
+            {% endif %}
           {% endif %}
           <li style="cursor: pointer;">
             <div class="dropdown">              

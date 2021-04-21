@@ -8,6 +8,10 @@ users = Blueprint("users", __name__, static_folder="static", template_folder="te
 
 @users.route('/dashboard')
 def dashboard():
+	if 'dashboard' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
+	if 'user' not in session:
+		return redirect(url_for('users.login'))
 	data = {
 		"transmitter_count": dd.transmitters_count(),
 		"message_count": dd.sms_count(),
@@ -23,6 +27,8 @@ def dashboard():
 
 @users.route('/register')
 def register():
+	if 'users' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	role = Role.query.all()
 	output = RoleSchema(many=True).dump(role)
 	if not role:
@@ -96,9 +102,14 @@ def login():
 		if email and password:
 			user = User.query.filter(User.email == email, User.password == password).first()
 			userS = UserSchema(many=False).dump(user)
+			role_access = []
 			if user:
 				session['email'] = user.email
 				session['user'] = {'user':userS}
+				session['username'] = user.username
+				for access in user.role.role_access:
+					role_access.append(access.access)
+				session['role_access'] = role_access
 				return redirect(url_for('users.dashboard'))
 			else:
 				return "user not found"
@@ -114,6 +125,9 @@ def login():
 @users.route('/logout')
 def logout():
 	session.pop('email', None)
+	session.pop('user', None)
+	session.pop('role_access', None)
+	session.pop('username', None)
 	return render_template('/login.html')
 
 @users.route('/roles')
@@ -167,22 +181,30 @@ def addRole():
 
 @users.route('/list')
 def users_list():
-   return render_template('list.html')
+	if 'users' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
+	return render_template('/list.html')
 
 @users.route('/adduserinfo')
 def addUserInfo():
+	if 'users' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	role = Role.query.all()
 	output = RoleSchema(many=True).dump(role)
 	return render_template('/adduserinfo.html', roles=output)
 
 @users.route('/user-info/<id>')
 def userInfo(id):
+	if 'users' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	user = User.query.filter(User.id == id).first()
 	output = UserSchema(many=False).dump(user)
 	return render_template('/comp/user-info.html', user=user)
 
 @users.route('/edit-info/<id>')
 def editInfo(id):
+	if 'users' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	user = User.query.filter(User.id == id).first()
 	output = UserSchema(many=False).dump(user)
 	roles = Role.query.all()
@@ -190,6 +212,8 @@ def editInfo(id):
 
 @users.route('/profile')
 def profile():
+	if 'users' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	return render_template("/profile.html")
 
 @users.route('/show')
@@ -226,3 +250,7 @@ def clearRole():
 	db.session.query(RoleAccess).delete()
 	db.session.commit()
 	return "Done"
+
+@users.route('/right-access-control')
+def rightAccessControl():
+	return render_template('/right-access-control.html')

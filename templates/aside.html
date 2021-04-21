@@ -6,10 +6,8 @@
         color: rgb(133, 48, 48);
     }
 </style>
-{% import bisect %}
-{% end %}
 <aside class="sidebar" style="background-color: rgb(255, 255, 255);">
-		
+	{% if 'user' in session %}
     <div class="side-inner">
 
       <div class="share" style="margin-top: -3%;">
@@ -23,30 +21,38 @@
             <li>
                 <a class="nav-link text-muted" href="/"><h5 class="hover-green"><span class="fas fa-home"></span> Home</h5></a>
             </li>
-            {% if 'dashboard' in set(session['user'].user.role.role_access) %}   
+            {% if 'dashboard' in session['role_access'] %}   
             <li>
                 <a class="nav-link text-muted" href="/users/dashboard"><h5 class="hover-green"><span class="fas fa-tachometer-alt"></span> Dashboard</h5></a>
             </li>
             {% endif %}
+            {% if 'transmitters' in session['role_access'] %}   
             <li>
                 <a class="nav-link text-muted" href="/transmitter"><h5 class="hover-green"><span class="fas fa-broadcast-tower"></span> Transmitters</h5></a>
             </li>
+            {% endif %}
             <!-- <li>
                 <a class="nav-link text-muted" href="/configurations"><h5 class="hover-green"><span class="fas fa-cog"></span> Configuration</h5></a>
             </li> -->
+            {% if 'users' in session['role_access'] %}   
             <li>
                 <a class="nav-link text-muted" href="/users/list">
                     <h5 class="hover-green"><span class="fas fa-users"></span> Users</h5>
                 </a>
             </li>
+            {% endif %}
+            {% if 'roles' in session['role_access'] %}   
             <li>
                 <a class="nav-link text-muted" href="/users/roles">
                     <h5 class="hover-green"><span class="fas fa-lock"></span> Roles</h5>
                 </a>
             </li>
+            {% endif %}
+            {% if 'profile' in session['role_access'] %}   
             <li>
                 <a class="nav-link text-muted" href="/users/profile"><h5 class="hover-green"><span class="fas fa-user-circle"></span> Profile</h5></a>
             </li>
+            {% endif %}
             <li>
                 <a class="nav-link text-muted" href="/users/logout"><h5 class="hover-red"><span class="fas fa-sign-out-alt"></span> Logout</h5></a>
             </li>
@@ -54,6 +60,7 @@
         <hr>
         <ul style="list-style-type: none;">
             <strong class="text-muted">Presentation</strong>
+            {% if 'sms' in session['role_access'] %}  
             <li>
                 <a class="nav-link text-muted" href="/sms">
                     <h5 class="hover-green"><span class="fas fa-comment-alt"></span> SMS
@@ -61,40 +68,49 @@
                     </h5>
                 </a>
             </li>
+            {% endif %}
+            {% if 'graph' in session['role_access'] %}  
             <li>
                 <a class="nav-link text-muted" href="/graph">
                     <h5 class="hover-green"><span class="fas fa-line-chart"></span> Graph</h5>
                 </a>
             </li>
+            {% endif %}
+            {% if 'map' in session['role_access'] %}  
             <li>
                 <a class="nav-link text-muted" href="/map">
                     <h5 class="hover-green"><span class="fas fa-map"></span> Map
-                    <span class="fas fa-star text-warning"></span>
+                    <span class="fas fa-star text-muted></span>
                     <!-- <small class="badge badge-pill badge-success text-white"><span class="fas fa-rss"></span></small> -->
                 </h5>
             </a>
             </li>
+            {% endif %}
         </ul>
         <hr>
         <ul style="list-style-type: none;">
             <strong class="text-muted">Others</strong>
+            {% if 'extrasms' in session['role_access'] %}  
             <li>
                 <a class="nav-link text-muted" href="/extrasms">
-                    <h5 class="hover-green"><span class="fas fa-comment-dots"></span> Extra SMS
+                    <h5 class="hover-green"><span class="fas fa-comment-dots"></span> Extra
                         <small class="badge badge-pill badge-warning extrasms_notification" style="margin-left: -5px;"></small>
                     </h5>
                 </a>
             </li>
+            {% endif %}
         </ul>
         <hr>
         <ul style="list-style-type: none;">
             <strong class="text-muted">Miscellaneous</strong>
+            {% if 'recyclebin' in session['role_access'] %}  
             <li>
                 <a class="nav-link text-muted" href="#">
                     <h5 class="hover-green"><span class="fas fa-trash"></span> Recycle bin
                 </h5>
             </a>
             </li>
+            {% endif %}
         </ul>
 
         <div class="text-center">
@@ -104,6 +120,7 @@
         </div>
       </div>		  
     </div>		
+    {% endif %}
   </aside>
   <script>
       $(document).ready(function(){

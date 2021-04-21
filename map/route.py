@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify
+from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, redirect, session
 from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema
 import datetime
 
@@ -7,6 +7,8 @@ map = Blueprint('map', __name__, static_folder='static', template_folder='templa
 @map.route('/index')
 @map.route('/')
 def index():
+	if 'map' not in session['role_access']:
+		return redirect(url_for('users.rightAccessControl'))
 	result = Transmitter.query.all()
 	output = TransmitterSchema(many=True).dump(result)
 	return render_template('index.html', transmitters=output)

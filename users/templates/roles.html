@@ -33,7 +33,7 @@
                         {% for module in modules %}
                         <div class="form-group">
                           <input type="checkbox" name="{{module}}" class="from-control">
-                          <label class="text-capitalize" for="{{module}}">{{module}}</label>
+                          <span class="text-capitalize" for="{{module}}">{{module}}</span>
                         </div>
                         {% endfor %}
                       </div>
@@ -53,12 +53,15 @@
             </div><!-- /.card -->
           </div>
           <!-- /.register-box -->
-    </div>
-    <div class="col-md-8">
-        <h1>Roles</h1>
-        <hr>
-        <table class="table table-sm table-hover" id="rolesTable">
-        </table>
+      </div>
+      <div class="col-md-8">
+          <h1><i class="fas fa-lock"></i> Roles</h1>
+          <hr>
+          <div class="container" style="height: 400px; overflow-y: scroll;">
+            <table class="table table-sm table-hover" id="rolesTable">
+          </div>
+          </table>
+      </div>
     </div>
 </div>
 {% endblock %}
