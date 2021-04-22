@@ -36,10 +36,33 @@ def detection_history():
     output = SmsSchema(many=False).dump(sms)
     return str("output['created_at']")
 
+def alertsStat():
+    data = []
+    c_count = db.session.query(func.count(Sms.id)).filter(Sms.alert_type == 3).scalar()
+    d_count = db.session.query(func.count(Sms.id)).filter(Sms.alert_type == 4).scalar()
+
+    d1 = {
+        'alert_type' : 'Warnings',
+        'count' : c_count
+    }
+    data.append(d1)
+    d2 = {
+        'alert_type' : 'Danger',
+        'count' : d_count
+    }
+    data.append(d2)
+    return data
+
+
+
 def roles_():
     roles = Role.query.all()
-    data = {}
+    data = []
     for r in roles:
         user_count = db.session.query(func.count(User.id)).filter(User.role_id == r.id).scalar()
-        data[r.role] = user_count
-    return jsonify(data)
+        d = {
+            'count' : user_count,
+            'role' : r.role
+        }
+        data.append(d)
+    return data

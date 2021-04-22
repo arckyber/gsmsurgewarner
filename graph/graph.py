@@ -44,6 +44,8 @@ def process():
 	for o in output:
 		water_distance.append(o.get('water_distance'))
 		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
+	times.reverse()
+	water_distance.reverse()
 	transmitters = Transmitter.query.all()
 	return render_template('graph.html', legend=transmitter, water_distance=water_distance, times=times, transmitters=transmitters)
 
@@ -60,8 +62,3 @@ def graph_index():
 		times.append(parser.parse(o.get('created_at')).strftime("%b. %d, %Y %I:%M:%S %p"))
 	transmitters = Transmitter.query.all()
 	return render_template('graph_index.html', legend=t_name, water_distance=water_distance, times=times, transmitters=transmitters)
-
-
-@graph.route('/test')
-def test():
-	return render_template('test.html')

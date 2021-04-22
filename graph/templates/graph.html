@@ -34,10 +34,10 @@
 				<h3><span class="fas fa-line-chart"></span> Graph</h3>
 			</div>
 			<hr>
-            <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 500px;">
+            <div class="container" style="overflow-y: scroll; overflow-x: scroll; height: 450px;">
 				<div class="container">
 					<div class="card-body border rounded" id="card_body">
-						<canvas id="chart" height="300" style="margin: auto; width: 100%;background-color:#c2eee4;"></canvas>
+						<canvas id="chart" height="300" style="margin: auto; width: 100%; background-color:  rgb(247, 253, 247);"></canvas>
 					</div>
 					<div class="card-footer">
 						<form action="/graph/process" method="post">
@@ -107,24 +107,33 @@
 					lineTension: 0.1,
 					backgroundColor: "rgba(75,192,192,0.4)",
 					borderColor: "rgba(75,192,192,1)",
-					// borderColor: "red",
 					borderCapStyle: 'butt',
 					borderDash: [],
 					borderDashOffset: 0.0,
-					// borderJoinStyle: 'miter',
+					borderJoinStyle: 'miter',
 					borderJoinStyle: 'string',
-					pointBorderColor: "rgba(75,192,192,1)",
-					pointBackgroundColor: "#fff",
-					pointBorderWidth: 1,
-					pointHoverRadius: 5,
+					// pointBorderColor: "rgba(75,192,192,1)",
+					// pointBackgroundColor: "#fff",
+					// pointBorderWidth: 1,
+					// pointHoverRadius: 5,
 					// pointHoverBackgroundColor: "rgba(75,192,192,1)",
-					pointHoverBackgroundColor: "red",
-					pointHoverBorderColor: "rgba(220,220,220,1)",
-					pointHoverBorderWidth: 2,
-					pointRadius: 1,
+					// pointHoverBorderColor: "rgba(220,220,220,1)",
+					// pointHoverBorderWidth: 2,
+					// pointRadius: 1,
 					pointHitRadius: 10,
 					data: data,
-					spanGaps: false,
+					spanGaps: false,	
+					borderColor: "#80b6f4",
+					pointBorderColor: "#80b6f4", // new
+					pointBackgroundColor: "#80b6f4",
+					pointHoverBackgroundColor: "#80b6f4",
+					pointHoverBorderColor: "#80b6f4",
+					pointBorderWidth: 10,
+					pointHoverRadius: 10,
+					pointHoverBorderWidth: 1,
+					pointRadius: 3,
+					fill: false,
+					borderWidth: 4, // end new
 					options: {
 						scales: {
 							yAxes: [{
@@ -135,11 +144,24 @@
 						}
 					},
 				}
-			]
+			],
+			
 		};
+
+		// for (i = 0; i < chartData.data.datasets[0].data.length; i++) {
+		// 	if (chartData.data.datasets[0].data[i] > 100) {
+		// 		pointBackgroundColors.push("#90cd8a");
+		// 	} else {
+		// 		pointBackgroundColors.push("#f58368");
+		// 	}
+		// }
 
 		var holder = document.getElementById("chart");
 		var ctx = document.getElementById("chart").getContext("2d");
+
+		var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+		gradientStroke.addColorStop(0, "#80b6f4");
+		gradientStroke.addColorStop(1, "#f49080");
 
 		// create the chart using the chart canvas
 		var chart = new Chart(ctx, {
@@ -151,7 +173,7 @@
             mode: 'single',
             callbacks: {
               label: function(tooltipItems, data) {
-					return tooltipItems.yLabel + ' meter(s)';
+					return tooltipItems.yLabel + ' cm';
 				}
             }
           },

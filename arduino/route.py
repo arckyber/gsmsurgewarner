@@ -70,6 +70,11 @@ def receivedum():
 			data = data[:-1]
 			print('receive dum..............')
 			print(data)
+
+			# if simcard module is not initialized properly
+			if "error" in data:
+				return ERROR
+
 			if "TRANSMITTER" in data:
 				# Split the string and store in array
 				dataArr = data.split('&')
@@ -93,9 +98,7 @@ def receivedum():
 					db.session.add(sms)
 					db.session.commit()
 					# print("saved.................................................")
-					return jsonify({
-						'sucess': True
-					})
+					return SUCCESS
 			else:
 				dataArr = data.split('&')
 				# print(dataArr)
@@ -110,17 +113,11 @@ def receivedum():
 				)
 				db.session.add(extra_obj)
 				db.session.commit()
-				return jsonify({
-					'success':True
-				})
-		return jsonify({
-			'success':False
-		})
+				return SUCCESS
+		return FAILED
 	except Exception as e:
 		print(str(e))
-		return jsonify({
-			'success':False
-		})
+		return str(e)
 
 @arduino.route('/delete-all-sms', methods=['POST'])
 def delete_all_sms():

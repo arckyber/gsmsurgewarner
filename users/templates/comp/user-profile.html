@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}GSM Surge Warner - Users{% endblock %}
+
+{% block head %}
+<style>
+    .control-center {
+        text-align: center;
+    }
+    #sectionhead #legends {
+        display: inline;
+    }
+    #legends {
+        right: 0;
+    }
+	button.btn-success{
+		background-color: green !important;
+		color: white !important;
+	}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="card card-info" style="width: 70%; margin: auto;">
+	<div class="card-header">
+	  <h3 class="card-title">Hi, {{session['username']}}!</h3>
+	</div>
+	<!-- /.card-header -->
+	<!-- form start -->
+	<div class="form-horizontal">
+	  <div class="card-body">	
+        <div>
+            <legend>Account information</legend>
+            <div class="container">
+                <div class="form-group row">
+                    <label for="username" class="col-sm-2 col-form-label">Username</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" readonly="true" value="{{user.username}}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" readonly="true" value="{{user.email}}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="role" class="col-sm-2 col-form-label">Role</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="role" name="role" placeholder="Role" readonly="true" value="{{user.role.role}}">
+                    </div>
+                </div>
+            </div>
+        </div>	
+        <div class="container">
+          <hr>
+        </div>	
+		  <div>
+			  <legend>Personal information</legend>
+			  <div class="container">
+				  <div>
+					  <i class="fas fa-user" style="font-size: 3rem;"></i>
+				  </div>
+				<!-- <div class="form-group row">
+					<label for="image" class="col-sm-2 col-form-label">Image</label>
+					<div class="input-group col-sm-10">
+						<div class="custom-file">
+						<input type="file" class="custom-file-input" id="image" name="image">
+						<label class="custom-file-label" for="image">Choose file</label>
+						</div>
+					</div>
+				</div> -->
+				<div class="form-group row">
+					<label for="firstname" class="col-sm-2 col-form-label">First name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" readonly="true" value="{{user.userinfo[0].firstname}}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="middlename" class="col-sm-2 col-form-label">Middle name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="middlename" name="middlename" placeholder="Middle name" readonly="true" value="{{user.userinfo[0].middlename}}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="lastname" class="col-sm-2 col-form-label">Last name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" readonly="true" value="{{user.userinfo[0].lastname}}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="gender" class="col-sm-2 col-form-label">Gender</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="gender" name="gender" placeholder="Gender" readonly="true" value="{{user.userinfo[0].gender}}">
+                    </div>
+				</div>
+				<div>
+				  <a style="float: right;" href="/users/edit-info/{{session['id']}}">Edit?</a>
+				  <br>
+				</div>
+			  </div>
+		  </div>
+	  </div>
+	  <!-- /.card-body -->
+	  <div class="card-footer">
+		<!-- <button id="back" type="button" class="btn btn-info">Back</button> -->
+		<!-- <button type="button" class="btn btn-default float-right">Back</button> -->
+	  </div>
+	  <!-- /.card-footer -->
+	</div>
+  </div>
+  <!-- /.card -->
+{% endblock %}
+
+{% block script %}
+<script language="javascript">
+	$(document).ready(function(){		
+		
+    })
+</script>
+{% endblock %}

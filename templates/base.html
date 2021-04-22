@@ -211,11 +211,17 @@
 						&copy; Copyright <strong><span>GSM Surge Warner</span></strong>. All Rights Reserved
 					</div>
 					<div class="credits">
-						Designed by <a href="https://bootstrapmade.com/">Web Naive</a>
+						Designed by <a href="#">Web Naive</a>
 					</div>
 				</div>
 			</footer><!-- End Footer -->
 	</main>
+
+	<!-- <div class="border rounded bg-danger" style="z-index: 30230; position: fixed; bottom: unset; margin-top: 100px;">
+		<p>
+			Ther
+		</p>
+	</div> -->
 
 
 	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
@@ -352,6 +358,14 @@
 
 			$("#back").on("click", function(){
 				window.history.back();
+			})
+
+			$("#seeAllExtra").on('click', function(){
+				window.location = "/extrasms";
+			})
+
+			$("#seeAllAlerts").on('click', function(){
+				window.location = "/sms";
 			})
 		})
 

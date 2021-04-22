@@ -7,9 +7,15 @@ from config.const import SUCCESS, FAILED, ERROR, ALERT_3_MESSAGE, ALERT_4_MESSAG
 
 sms = Blueprint('sms', __name__, static_folder='static', template_folder='templates')
 
+def authenticateUser():
+	print("Authenticate.......................")
+	if 'user' not in session:
+		redirect(url_for('users.login'))
+
 @sms.route('/index')
 @sms.route('/')
 def index():
+	authenticateUser()
 	if 'sms' not in session['role_access']:
 		return redirect(url_for('users.rightAccessControl'))
 	return render_template('sms_index.html')

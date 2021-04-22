@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, url_for, current_app, request, flash, jsonify, redirect, session
 from model.models import Transmitter, TransmitterSchema, Sms, SmsSchema
 import datetime
+from sqlalchemy import desc, asc
 
 map = Blueprint('map', __name__, static_folder='static', template_folder='templates')
 
@@ -19,7 +20,7 @@ def query():
 	# return str(days_ago)
 	# return str(datetime.datetime.now() >= days_ago)
 	query = Sms.query.filter(Sms.created_at >= days_ago).order_by(Sms.id.desc())
-	messages = query.distinct().all()
+	messages = query.distinct().order_by(desc(Sms.created_at)).all()
 	output = SmsSchema(many=True).dump(messages)
 	return jsonify(output)
 

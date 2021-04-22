@@ -20,6 +20,7 @@ def dashboard():
 		"detection_history": dd.detection_history(),
 		"users": dd.users(),
 		"roles": dd.roles_(),
+		"alertsStat" : dd.alertsStat()
 	}
 	if 'email' not in session:
 		return redirect(url_for('users.login'))
@@ -107,6 +108,7 @@ def login():
 				session['email'] = user.email
 				session['user'] = {'user':userS}
 				session['username'] = user.username
+				session['id'] = user.id
 				for access in user.role.role_access:
 					role_access.append(access.access)
 				session['role_access'] = role_access
@@ -128,6 +130,7 @@ def logout():
 	session.pop('user', None)
 	session.pop('role_access', None)
 	session.pop('username', None)
+	session.pop('id', None)
 	return render_template('/login.html')
 
 @users.route('/roles')
@@ -210,11 +213,13 @@ def editInfo(id):
 	roles = Role.query.all()
 	return render_template('/comp/edit-info.html', user=user, roles=roles)
 
-@users.route('/profile')
-def profile():
+@users.route('/profile/<id>')
+def profile(id):
 	if 'users' not in session['role_access']:
 		return redirect(url_for('users.rightAccessControl'))
-	return render_template("/profile.html")
+	user = User.query.filter(User.id == id).first()
+	output = UserSchema(many=False).dump(user)
+	return render_template('/comp/user-profile.html', user=user)
 
 @users.route('/show')
 def show():
@@ -254,3 +259,7 @@ def clearRole():
 @users.route('/right-access-control')
 def rightAccessControl():
 	return render_template('/right-access-control.html')
+
+@users.route('/t')
+def t():
+	return str(dd.roles_()[0]['count'])

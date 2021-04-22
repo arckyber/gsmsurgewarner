@@ -1,4 +1,5 @@
 import serial, serial.tools.list_ports
+from flask import session
 import time
 
 class Arduino():
@@ -13,6 +14,8 @@ class Arduino():
             time.sleep(3)
             print("device instantiation success")
             print(self.arduino)
+            print(self.arduino.port)
+            # session['port'] = self.arduino.port
         except Exception as e:
             print("device instantiation exception")
             print(str(e))

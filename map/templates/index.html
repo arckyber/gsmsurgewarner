@@ -135,19 +135,49 @@
 <script>
   $(document).ready(function(){
 
-		// // loading animation
-		// $loader_show("#b3b3c1");
+    // tick time
+    function ticktime_small() {
+        var d = new Date(Date.now());
+        var target = document.getElementById("time");
+        $("#time_small").text(d.toLocaleTimeString());
+    }
+    setInterval(ticktime_small, 1000);
+    // end tick time
 
-    // setTimeout(()=>{
-    //   $loader_hide();
-    // }, 3000);
-		// end loading animation
 
-    // var ldld = new ldLoader({ root: "#my-loader" }); 
-    /* 4. active this loader */
-    // ldld.on();
 
-    // document.getElementById("mapid").style.height = screen.height+"px"; 
+    // detect arduino
+    
+    // end detect arduino
+
+    $("#realtime").addClass('active');
+
+    $("#fullscreen_btn").on('click', function(){
+      if ($("#full").hasClass('fullscreen')){
+				$("#full").removeClass('fullscreen');
+                document.getElementById("mapid").style.height = "400px";
+                // remove class for full screen view
+                $("#leftControl").removeClass("leftControlF");
+                $("#rightControl").removeClass("rightControlF");
+                // add class for small screen
+                $("#leftControl").addClass("leftControl");
+                $("#rightControl").addClass("rightControl");
+			}
+			else {
+				$("#full").addClass('fullscreen');
+                document.getElementById("mapid").style.height = screen.height+"px";
+                $("#rightControl").css("margin-right", "-1px !important");
+                // remove class for small view
+                $("#leftControl").removeClass("leftControl");
+                $("#rightControl").removeClass("rightControl");
+                // add class for full screen
+                $("#leftControl").addClass("leftControlF");
+                $("#rightControl").addClass("rightControlF");
+			}
+    })
+
+  })
+
     document.getElementById("mapid").style.height = "400px";
 
     var mymap = undefined;
@@ -331,48 +361,7 @@
     }
 
 
-    // tick time
-    function ticktime_small() {
-        var d = new Date(Date.now());
-        var target = document.getElementById("time");
-        $("#time_small").text(d.toLocaleTimeString());
-    }
-    setInterval(ticktime_small, 1000);
-    // end tick time
-
-
-
-    // detect arduino
     
-    // end detect arduino
-
-    $("#realtime").addClass('active');
-
-    $("#fullscreen_btn").on('click', function(){
-      if ($("#full").hasClass('fullscreen')){
-				$("#full").removeClass('fullscreen');
-                document.getElementById("mapid").style.height = "400px";
-                // remove class for full screen view
-                $("#leftControl").removeClass("leftControlF");
-                $("#rightControl").removeClass("rightControlF");
-                // add class for small screen
-                $("#leftControl").addClass("leftControl");
-                $("#rightControl").addClass("rightControl");
-			}
-			else {
-				$("#full").addClass('fullscreen');
-                document.getElementById("mapid").style.height = screen.height+"px";
-                $("#rightControl").css("margin-right", "-1px !important");
-                // remove class for small view
-                $("#leftControl").removeClass("leftControl");
-                $("#rightControl").removeClass("rightControl");
-                // add class for full screen
-                $("#leftControl").addClass("leftControlF");
-                $("#rightControl").addClass("rightControlF");
-			}
-    })
-
-  })
 
 </script>
 {% endblock %}

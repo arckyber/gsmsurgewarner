@@ -56,6 +56,12 @@ def delete():
 def view():
 	if request.method == 'POST':
 		id = request.form['id']
+
+		# mark as read
+		e = Extra.query.filter(Extra.status == True, Extra.id == id).first()
+		e.is_opened = True
+		db.session.commit()
+
 		extra = Extra.query.filter(Extra.status == True, Extra.id == id).first()
 		output = ExtraSchema(many=False).dump(extra)
 		return jsonify(output)

@@ -50,7 +50,7 @@
             {% endif %}
             {% if 'profile' in session['role_access'] %}   
             <li>
-                <a class="nav-link text-muted" href="/users/profile"><h5 class="hover-green"><span class="fas fa-user-circle"></span> Profile</h5></a>
+                <a class="nav-link text-muted" href="/users/profile/{{session['id']}}"><h5 class="hover-green"><span class="fas fa-user-circle"></span> Profile</h5></a>
             </li>
             {% endif %}
             <li>
@@ -80,7 +80,7 @@
             <li>
                 <a class="nav-link text-muted" href="/map">
                     <h5 class="hover-green"><span class="fas fa-map"></span> Map
-                    <span class="fas fa-star text-muted></span>
+                    <!-- <span class="fas fa-star text-muted"></span> -->
                     <!-- <small class="badge badge-pill badge-success text-white"><span class="fas fa-rss"></span></small> -->
                 </h5>
             </a>
