@@ -32,9 +32,11 @@
                     <h6 class="dropdown-header text-center fas fa-broadcast-tower"> Warnings</h6>
                     <div id="alert_notification_holder">
                     </div>
+                    {% if 'user' in session %}
                     <a href="/sms">
                       <a id="seeAllAlerts" style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
                     </a>
+                    {% endif %}
                   </div>
                 </div>
               </span>
@@ -58,7 +60,9 @@
                         </small>
                       </div> -->
                     </div>
+                    {% if 'user' in session %}
                     <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" id="seeAllExtra" href="/sms">See all</a>
+                    {% endif %}
                   </div>
                 </div>
               </span>

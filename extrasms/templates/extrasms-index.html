@@ -104,21 +104,21 @@
                         $("#compose_sms_modal").modal('show');
                     }
                 },
-                {
-                    text:'Delete all',
-                    action:function(e, dt, node, config) {
-                        $.ajax({
-                            url:'/arduino/delete-all-sms',
-                            method:'post',
-                            data:{},
-                            syccess:function(data) {
-                                console.log("delete all sms data in arduino/smslist");
-                                toastr.warning("All message cleared!");
-                                refresh();
-                            }
-                        })
-                    }
-                }
+                // {
+                //     text:'Delete all',
+                //     action:function(e, dt, node, config) {
+                //         $.ajax({
+                //             url:'/arduino/delete-all-sms',
+                //             method:'post',
+                //             data:{},
+                //             syccess:function(data) {
+                //                 console.log("delete all sms data in arduino/smslist");
+                //                 toastr.warning("All message cleared!");
+                //                 refresh();
+                //             }
+                //         })
+                //     }
+                // }
             ],
             "order": [[ 3, "desc" ]],
         });

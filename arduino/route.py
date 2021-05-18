@@ -76,15 +76,8 @@ def receivedum():
 				return ERROR
 
 			if "TRANSMITTER" in data:
-				# Split the string and store in array
 				dataArr = data.split('&')
-				# print(dataArr)
-				# print("inside transmitter condition...................................")
 				transmitter = Transmitter.query.filter(Transmitter.sim_number == dataArr[SIMNUMBER_INDEX]).first()
-				# print(transmitter)
-				# print("Found transmitter:")
-				# transmitter_dict = TransmitterSchema(many=False).dump(transmitter)
-				# print(transmitter_dict['desequivealert'][0])
 				if transmitter:
 					sms = Sms(
 						alert_type = dataArr[ALERT_TYPE_INDEX],
@@ -97,15 +90,12 @@ def receivedum():
 					)
 					db.session.add(sms)
 					db.session.commit()
-					# print("saved.................................................")
 					return SUCCESS
 			else:
 				dataArr = data.split('&')
-				# print(dataArr)
 				extra_obj = Extra(
 					number = dataArr[SIMNUMBER_INDEX],
 					message = dataArr[MSG_INDEX],
-					# date_sent = dateparser.parse(dataArr[DATETIME_INDEX][:-3]),
 					date_sent = datetime.datetime.now(),
 					created_at = datetime.datetime.now(),
 					is_opened = False,
@@ -121,7 +111,6 @@ def receivedum():
 
 @arduino.route('/delete-all-sms', methods=['POST'])
 def delete_all_sms():
-	# print("arduino/delete-all-sms is called ................")
 	try:
 		db.session.query(Extra).delete()
 		db.session.commit()

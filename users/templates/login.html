@@ -6,12 +6,19 @@
 
 {% block body %}
 <div class="hold-transition login-page">
-	
 	<div class="login-box" style="width: 40%; margin: auto;">
+		<br>
 		<div class="login-logo text-center">
-			<!-- <legend class="font-weight-bold text-primary">Login</legend> -->
 			<h1>Login</h1>
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for message in messages %}
+				<p class="alert alert-danger">{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+			{% endwith %}
 		</div>
+		<br>
 		<!-- /.login-logo -->
 		<div class="card">
 			<div class="card-body login-card-body">
@@ -61,19 +68,17 @@
 					</a>
 				</div> -->
 				<!-- /.social-auth-links -->
-		
-				<p class="mb-1">
-				<a href="forgot-password.html">I forgot my password</a>
-				</p>
-				<p class="mb-0">
+
+				<!-- <p class="mb-0">
 				<a href="/users/register" class="text-center">Register a new membership</a>
-				</p>
+				</p> -->
 			</div>
 		<!-- /.login-card-body -->
 		</div>
   </div>
   <!-- /.login-box -->
 </div>
+<br><br>
 {% endblock %}
 
 {% block script %}

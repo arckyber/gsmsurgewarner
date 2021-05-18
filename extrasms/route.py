@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, session
 from sqlalchemy import desc, func, asc
 
+import datetime
+
 from model.models import Extra, ExtraSchema, ExtraSms, ExtraSmsSchema, db
 
 extrasms = Blueprint('extrasms', __name__, static_folder="static", template_folder="templates")
@@ -67,3 +69,19 @@ def view():
 		return jsonify(output)
 	else:
 		return "Invalid method"
+
+@extrasms.route('/test')
+def test():
+	e = Extra(
+		message = "This is message",
+		number = "+639207823026",
+		created_at = datetime.datetime.now(),
+		date_sent = datetime.datetime.now(),
+		is_opened = False,
+		status = True
+	)
+
+	db.session.add(e)
+	db.session.commit()
+
+	return "Done"

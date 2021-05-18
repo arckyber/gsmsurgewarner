@@ -28,8 +28,6 @@ def dashboard():
 
 @users.route('/register')
 def register():
-	if 'users' not in session['role_access']:
-		return redirect(url_for('users.rightAccessControl'))
 	role = Role.query.all()
 	output = RoleSchema(many=True).dump(role)
 	if not role:
@@ -38,7 +36,6 @@ def register():
 
 @users.route('/store', methods=['POST'])
 def store():	
-
 	# account information
 	username = request.form['username']
 	email = request.form['email']
@@ -114,9 +111,11 @@ def login():
 				session['role_access'] = role_access
 				return redirect(url_for('users.dashboard'))
 			else:
-				return "user not found"
+				flash("User not found")
+				return redirect(url_for('users.login'))
 		else:
-			return "all fields are required"
+			flash("All fields are required")
+			return redirect(url_for('users.login'))
 	elif request.method == 'GET':
 		if 'email' in session:
 			return redirect(url_for('users.dashboard'))
@@ -259,7 +258,3 @@ def clearRole():
 @users.route('/right-access-control')
 def rightAccessControl():
 	return render_template('/right-access-control.html')
-
-@users.route('/t')
-def t():
-	return str(dd.roles_()[0]['count'])

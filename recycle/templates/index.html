@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}GSM Surge Warner - Extra SMS{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+{% endblock %}
+
+{% block body %}
+{% include '/comp/sms.html' %}
+{% include '/comp/compose.html' %}
+<div>
+    <div class="row">
+        <div class="col-md-3">
+            <div>
+                <ul>
+                    <li>
+                        <a href="">Sms</a>
+                    </li>
+                    <li>    
+                        <a href="">Extra</a>
+                    </li>
+                    <li>
+                        <a href="">Transmitters</a>
+                    </li>
+                    <li>
+                        <a href="">Users</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+        $("#smstable").DataTable({
+            'pageLength': 8,
+            'processing': true,
+            'ajax': {
+                'url': '/arduino/smsdum',
+                method:'post',
+                'dataSrc': ''
+            },
+            'columns':[
+                
+            ],
+            dom: 'Bfrtip',
+            buttons:[
+                {
+                    text:'Compose',
+                    action:function(e, dt, node, config) {
+                        $("#compose_sms_modal").modal('show');
+                    }
+                },
+                {
+                    text:'Delete all',
+                    action:function(e, dt, node, config) {
+                        $.ajax({
+                            url:'/arduino/delete-all-sms',
+                            method:'post',
+                            data:{},
+                            syccess:function(data) {
+                                console.log("delete all sms data in arduino/smslist");
+                                toastr.warning("All message cleared!");
+                                refresh();
+                            }
+                        })
+                    }
+                }
+            ],
+            "order": [[ 3, "desc" ]],
+        });
+
+        function refresh() {
+			$("#smstable").DataTable().ajax.reload(null, false);
+        }
+        
+        setInterval(refresh, 5000);
+    })
+</script>
+{% endblock %}

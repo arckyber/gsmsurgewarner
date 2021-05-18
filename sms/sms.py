@@ -87,3 +87,9 @@ def clear():
 	db.session.query(Sms).delete()
 	db.session.commit()
 	return "Deleted"
+
+@sms.route('/delete/<id>')
+def delete(id):
+	Sms.query.filter(Sms.id == id).delete()
+	db.session.commit()
+	return "Deleted"

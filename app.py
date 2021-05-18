@@ -51,6 +51,9 @@ app.register_blueprint(extrasms, url_prefix="/extrasms")
 from test.route import test
 app.register_blueprint(test, url_prefix="/test")
 
+from recycle.route import recycle
+app.register_blueprint(recycle, url_prefix="/recycle")
+
 # from admin.model.admin import db as admin_db
 # from transmitter.model.transmitter import db as transmitter_db
 # from sms.model.sms import db as sms_db

@@ -15,7 +15,6 @@ class Arduino():
             print("device instantiation success")
             print(self.arduino)
             print(self.arduino.port)
-            # session['port'] = self.arduino.port
         except Exception as e:
             print("device instantiation exception")
             print(str(e))

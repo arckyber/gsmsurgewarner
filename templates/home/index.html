@@ -27,7 +27,7 @@
 <!-- end maps -->
 
   <!-- Favicons -->
-  <link href="{{ url_for('static', filename='home/assets/img/favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static', filename='home/assets/img/favicon.ico') }}" rel="icon">
   <link href="{{ url_for('static', filename='home/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -69,8 +69,6 @@
           <li class="active"><a href="#hero">Home</a></li>
           <li><a href="#maps">Maps</a></li>
           <li><a href="#about">About</a></li>          
-          
-          
           <li style="cursor: pointer;">
             <div class="dropdown">              
               <span class="fas fa-broadcast-tower text-light dropdown-toggle" id="alert_dropdownmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -80,7 +78,11 @@
                     <h6 class="dropdown-header text-center fas fa-broadcast-tower"> Warnings</h6>
                     <div id="alert_notification_holder">
                     </div>
-                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                    {% if 'user' in session %}
+                    <a href="/sms">
+                      <a id="seeAllAlerts" style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                    </a>
+                    {% endif %}
                   </div>
                 </div>
               </span>
@@ -104,7 +106,9 @@
                         </small>
                       </div> -->
                     </div>
-                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" href="/sms">See all</a>
+                    {% if 'user' in session %}
+                    <a style="font-size: .7rem;" class="text-primary text-center btn btn-link" id="seeAllExtra" href="/sms">See all</a>
+                    {% endif %}
                   </div>
                 </div>
               </span>
@@ -137,8 +141,8 @@
             <div class="carousel-item active" style="background: url(static/home/assets/img/slide/slide-4.jpg); background-size: inherit !important;">
               <div class="carousel-container">
                 <div class="carousel-content">
-                  <h2 class="animate__animated animate__fadeInDown">Safety must be on top of priority</h2>
-                  <p class="animate__animated animate__fadeInUp">Sa panahon karon nga permi mag usab-usab ang weather, kinahanglan.... blah...  blah... blah...  blah...  blah...  blah...  blah...  blah...  blah... </p>
+                  <h2 class="animate__animated animate__fadeInDown">Safety by choice not by chance</h2>
+                  <p class="animate__animated animate__fadeInUp">Safety is the key, it is up to you and me!</p>
                   <div>
                     <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Read More</a>
                   </div>
@@ -150,8 +154,8 @@
             <div class="carousel-item" style="background: url(static/home/assets/img/slide/slide-5.jpg);">
               <div class="carousel-container">
                 <div class="carousel-content">
-                  <h2 class="animate__animated animate__fadeInDown">Lorem Ipsum Dolor</h2>
-                  <p class="animate__animated animate__fadeInUp">Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea voluptatem. Esse doloremque accusamus repellendus deleniti vel. Minus et tempore modi architecto.</p>
+                  <h2 class="animate__animated animate__fadeInDown">Flood can come without warning</h2>
+                  <p class="animate__animated animate__fadeInUp">Turn your attention to accident prevention.</p>
                   <div>
                     <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Read More</a>
                   </div>
@@ -164,8 +168,8 @@
               <div class="carousel-background"><img src="static/home/assets/img/slide/slide-6.jpg" alt=""></div>
               <div class="carousel-container">
                 <div class="carousel-content">
-                  <h2 class="animate__animated animate__fadeInDown">Sequi ea ut et est quaerat</h2>
-                  <p class="animate__animated animate__fadeInUp">Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea voluptatem. Esse doloremque accusamus repellendus deleniti vel. Minus et tempore modi architecto.</p>
+                  <h2 class="animate__animated animate__fadeInDown">Simple warning leads to necessary action</h2>
+                  <p class="animate__animated animate__fadeInUp">Moving from fear to hope begins with safety.</p>
                   <div>
                     <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Read More</a>
                   </div>
@@ -207,30 +211,30 @@
           <div class="image col-xl-5 d-flex align-items-stretch justify-content-center justify-content-lg-start"></div>
           <div class="col-xl-7 pl-0 pl-lg-5 pr-lg-1 d-flex align-items-stretch">
             <div class="content d-flex flex-column justify-content-center">
-              <h3>Voluptatem dignissimos provident quasi</h3>
+              <h3>We aim to aid risk reduction managements in terms of flood monitoring.</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
+                Strive for the best for our society.
               </p>
               <div class="row">
                 <div class="col-md-6 icon-box">
                   <i class="bx bx-receipt"></i>
-                  <h4>Corporis voluptates sit</h4>
-                  <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
+                  <h4>Safety is the key</h4>
+                  <p>Safety by choice, not by chance.</p>
                 </div>
                 <div class="col-md-6 icon-box">
                   <i class="bx bx-cube-alt"></i>
-                  <h4>Ullamco laboris nisi</h4>
-                  <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</p>
+                  <h4>Better presentation</h4>
+                  <p>We provide a better way to present data for you.</p>
                 </div>
                 <div class="col-md-6 icon-box">
                   <i class="bx bx-images"></i>
-                  <h4>Labore consequatur</h4>
-                  <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
+                  <h4>Using Map</h4>
+                  <p>With MAP, it is easier to monitor water level changes.</p>
                 </div>
                 <div class="col-md-6 icon-box">
                   <i class="bx bx-shield"></i>
-                  <h4>Beatae veritatis</h4>
-                  <p>Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta</p>
+                  <h4>Secured data transmition</h4>
+                  <p>Using GSM network, transmition of data is secured.</p>
                 </div>
               </div>
             </div><!-- End .content-->
@@ -249,12 +253,11 @@
 
           <div class="col-lg-3 col-md-6">
             <div class="footer-info">
-              <h3>Groovin</h3>
+              <h3>GSM Surge Warner</h3>
               <p>
-                A108 Adam Street <br>
-                NY 535022, USA<br><br>
-                <strong>Phone:</strong> +1 5589 55488 55<br>
-                <strong>Email:</strong> info@example.com<br>
+                Web Naive<br><br>
+                <strong>Phone:</strong> 09506305568<br>
+                <strong>Email:</strong> cg@domain.com<br>
               </p>
               <div class="social-links mt-3">
                 <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -269,31 +272,26 @@
           <div class="col-lg-2 col-md-6 footer-links">
             <h4>Useful Links</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="/">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#about">About</a></li>
             </ul>
           </div>
 
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Services</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">SMS</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">GRAPH</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">MAP</a></li>
             </ul>
           </div>
 
           <div class="col-lg-4 col-md-6 footer-newsletter">
             <h4>Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
+            <p>We introduce you to the future risk reduction aids.</p>
+            <!-- <form action="" method="post">
               <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
+            </form> -->
 
           </div>
 
@@ -303,14 +301,10 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong><span>Groovin</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>GSM Surge Warner</span></strong>. All Rights Reserved
       </div>
       <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/groovin-free-bootstrap-theme/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        Designed by <a href="">Web Naive</a>
       </div>
     </div>
   </footer><!-- End Footer -->
@@ -352,16 +346,16 @@
 							div += "<div class='dropdown-item container-fluid border rounded'>";
 								div += "<div>";
 									div += "<span>";
-										if (data.alert_level == 1) {
+										if (data.alert_type == 1) {
 											div += "<span class='fas fa-circle text-info'></span>";
 										}
-										else if (data.alert_level == 2) {
+										else if (data.alert_type == 2) {
 											div += "<span class='fas fa-circle text-yellow'></span>";
 										}
-										else if (data.alert_level == 3) {
+										else if (data.alert_type == 3) {
 											div += "<span class='fas fa-circle text-warning'></span>";
 										}
-										else if (data.alert_level == 4) {
+										else if (data.alert_type == 4) {
 											div += "<span class='fas fa-circle text-danger'></span>";
 										}
 										div += "<small> "+data.transmitter.name+"</small>";
@@ -370,7 +364,7 @@
 									div += "<small>";
 										div += "<small>";
 											div += "<span>Water level: </span>";
-											div += "<span class='text-muted'>"+ data.water_distance +"m from sensor</span>"
+											div += "<span class='text-muted'>"+ data.water_distance +"cm from sensor</span>"
 										div += "</small>";
 										div += "<br>";
 										div += "<small>";
@@ -395,7 +389,6 @@
 					method:'post',
 					data:{},
 					success:function(datas){
-						console.log(datas);
 						var div = "";
 						datas.forEach(data=>{
 							div += '<div class="dropdown-item border rounded">';
@@ -456,6 +449,18 @@
 				var shortname = name.substring(0, 15) + " ...";
 				$('.textdot').replaceWith(shortname);
 			}
+
+			$("#back").on("click", function(){
+				window.history.back();
+			})
+
+			$("#seeAllExtra").on('click', function(){
+				window.location = "/extrasms";
+			})
+
+			$("#seeAllAlerts").on('click', function(){
+				window.location = "/sms";
+			})
 
       document.getElementById("mapid").style.height = screen.height+"px"; 
 
